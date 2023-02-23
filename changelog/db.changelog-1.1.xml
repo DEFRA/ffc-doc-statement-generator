@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="Simon Dunn" id="2">
+    <tagDatabase tag="v1.0.0" />
+  </changeSet>
+  <changeSet author="Simon Dunn" id="3">
+    <tagDatabase tag="v1.1.0" />
+  </changeSet>
+  <changeSet author="Simon Dunn" id="4">
+    <createTable tableName="generations">
+      <column autoIncrement="true" name="generationId" type="INTEGER">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="generationId_pkey" />
+      </column>
+      <column name="statementData" type="JSON" />
+      <column name="dateGenerated" type="TIMESTAMP" />
+      <column name="filename" type="VARCHAR(255)" />     
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

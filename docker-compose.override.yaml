@@ -1,0 +1,33 @@
+version: '3.8'
+# This override file should be used when running this service in isolation
+# to provide dependencies and expose ports for local testing
+
+services:
+  ffc-pay-statement-generator:
+    build:
+      target: development
+    image: ffc-pay-statement-generator-development
+    container_name: ffc-pay-statement-generator-development
+    ports:
+      - "9251:9229"
+    volumes:
+      - ./app:/home/node/app
+      - ./package.json:/home/node/package.json
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-pay-statement-azurite:10000/devstoreaccount1;
+
+  ffc-pay-statement-generator-postgres:
+    ports:
+      - "5451:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  ffc-pay-statement-azurite:
+    volumes:
+      - azurite_data:/data
+    ports:
+      - "10051:10000"
+
+volumes:
+  azurite_data:
+  postgres_data:
