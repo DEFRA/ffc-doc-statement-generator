@@ -24,7 +24,7 @@ const createCrmMessage = (statement, filename) => {
       ...crm
     },
     type: 'uk.gov.pay.statement.crm',
-    source: 'ffc-pay-statement-generator'
+    source: 'ffc-doc-statement-generator'
   }
 }
 

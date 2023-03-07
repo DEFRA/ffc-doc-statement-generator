@@ -1,9 +1,9 @@
 environment: development
 environmentCode:
-name: ffc-pay-statement-generator
-namespace: ffc-pay
-workstream: ffc-pay
-image: ffc-pay-statement-generator
+name: ffc-doc-statement-generator
+namespace: ffc-doc
+workstream: ffc-doc
+image: ffc-doc-statement-generator
 
 labels: {}
 
@@ -11,10 +11,10 @@ appInsights:
   key:
 
 containerConfigMap:
-  name: ffc-pay-statement-generator-config-map
+  name: ffc-doc-statement-generator-config-map
 
 containerSecret:
-  name: ffc-pay-statement-generator-container-secret
+  name: ffc-doc-statement-generator-container-secret
   type: Opaque
 
 deployment:
@@ -29,25 +29,25 @@ container:
   limitMemory: 150Mi
   limitCpu: 120m
   messageQueueHost: namespace.servicebus.windows.net
-  statementTopicAddress: ffc-pay-statements
-  statementSubscriptionAddress: ffc-pay-statement-generator
-  publishTopicAddress: ffc-pay-statement-publish
-  crmTopicAddress: ffc-pay-statement-crm
-  azureStorageAccountName: ffcpay
+  statementTopicAddress: ffc-doc-statements
+  statementSubscriptionAddress: ffc-doc-statement-generator
+  publishTopicAddress: ffc-doc-statement-publish
+  crmTopicAddress: ffc-doc-statement-crm
+  azureStorageAccountName: ffcdoc
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
   azureStorageCreateContainers: false
   storageContainer: statements
   storageFolder: outbound
   statementReceiverApiVersion: v1
-  statementReceiverEndpoint: https://ffc-pay-statement-receiver
+  statementReceiverEndpoint: https://ffc-doc-statement-receiver
 
 ingress:
   server: example.com
 
 postgresService:
-  postgresDb: ffc_pay_statement_generator
-  postgresqlHost: ffc-pay-statement-generator-postgres
+  postgresDb: ffc_doc_statement_generator
+  postgresqlHost: ffc-doc-statement-generator-postgres
   postgresPort: 5432
   postgresSchema: public
   postgresUser: postgres

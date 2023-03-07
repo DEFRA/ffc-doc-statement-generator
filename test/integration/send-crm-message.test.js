@@ -53,6 +53,6 @@ describe('send crm message', () => {
 
   test('sends crm message with source', async () => {
     await sendCrmMessage(mockStatement, FILENAME)
-    expect(mockSendMessage.mock.calls[0][0].source).toBe('ffc-pay-statement-generator')
+    expect(mockSendMessage.mock.calls[0][0].source).toBe('ffc-doc-statement-generator')
   })
 })

@@ -10,7 +10,7 @@ const createMessage = (statement, filename) => {
       scheme: statement.scheme
     },
     type: 'uk.gov.pay.statement.publish',
-    source: 'ffc-pay-statement-generator'
+    source: 'ffc-doc-statement-generator'
   }
 }
 

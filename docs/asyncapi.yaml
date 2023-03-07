@@ -53,7 +53,7 @@ components:
                 description: Scheme name
                 example: SFI
           type: 'uk.gov.pay.statement.crm'
-          source: 'ffc-pay-statement-generator'
+          source: 'ffc-doc-statement-generator'
   schemas:
     PaymentStatement:
       type: object

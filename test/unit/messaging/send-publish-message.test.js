@@ -66,7 +66,7 @@ describe('send publish message', () => {
 
   test('sends message with source', async () => {
     await sendPublishMessage(mockStatement, FILE_NAME)
-    expect(mockSendMessage.mock.calls[0][0].source).toBe('ffc-pay-statement-generator')
+    expect(mockSendMessage.mock.calls[0][0].source).toBe('ffc-doc-statement-generator')
   })
 
   test('sends message with scheme', async () => {

@@ -1,6 +1,6 @@
 apiVersion: v2
 description: FFC payment statement generator
-name: ffc-pay-statement-generator
+name: ffc-doc-statement-generator
 # this version is automatically updated in the build pipeline
 version: 1.0.0
 dependencies:

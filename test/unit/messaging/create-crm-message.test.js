@@ -40,7 +40,7 @@ describe('send crm message', () => {
         ...crmValid
       },
       type: 'uk.gov.pay.statement.crm',
-      source: 'ffc-pay-statement-generator'
+      source: 'ffc-doc-statement-generator'
     }
 
     schema.validate.mockReturnValue({ value: crmValid })
