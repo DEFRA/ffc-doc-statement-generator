@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "1.10.8",
+  "version": "1.11.0",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -22,9 +22,9 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "2.0.5",
-    "@azure/storage-blob": "12.10.0",
+    "@azure/storage-blob": "12.13.0",
     "@hapi/hapi": "20.2.2",
-    "applicationinsights": "2.3.3",
+    "applicationinsights": "2.5.1",
     "ffc-messaging": "2.5.1",
     "joi": "17.6.0",
     "log-timestamp": "0.3.0",
@@ -32,7 +32,7 @@
     "pdfmake": "0.2.5",
     "pg": "8.7.3",
     "pg-hstore": "2.3.4",
-    "sequelize": "6.21.2"
+    "sequelize": "6.31.0"
   },
   "devDependencies": {
     "jest": "28.1.2",

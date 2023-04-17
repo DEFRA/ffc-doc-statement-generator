@@ -1,9 +1,14 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.22.1
+version: v1.25.0
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   SNYK-JS-PDFMAKE-3160329:
     - pdfmake:
         reason: None given
         expires: '2023-01-11T12:16:21.571Z'
+  SNYK-JS-WORDWRAP-3149973:
+    - '*':
+        reason: None Given
+        expires: 2023-05-14T10:05:28.716Z
+        created: 2023-04-14T10:05:28.726Z
 patch: {}
