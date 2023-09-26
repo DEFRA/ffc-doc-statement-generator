@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -17,22 +17,25 @@
   "contributors": [
     "Callum Leighton callum.leighton@kainos.com",
     "John Watson john.watson2@rpa.gov.uk",
-    "Marc Templeton m.templeton@kainos.com"
+    "Simon Dunn simon.dunn1@defra.gov.uk",
+    "Marc Templeton m.templeton@kainos.com",
+    "Abidemi Adio abidemi.adio@defra.gov.uk"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "2.0.5",
-    "@azure/storage-blob": "12.13.0",
+    "@azure/storage-blob": "12.10.0",
     "@hapi/hapi": "20.2.2",
-    "applicationinsights": "2.5.1",
+    "applicationinsights": "2.3.3",
     "ffc-messaging": "2.5.1",
     "joi": "17.6.0",
     "log-timestamp": "0.3.0",
     "moment": "2.29.4",
-    "pdfmake": "0.2.5",
+    "notifications-node-client": "7.0.0",
+    "pdfmake": "0.2.7",
     "pg": "8.7.3",
     "pg-hstore": "2.3.4",
-    "sequelize": "6.31.0"
+    "sequelize": "6.29.0"
   },
   "devDependencies": {
     "jest": "28.1.2",
