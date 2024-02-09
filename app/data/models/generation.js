@@ -3,7 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     generationId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     statementData: DataTypes.JSON,
     dateGenerated: DataTypes.DATE,
-    filename: DataTypes.STRING
+    filename: DataTypes.STRING,
+    documentReference: DataTypes.INTEGER
   },
   {
     tableName: 'generations',

@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { STATEMENT } = require('../../document-types')
+const { STATEMENT } = require('../../constants/document-types')
 
 module.exports = Joi.object({
   sbi: Joi.number().integer().min(105000000).max(999999999).required(),

@@ -7,12 +7,12 @@ module.exports = {
     lineHeight: 1.15
   },
   header1: {
-    fontSize: 24,
+    fontSize: 16,
     bold: true,
     margin: [0, 10, 0, 10]
   },
   header2: {
-    fontSize: 16,
+    fontSize: 14,
     bold: true,
     margin: [0, 40, 0, 10]
   },
@@ -24,6 +24,11 @@ module.exports = {
   subTitle: {
     fontSize: 18,
     margin: [0, 0, 0, 30]
+  },
+  SFIAHeader: {
+    fontSize: 16,
+    bold: true,
+    margin: [0, 20, 0, 10]
   },
   link: {
     decoration: 'underline',
@@ -42,9 +47,10 @@ module.exports = {
     alignment: 'right'
   },
   logo: {
-    margin: [0, 0, 0, millimetresToPoints(50)]
+    margin: [0, 20, 0, millimetresToPoints(15)]
   },
   address: {
+    margin: [0, 5, 0, millimetresToPoints(25)],
     fontSize: 9.5,
     lineHeight: 1
   },

@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const { PRODUCTION } = require('./environments')
 
 const mqSchema = Joi.object({
   messageQueue: {
@@ -26,8 +27,8 @@ const mqConfig = {
     host: process.env.MESSAGE_QUEUE_HOST,
     username: process.env.MESSAGE_QUEUE_USER,
     password: process.env.MESSAGE_QUEUE_PASSWORD,
-    useCredentialChain: process.env.NODE_ENV === 'production',
-    appInsights: process.env.NODE_ENV === 'production' ? require('applicationinsights') : undefined
+    useCredentialChain: process.env.NODE_ENV === PRODUCTION,
+    appInsights: process.env.NODE_ENV === PRODUCTION ? require('applicationinsights') : undefined
   },
   statementSubscription: {
     address: process.env.STATEMENT_SUBSCRIPTION_ADDRESS,
