@@ -1,15 +1,20 @@
 const getLevelPriority = (level) => {
+  const introductoryLevel = 1
+  const intermediateLevel = 2
+  const advancedLevel = 3
+  const additionalLevel = 4
+  const defaultLevel = 5
   switch (level) {
     case 'Introductory':
-      return 1
+      return introductoryLevel
     case 'Intermediate':
-      return 2
+      return intermediateLevel
     case 'Advanced':
-      return 3
+      return advancedLevel
     case 'Additional':
-      return 4
+      return additionalLevel
     default:
-      return 5
+      return defaultLevel
   }
 }
 
