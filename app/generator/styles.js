@@ -1,4 +1,12 @@
 const { millimetresToPoints } = require('./conversion')
+const zeroPoint = 0
+const fivePoints = 5
+const tenPoints = 10
+const fifteenPoints = 15
+const twentyPoints = 20
+const twentyfivePoints = 25
+const thirtyPoints = 30
+const fortyPoints = 40
 
 module.exports = {
   default: {
@@ -9,52 +17,52 @@ module.exports = {
   header1: {
     fontSize: 16,
     bold: true,
-    margin: [0, 10, 0, 10]
+    margin: [zeroPoint, tenPoints, zeroPoint, tenPoints]
   },
   header2: {
     fontSize: 14,
     bold: true,
-    margin: [0, 40, 0, 10]
+    margin: [zeroPoint, fortyPoints, zeroPoint, tenPoints]
   },
   header3: {
     fontSize: 12,
     bold: true,
-    margin: [0, 10, 0, 10]
+    margin: [zeroPoint, tenPoints, zeroPoint, tenPoints]
   },
   subTitle: {
     fontSize: 18,
-    margin: [0, 0, 0, 30]
+    margin: [zeroPoint, zeroPoint, zeroPoint, thirtyPoints]
   },
   SFIAHeader: {
     fontSize: 16,
     bold: true,
-    margin: [0, 20, 0, 10]
+    margin: [zeroPoint, twentyPoints, zeroPoint, tenPoints]
   },
   link: {
     decoration: 'underline',
     color: 'blue'
   },
   table: {
-    fontSize: 10,
-    margin: [0, 10, 0, 10]
+    fontSize: tenPoints,
+    margin: [zeroPoint, tenPoints, zeroPoint, tenPoints]
   },
   tableHeader: {
     fontSize: 12,
     bold: true,
-    margin: [0, 0, 0, 5]
+    margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]
   },
   tableNumber: {
     alignment: 'right'
   },
   logo: {
-    margin: [0, 20, 0, millimetresToPoints(15)]
+    margin: [zeroPoint, twentyPoints, zeroPoint, millimetresToPoints(fifteenPoints)]
   },
   address: {
-    margin: [0, 5, 0, millimetresToPoints(25)],
+    margin: [zeroPoint, fivePoints, zeroPoint, millimetresToPoints(twentyfivePoints)],
     fontSize: 9.5,
     lineHeight: 1
   },
   style: {
-    margin: [0, 0, 0, 5]
+    margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]
   }
 }
