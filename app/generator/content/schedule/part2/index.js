@@ -8,10 +8,10 @@ const part2 = (schedule) => {
   switch (true) {
     case (remainingAmount > 0):
       return schedule.adjustment.adjustmentValue > 0 ? getTopUpDescription(schedule) : getReductionDescription(schedule)
-    case (remainingAmount === 0):
-      return getReductionZeroDescription(schedule)
     case (remainingAmount < 0):
       return getRecoveryDescription(schedule)
+    default:
+      return getReductionZeroDescription(schedule)
   }
 }
 
