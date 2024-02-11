@@ -13,8 +13,10 @@ const getLatestFromValid = (payments) => {
   return payments.reduce((x, y) => {
     const currentDate = moment(x.settled, SETTLEMENT_DATE_FORMAT)
     const previousDate = moment(y.settled, SETTLEMENT_DATE_FORMAT)
-    if (currentDate && currentDate.isAfter(previousDate)) {
-      return x
+    if (currentDate) {
+      if (currentDate.isAfter(previousDate)) {
+        return x
+      }
     }
     return y
   })

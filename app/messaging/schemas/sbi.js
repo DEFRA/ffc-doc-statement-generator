@@ -1,6 +1,7 @@
 const Joi = require('joi')
-
-module.exports = Joi.number().integer().min(105000000).max(999999999).required().messages({
+const minSbi = 105000000
+const maxSbi = 999999999
+module.exports = Joi.number().integer().min(minSbi).max(maxSbi).required().messages({
   'number.base': 'SBI must be a number',
   'number.integer': 'SBI must be an integer',
   'number.min': 'SBI must be at least 9 digits',

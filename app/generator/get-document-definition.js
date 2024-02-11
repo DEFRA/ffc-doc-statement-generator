@@ -4,14 +4,14 @@ const { A4 } = require('./page-sizes')
 const { millimetresToPoints } = require('./conversion')
 
 const getDocumentDefinition = (request, type) => {
-  const topMargin = millimetresToPoints(5)
-  const sideMargin = millimetresToPoints(15)
+  const topMargin = 5
+  const sideMargin = 15
   return {
     pageSize: A4,
     content: generateContent(request, type),
     styles,
     defaultStyle: styles.default,
-    pageMargins: [sideMargin, topMargin, sideMargin, topMargin]
+    pageMargins: [millimetresToPoints(sideMargin), millimetresToPoints(topMargin), millimetresToPoints(sideMargin), millimetresToPoints(topMargin)]
   }
 }
 
