@@ -3,7 +3,7 @@ let mockAddress
 
 describe('address schema', () => {
   beforeEach(() => {
-    mockAddress = JSON.parse(JSON.stringify(require('../../../mocks/statement-data').address))
+    mockAddress = JSON.parse(JSON.stringify(require('../../../mocks/mock-statement').address))
   })
   test('validates success if all present', () => {
     const result = schema.validate(mockAddress)

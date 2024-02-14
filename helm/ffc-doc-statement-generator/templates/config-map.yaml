@@ -21,14 +21,17 @@ data:
   AZURE_STORAGE_ACCOUNT_NAME: {{ quote .Values.container.azureStorageAccountName }}
   AZURE_STORAGE_CONNECTION_STRING: {{ quote .Values.container.azureStorageConnectionString }}
   AZURE_STORAGE_USE_CONNECTION_STRING: {{ quote .Values.container.azureStorageUseConnectionString }}
-  AZURE_STORAGE_USE_CONNECTION_STRING: {{ quote .Values.container.azureStorageUseConnectionString }}
   AZURE_STORAGE_CREATE_CONTAINERS: {{ quote .Values.container.azureStorageCreateContainers }}
   AZURE_STORAGE_CONTAINER: {{ quote .Values.container.storageContainer }}
   AZURE_STORAGE_FOLDER: {{ quote .Values.container.storageFolder }}
+  NOTIFY_EMAIL_ADDRESS: {{ quote .Values.container.emailAddress }}
+  NOTIFY_API_KEY: {{ quote .Values.container.apiKey }}
+  NOTIFY_EMAIL_TEMPLATE_KEY: {{ quote .Values.container.emailTemplateKey }}
   STATEMENT_RECEIVER_API_VERSION: {{ quote .Values.container.statementReceiverApiVersion }}
   {{- if and (.Values.environmentCode) (ne (.Values.environmentCode | toString ) "snd") }}
   STATEMENT_RECEIVER_ENDPOINT: {{ .Values.container.statementReceiverEndpoint }}-{{ .Values.environmentCode }}.{{ .Values.ingress.server }}
   {{ else }}
   STATEMENT_RECEIVER_ENDPOINT: {{ .Values.container.statementReceiverEndpoint }}.{{ .Values.ingress.server }}
   {{- end }}
+  SCHEDULES_ARE_PUBLISHED: {{ quote .Values.container.schedulesArePublished }}
 {{- end -}}

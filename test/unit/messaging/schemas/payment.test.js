@@ -3,7 +3,7 @@ let mockPayment
 
 describe('payment schema', () => {
   beforeEach(() => {
-    mockPayment = JSON.parse(JSON.stringify(require('../../../mocks/statement-data').payments[0]))
+    mockPayment = JSON.parse(JSON.stringify(require('../../../mocks/mock-statement').payments[0]))
   })
   test('validates success if all present', () => {
     const result = schema.validate(mockPayment)

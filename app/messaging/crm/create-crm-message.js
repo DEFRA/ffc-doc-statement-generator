@@ -1,14 +1,13 @@
 const schema = require('./crm-schema')
 const { statementReceiverApiVersion, statementReceiverEndpoint } = require('../../config')
-const { STATEMENT } = require('../../document-types')
 
-const createCrmMessage = (statement, filename) => {
+const createCrmMessage = (statement, filename, type) => {
   const crm = {
     apiLink: `${statementReceiverEndpoint}/${statementReceiverApiVersion}/statements/statement/${filename}`,
     frn: statement.frn,
     sbi: statement.sbi,
     scheme: statement.scheme.shortName,
-    documentType: STATEMENT
+    documentType: type.name
   }
 
   const result = schema.validate(crm, {
@@ -23,7 +22,7 @@ const createCrmMessage = (statement, filename) => {
     body: {
       ...crm
     },
-    type: 'uk.gov.pay.statement.crm',
+    type: `uk.gov.doc.${type.id}.crm`,
     source: 'ffc-doc-statement-generator'
   }
 }

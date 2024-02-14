@@ -8,7 +8,7 @@ image: ffc-doc-statement-generator
 labels: {}
 
 appInsights:
-  key:
+  connectionString:
 
 containerConfigMap:
   name: ffc-doc-statement-generator-config-map
@@ -19,7 +19,7 @@ containerSecret:
 
 deployment:
   minReplicas: 1
-  maxReplicas: 1
+  maxReplicas: 4
   cpuThreshold: 80
   memoryThreshold: 80
 
@@ -40,7 +40,11 @@ container:
   storageContainer: statements
   storageFolder: outbound
   statementReceiverApiVersion: v1
-  statementReceiverEndpoint: https://ffc-doc-statement-receiver
+  statementReceiverEndpoint: https://ffc-pay-statement-receiver
+  schedulesArePublished: false
+  emailAddress: dummy
+  apiKey: dummy
+  emailTemplateKey: dummy
 
 ingress:
   server: example.com

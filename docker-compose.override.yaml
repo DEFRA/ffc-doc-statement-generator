@@ -9,7 +9,7 @@ services:
     image: ffc-doc-statement-generator-development
     container_name: ffc-doc-statement-generator-development
     ports:
-      - "9251:9229"
+      - "9288:9229"
     volumes:
       - ./app:/home/node/app
       - ./package.json:/home/node/package.json
@@ -18,7 +18,7 @@ services:
 
   ffc-doc-statement-generator-postgres:
     ports:
-      - "5451:5432"
+      - "5488:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -26,7 +26,7 @@ services:
     volumes:
       - azurite_data:/data
     ports:
-      - "10051:10000"
+      - "10081:10000"
 
 volumes:
   azurite_data:
