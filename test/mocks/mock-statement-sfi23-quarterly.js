@@ -1,3 +1,4 @@
+const SFI23QS = 'sfi 23 quarterly statement'
 module.exports = {
   sbi: 200211430,
   addressLine1: '012 Maple Road',
@@ -17,48 +18,34 @@ module.exports = {
   agreementNumber: 1653462,
   calculationReference: 123759089,
   claimReference: 1667086,
-  schemeCode: 'SFI-23',
+  schemeType: 'SFI-23',
   calculationDate: '1 March 2024',
   invoiceNumber: 'SFIA0103195',
   agreementStart: '1 March 2024',
   agreementEnd: '1 March 2024',
+  updated: '1 March 2024',
   totalAdditionalPayments: 1000,
   totalActionPayments: 35483.37,
   totalPayments: 36483.37,
-  schemeName: 'Sustainable Farming Incentive',
-  actionGroups: [
+  schemeName: 'Sustainable Farming Incentive 23 Quarterly Payment Statement',
+  type: SFI23QS,
+  actionGroups:
     {
-      groupName: 'Actions for hedgerows',
-      actions: [{
-        actionReference: 32,
-        calculationReference: 123759089,
-        fundingCode: 80201,
-        groupName: 'Actions for hedgerows',
-        actionCode: 'HRW1',
-        actionName: 'Assess and record hedgerow condition',
-        rate: '£3 per 100m - one side',
-        landArea: 15800.000000,
-        uom: 'm',
-        annualValue: 474,
-        quarterlyValue: 118.50,
-        overDeclarationPenalty: 0,
-        quarterlyPaymentAmount: 118.50
-      },
-      {
-        actionReference: 34,
-        calculationReference: 123759089,
-        fundingCode: 80203,
-        groupName: 'Actions for hedgerows',
-        actionCode: 'HRW3',
-        actionName: 'Maintain existing hedgerow trees, or establish new hedgerow trees',
-        rate: '£10 per 100m - both sides',
-        landArea: 6836.00,
-        uom: 'm',
-        annualValue: 683.6,
-        quarterlyValue: 170.90,
-        overDeclarationPenalty: 0,
-        quarterlyPaymentAmount: 170.90
-      }]
-    }
-  ]
+      groupName: 'Actions for hedgerows'
+    },
+  actions: [{
+    actionReference: 32,
+    calculationReference: 123759089,
+    fundingCode: '80201',
+    groupName: 'Actions for hedgerows',
+    actionCode: 'HRW1',
+    actionName: 'Assess and record hedgerow condition',
+    rate: '£3 per 100m - one side',
+    landArea: '15800.000000',
+    uom: 'm',
+    annualValue: '474',
+    quarterlyValue: '118.50',
+    overDeclarationPenalty: 0,
+    quarterlyPaymentAmount: '118.50'
+  }]
 }

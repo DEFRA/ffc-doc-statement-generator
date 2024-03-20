@@ -1,10 +1,54 @@
-const { STATEMENT, SCHEDULE } = require('../../../app/constants/document-types')
+const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT } = require('../../../app/constants/document-types')
 const { VALIDATION } = require('../../../app/errors')
 
 const { validateRequest } = require('../../../app/messaging/validate-request')
 
+let sfi23QuarterlyStatement
 let statement
 let schedule
+
+describe('validate SFI 23 quarterly statement', () => {
+  describe('when SFI 23 quarterly statement is valid', () => {
+    beforeEach(() => {
+      sfi23QuarterlyStatement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement-sfi23-quarterly')))
+    })
+
+    test('does not throw', async () => {
+      expect(() => validateRequest(sfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT)).not.toThrow()
+    })
+
+    test('returns undefined', async () => {
+      const result = validateRequest(sfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT)
+      expect(result).toBeUndefined()
+    })
+  })
+})
+
+describe('when sfi 23 quarterly statement is undefined', () => {
+  beforeEach(() => {
+    sfi23QuarterlyStatement = undefined
+  })
+
+  test('throws', async () => {
+    expect(() => validateRequest(undefined, SFI23QUARTERLYSTATEMENT)).toThrow()
+  })
+
+  test('throws Error', async () => {
+    expect(() => validateRequest(sfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT)).toThrow(Error)
+  })
+
+  test('throws error with category key', async () => {
+    try { validateRequest(sfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT) } catch (err) { expect(Object.keys(err)).toContain('category') }
+  })
+
+  test('throws error with VALIDATION value for category key', async () => {
+    try { validateRequest(sfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT) } catch (err) { expect(err.category).toBe(VALIDATION) }
+  })
+
+  test('throws error which starts "Request content is invalid"', async () => {
+    expect(() => validateRequest(sfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT)).toThrow(/^Request content is invalid/)
+  })
+})
 
 describe('validate statement', () => {
   describe('when statement is valid', () => {
