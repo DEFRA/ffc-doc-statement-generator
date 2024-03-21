@@ -1,4 +1,4 @@
-const { getPaymentPeriods } = require('./get-payment-periods')
+const { getPaymentPeriods } = require('./part3/get-payment-periods')
 
 const getHelpInfo = (sfi23Statement) => {
   return {

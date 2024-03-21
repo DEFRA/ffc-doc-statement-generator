@@ -1,7 +1,6 @@
-const getAgreementNumber = require('../summary/get-agreement-number')
-const getStartDate = require('./start-date')
-const getEndDate = require('./end-date')
-// const getTable = require('./get-table')
+const getAgreementNumber = require('../../summary/get-agreement-number')
+const getStartDate = require('../start-date')
+const getEndDate = require('../end-date')
 
 const part2 = (sfi23QuarterlyStatement) => {
   return {
