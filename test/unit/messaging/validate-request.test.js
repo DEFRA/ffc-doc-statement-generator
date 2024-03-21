@@ -1,6 +1,5 @@
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT } = require('../../../app/constants/document-types')
 const { VALIDATION } = require('../../../app/errors')
-
 const { validateRequest } = require('../../../app/messaging/validate-request')
 
 let sfi23QuarterlyStatement
