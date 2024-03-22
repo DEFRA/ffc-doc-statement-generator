@@ -4,7 +4,7 @@ jest.mock('../../../app/generator/content/sfi23-quarterly-statement/start-date.j
   return jest.fn().mockReturnValue({
     columns: [
       { width: 200, text: 'Start date: ' },
-      { width: '*', text: '2022-01-01' }
+      { width: '*', text: '2024-01-01' }
     ],
     style: 'column',
     columnGap: 10
@@ -13,10 +13,10 @@ jest.mock('../../../app/generator/content/sfi23-quarterly-statement/start-date.j
 
 describe('getStartDate', () => {
   test('processes agreementStart correctly', () => {
-    const agreementStart = '2022-01-01'
+    const agreementStart = '2024-01-01'
     const result = getStartDate(agreementStart)
     expect(result.columns.length).toBe(2)
     expect(result.columns[0]).toHaveProperty('text', 'Start date: ')
-    expect(result.columns[1]).toHaveProperty('text', '2022-01-01')
+    expect(result.columns[1]).toHaveProperty('text', '2024-01-01')
   })
 })
