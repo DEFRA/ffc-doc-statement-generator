@@ -1,22 +1,39 @@
-const getPaymentPeriod = require('../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-period')
+const getpaymentPeriod = require('../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-period')
+const paymentPeriod = '1st January to 31 March 2024'
 
-jest.mock('../../../app/generator/content/sfi23-quarterly-statement/start-date.js', () => {
-  return jest.fn().mockReturnValue({
-    columns: [
-      { width: 200, text: 'Period: ' },
-      { width: '*', text: '1st Jan 2024 to 1st March 2024' }
-    ],
-    style: 'column',
-    columnGap: 10
-  })
-})
-
-describe('get payment period', () => {
-  test('processes payment period correctly', () => {
-    const agreementStart = '1st Jan 2024 to 1st March 2024'
-    const result = getPaymentPeriod(agreementStart)
+describe('get payment period date', () => {
+  test('returns two columns', () => {
+    const result = getpaymentPeriod(paymentPeriod)
     expect(result.columns.length).toBe(2)
-    expect(result.columns[0]).toHaveProperty('text', 'Period: ')
-    expect(result.columns[1]).toHaveProperty('text', '1st Jan 2024 to 1st March 2024')
+  })
+
+  test('returns title column text', () => {
+    const result = getpaymentPeriod(paymentPeriod)
+    expect(result.columns[0].text).toBe('Period: ')
+  })
+
+  test('returns title column width', () => {
+    const result = getpaymentPeriod(paymentPeriod)
+    expect(result.columns[0].width).toBe(200)
+  })
+
+  test('returns payment period column text', () => {
+    const result = getpaymentPeriod(paymentPeriod)
+    expect(result.columns[1].text).toBe('1st January to 31 March 2024')
+  })
+
+  test('returns payment period column width', () => {
+    const result = getpaymentPeriod(paymentPeriod)
+    expect(result.columns[1].width).toBe('*')
+  })
+
+  test('returns column style', () => {
+    const result = getpaymentPeriod(paymentPeriod)
+    expect(result.style).toBe('column')
+  })
+
+  test('returns column gap', () => {
+    const result = getpaymentPeriod(paymentPeriod)
+    expect(result.columnGap).toBe(10)
   })
 })

@@ -7,14 +7,14 @@ const getPaymentPeriods = (sfi23Statement) => {
     style: 'table',
     table: {
       headerRows: 1,
-      widths: ['*', '*'],
-      body: [
-        [
-          { text: 'Period', style: 'tableHeader' },
-          { text: 'Estimated Payment', style: 'tableHeader' }
-        ]
+      widths: ['*', '*']
+    },
+    body: [
+      [
+        { text: 'Period', style: 'tableHeader' },
+        { text: 'Estimated Payment', style: 'tableHeader' }
       ]
-    }
+    ]
   }
 
   sfi23Statement.forEach((item) => {

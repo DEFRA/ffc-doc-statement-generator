@@ -1,22 +1,39 @@
 const getStartDate = require('../../../app/generator/content/sfi23-quarterly-statement/start-date.js')
+const agreementStart = '1st January 2024'
 
-jest.mock('../../../app/generator/content/sfi23-quarterly-statement/start-date.js', () => {
-  return jest.fn().mockReturnValue({
-    columns: [
-      { width: 200, text: 'Start date: ' },
-      { width: '*', text: '2024-01-01' }
-    ],
-    style: 'column',
-    columnGap: 10
-  })
-})
-
-describe('getStartDate', () => {
-  test('processes agreementStart correctly', () => {
-    const agreementStart = '2024-01-01'
+describe('get calculation date', () => {
+  test('returns two columns', () => {
     const result = getStartDate(agreementStart)
     expect(result.columns.length).toBe(2)
-    expect(result.columns[0]).toHaveProperty('text', 'Start date: ')
-    expect(result.columns[1]).toHaveProperty('text', '2024-01-01')
+  })
+
+  test('returns title column text', () => {
+    const result = getStartDate(agreementStart)
+    expect(result.columns[0].text).toBe('Start date:')
+  })
+
+  test('returns title column width', () => {
+    const result = getStartDate(agreementStart)
+    expect(result.columns[0].width).toBe(200)
+  })
+
+  test('returns start date column text', () => {
+    const result = getStartDate(agreementStart)
+    expect(result.columns[1].text).toBe('1st January 2024')
+  })
+
+  test('returns start date column width', () => {
+    const result = getStartDate(agreementStart)
+    expect(result.columns[1].width).toBe('*')
+  })
+
+  test('returns column style', () => {
+    const result = getStartDate(agreementStart)
+    expect(result.style).toBe('column')
+  })
+
+  test('returns column gap', () => {
+    const result = getStartDate(agreementStart)
+    expect(result.columnGap).toBe(10)
   })
 })
