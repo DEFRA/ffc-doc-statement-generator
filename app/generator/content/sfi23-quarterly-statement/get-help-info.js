@@ -1,4 +1,4 @@
-const { getPaymentPeriods } = require('./part3/get-payment-periods')
+const { getPaymentPeriodsTable } = require('./part3/get-payment-periods-table')
 
 const getHelpInfo = (sfi23Statement) => {
   return {
@@ -23,7 +23,9 @@ const getHelpInfo = (sfi23Statement) => {
         listStyle: 'square'
       },
       { text: 'When your next payments will be paid', style: 'header3' },
-      getPaymentPeriods(sfi23Statement.sfi23Statement),
+
+      getPaymentPeriodsTable(sfi23Statement.sfi23Statement),
+
       { text: 'If you\'ve any questions about this statement', style: 'header3' },
       {
         text: [

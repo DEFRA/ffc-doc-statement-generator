@@ -2,7 +2,7 @@ const rpaLogo = require('../rpa-logo')
 const getAddress = require('../get-address')
 const getSBI = require('../summary/get-sbi')
 const getBusinessName = require('../get-business-name')
-const getStatementDate = require('./getStatementDate')
+const getStatementDate = require('./get-statement-date')
 
 const summary = (sfi23QuarterlyStatement) => {
   return {
