@@ -4,7 +4,7 @@ const part3 = (sfi23Statement) => {
   return {
     stack: [
       { text: 'Payment Statement Table Placeholder', style: 'header3' },
-      getTable(sfi23Statement.sfi23Statement) // placeholder for the table structure
+      //getTable(sfi23Statement.sfi23Statement) // placeholder for the table structure
     ],
     unbreakable: true
   }

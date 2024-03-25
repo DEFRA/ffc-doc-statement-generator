@@ -1,16 +1,15 @@
-const getAgreementNumber = require('../../summary/get-agreement-number')
-const getStartDate = require('../start-date')
-const getEndDate = require('../end-date')
+const moment = require('moment')
 
 const part1 = (sfi23QuarterlyStatement) => {
+  moment.locale('en-gb')
   return {
     stack: [
-      { text: `${sfi23QuarterlyStatement.scheme.name} (${sfi23QuarterlyStatement.scheme.shortName}) agreement: quarterly payment statement `, style: 'header3' },
-      { text: 'This statement explains your quarterly payment for your SFI 2023 agreement.' },
-      { text: 'Your SFI 2023 agreement', style: 'header2' },
-      getAgreementNumber(sfi23QuarterlyStatement.scheme.agreementNumber),
-      getStartDate(sfi23QuarterlyStatement.scheme.startDate),
-      getEndDate(sfi23QuarterlyStatement.scheme.endDate)
+      { text: `${sfi23QuarterlyStatement.scheme.name} (${sfi23QuarterlyStatement.scheme.shortName}) ${sfi23QuarterlyStatement.scheme.year} agreement: quarterly payment statement `, style: 'header1' },
+      { text: `This statement explains your quarterly payment for your ${sfi23QuarterlyStatement.scheme.shortName} ${sfi23QuarterlyStatement.scheme.year} agreement.` },
+      { text: `Your ${sfi23QuarterlyStatement.scheme.shortName} ${sfi23QuarterlyStatement.scheme.year} agreement`, style: 'header2' },
+      { text: [{ text: 'Agreement number: ', bold: true, lineBreak : false }, `${ sfi23QuarterlyStatement.agreementNumber }`] },
+      { text: [{ text: 'Start date: ', bold: true, lineBreak : false }, `${ moment(sfi23QuarterlyStatement.agreementStart).format('LL') }`] },
+      { text: [{ text: 'End date: ', bold: true, lineBreak : false }, `${ moment(sfi23QuarterlyStatement.agreementEnd).format('LL') }`] }
     ],
     unbreakable: true
   }

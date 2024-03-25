@@ -51,5 +51,10 @@ module.exports = Joi.object({
   paymentReference: Joi.string().max(number30).required(),
   paymentPeriod: Joi.string().max(number200).required(),
   paymentAmount: Joi.number().required(),
-  transactionDate: Joi.date().required()
+  transactionDate: Joi.date().required(),
+  scheme: Joi.object({
+    shortName: Joi.string().max(number50).required(),
+    name: Joi.string().max(number50).required(),
+    year: Joi.number().integer().required()
+  }).required()
 }).required()

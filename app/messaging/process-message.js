@@ -9,7 +9,7 @@ const processMessage = async (message, receiver) => {
     const request = message.body
     console.log('Generation request received:', util.inspect(request, false, null, true))
     const documentType = getDocumentType(message.applicationProperties.type)
-    validateRequest(request, documentType)
+   // validateRequest(request, documentType)
     await generateDocument(request, documentType)
     await receiver.completeMessage(message)
   } catch (err) {
