@@ -1,4 +1,5 @@
 const Joi = require('joi')
+const SFI23QS = 'sfi-23-quarterly-statement'
 
 const minSbi = 105000000
 const maxSbi = 999999999
@@ -77,5 +78,6 @@ module.exports = Joi.object({
   scheme: schemeSchema,
   actionGroups: Joi.array().items(actionGroupsSchema).min(1).required(),
   previousPaymentCount: Joi.number().integer().required(),
-  documentReference: Joi.number().integer().required()
+  documentReference: Joi.number().integer().required(),
+  type: Joi.string().required().allow(SFI23QS)
 }).required()
