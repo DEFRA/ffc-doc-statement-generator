@@ -7,14 +7,14 @@ const getPaymentPeriods = (sfi23Statement) => {
     style: 'table',
     table: {
       headerRows: 1,
-      widths: ['*', '*']
-    },
-    body: [
-      [
-        { text: 'Period', style: 'tableHeader' },
-        { text: 'Estimated Payment', style: 'tableHeader' }
+      widths: ['*', '*'],
+      body: [
+        [
+          { text: 'Period', style: 'tableHeader' },
+          { text: 'Estimated Payment', style: 'tableHeader' }
+        ]
       ]
-    ]
+    }
   }
 
   sfi23Statement.forEach((item) => {
@@ -26,7 +26,7 @@ const getPaymentPeriods = (sfi23Statement) => {
       const paymentDatePeriod = new Date(year, month - 1)
       paymentDatePeriod.setMonth(paymentDatePeriod.getMonth() + 1)
       const estimatedPayment = paymentDatePeriod.toLocaleString('default', { month: 'long', year: 'numeric' })
-      paymentPeriodTable.body.push([
+      paymentPeriodTable.table.body.push([
         { text: item.paymentPeriod, style: 'tableNumber' },
         { text: estimatedPayment, style: 'tableNumber' }
       ])
