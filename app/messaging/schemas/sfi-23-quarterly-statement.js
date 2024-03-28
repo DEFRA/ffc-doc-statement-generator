@@ -1,5 +1,4 @@
 const Joi = require('joi')
-const { SFI23QUARTERLYSTATEMENT } = require('../../constants/document-types')
 
 const minSbi = 105000000
 const maxSbi = 999999999
@@ -44,7 +43,7 @@ const actionSchema = Joi.object({
   uom: Joi.string().max(number10).optional(),
   annualValue: Joi.string().max(number50).required(),
   quarterlyValue: Joi.string().max(number15).required(),
-  overDeclarationPenalty: Joi.number().max(number15).required(),
+  overDeclarationPenalty: Joi.number().precision(number15).required(),
   quarterlyPaymentAmount: Joi.string().max(number15).required()
 })
 
@@ -78,6 +77,5 @@ module.exports = Joi.object({
   scheme: schemeSchema,
   actionGroups: Joi.array().items(actionGroupsSchema).min(1).required(),
   previousPaymentCount: Joi.number().integer().required(),
-  documentReference: Joi.number().integer().required(),
-  type: Joi.string().required().allow(SFI23QUARTERLYSTATEMENT)
+  documentReference: Joi.number().integer().required()
 }).required()
