@@ -1,13 +1,13 @@
 const moment = require('moment')
 
-const getPaymentPeriodsFromAgreementStart = (agreementStart, agreementEnd) => {
+const getPaymentPeriodsFromPaymentPeriodStart = (paymentPeriodStart, agreementEnd) => {
   moment.locale('en-gb')
-  const monthDiff = moment(agreementEnd).diff(agreementStart, "month");
+  const monthDiff = moment(agreementEnd).diff(paymentPeriodStart, "month");
   const paymentPeriods = []
 
-  for (let quarter = 0; quarter < monthDiff/3; quarter++) {
+  for (let quarter = 1; quarter < monthDiff/3; quarter++) {
      month = quarter * 3
-     const periodStart = moment(agreementStart).add(month, 'months').startOf('month')
+     const periodStart = moment(paymentPeriodStart).add(month, 'months').startOf('month')
      const periodEnd = moment(periodStart).add(3, 'months').subtract(1, 'day').endOf('month')
      const payDue = moment(periodStart).add(3, 'months')
      paymentPeriods.push({ quarter, periodStart, periodEnd, payDue})
@@ -16,4 +16,4 @@ const getPaymentPeriodsFromAgreementStart = (agreementStart, agreementEnd) => {
   return paymentPeriods
   }
   
-  module.exports = getPaymentPeriodsFromAgreementStart
+  module.exports = getPaymentPeriodsFromPaymentPeriodStart

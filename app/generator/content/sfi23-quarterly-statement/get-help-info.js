@@ -1,6 +1,8 @@
 const getPaymentPeriodsTable = require('./part3/get-payment-periods-table')
+const getPeriodStartDateFromPeriod = require('./get-period-start-date-from-period')
 
 const getHelpInfo = (sfi23QuarterlyStatement) => {
+  const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
   return {
     stack: [
       { text: `If you think your payments are wrong`, style: 'header3' },
@@ -24,19 +26,19 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
             { text: `check statements and letters you've received from us ` }
           ]
         }],
-        listStyle: 'square'
+        listStyle: 'square',
+        margin: [ 15, 2, 10, 20 ]
       },
-      '\n',
       { text: 'When your next payments will be paid', style: 'header3' },
 
-      getPaymentPeriodsTable(sfi23QuarterlyStatement.agreementStart, sfi23QuarterlyStatement.agreementEnd, sfi23QuarterlyStatement.previousPaymentCount),
+      getPaymentPeriodsTable(periodStart, sfi23QuarterlyStatement.agreementEnd),
 
       { text: 'If you\'ve any questions about this statement', style: 'header3' },
       {
         text: [
           'You can email ',
           { text: 'ruralpayments@defra.gov.uk', link: 'mailto:ruralpayments@defra.gov.uk', decoration: 'underline' },
-          ' or call 03000 200 301 (Monday to Friday, 8.30am to 5pm). You\'ll need  your SBI and SFI 2023 agreement number.'
+          ' or call 03000 200 301 (Monday to Friday, 8.30am to 5pm). You\'ll need your SBI and SFI 2023 agreement number.'
         ]
       }
     ],

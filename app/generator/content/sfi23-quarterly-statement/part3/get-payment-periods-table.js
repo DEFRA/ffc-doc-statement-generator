@@ -1,8 +1,8 @@
 const moment = require('moment')
 
-const getPaymentPeriodsFromAgreementStart = require('./get-payment-periods-from-agreement-start')
+const getPaymentPeriodsFromPaymentPeriodStart = require('./get-payment-periods-from-payment-period-start')
 
-const getPaymentPeriodsTable = (agreementStart, agreementEnd, previousPaymentCount) => {
+const getPaymentPeriodsTable = (paymentPeriodStart, agreementEnd) => {
   moment.locale('en-gb')
   const paymentPeriodTable = {
     layout: {
@@ -16,22 +16,22 @@ const getPaymentPeriodsTable = (agreementStart, agreementEnd, previousPaymentCou
       body: [
         [
           { text: 'Period', style: 'tableHeader' },
-          { text: 'Estimated Payment', style: 'tableHeader' }
+          { text: 'Estimated payment', style: 'tableHeader' }
         ]
       ]
     },
 
   }
 
-  const paymentPeriods = getPaymentPeriodsFromAgreementStart(agreementStart, agreementEnd)
+  const paymentPeriods = getPaymentPeriodsFromPaymentPeriodStart(paymentPeriodStart, agreementEnd)
   for( const paymentPeriod of paymentPeriods) {
-    if (paymentPeriod.quarter > previousPaymentCount) {
-      const estimatedPayment = moment(paymentPeriod.payDue).format('MMMM YYYY')
-      paymentPeriodTable.table.body.push([
-        { text: `${moment(paymentPeriod.periodStart).format('LL')} to ${moment(paymentPeriod.periodEnd).format('LL')}` },
-        { text: estimatedPayment }
-      ])
-    }
+  
+    const estimatedPayment = moment(paymentPeriod.payDue).format('MMMM YYYY')
+    paymentPeriodTable.table.body.push([
+      { text: `${moment(paymentPeriod.periodStart).format('LL')} to ${moment(paymentPeriod.periodEnd).format('LL')}` },
+      { text: estimatedPayment }
+    ])
+
   }
   return paymentPeriodTable
 }
