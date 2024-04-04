@@ -45,7 +45,7 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
           ])
     }
 
-    const groupActions =  JSON.parse(actionGroup.actions)
+    const groupActions =  actionGroup.actions
     for( const action of groupActions) {
       actionPaymentTable.table.body.push([
         { text: action.actionCode },
