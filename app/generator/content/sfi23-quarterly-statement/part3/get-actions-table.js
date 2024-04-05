@@ -47,11 +47,13 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
 
     const groupActions =  actionGroup.actions
     for( const action of groupActions) {
+      const landArea = action.landArea !== undefined && action.landArea !== null ? action.landArea.toString() : ''
+      const uom = action.uom !== undefined && action.uom !== null ? action.uom : ''
       actionPaymentTable.table.body.push([
         { text: action.actionCode },
         { text: action.actionName },
         { text: action.rate },
-        { text: action.landArea },
+        { text: landArea + uom },
         { text: action.annualValue },
         { text: toCurrencyString(action.quarterlyPaymentAmount) }
       ])
@@ -59,12 +61,12 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
   }
 
    actionPaymentTable.table.body.push([
-    { colSpan:4, text: 'Total',  style: 'tableNumber', bold: true },
+    { colSpan:5, text: 'Total',  style: 'tableNumber', bold: true },
     { text: ''},
     { text: '' },
     { text: '' },
-    { colSpan:2, text: toCurrencyString(totalpayment), bold: true},
-    { text: '' }
+    { text: '' },
+    { text: toCurrencyString(totalpayment), bold: true}
   ]) 
 
   return actionPaymentTable

@@ -5,7 +5,7 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
   const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
   return {
     stack: [
-      { text: `If you think your payments are wrong`, style: 'header3' },
+      { text: `If you think your payments are wrong`, style: 'header2' },
       { text: 'You can:' },
       {
         ul: [{
@@ -29,11 +29,11 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
         listStyle: 'square',
         margin: [ 15, 2, 10, 20 ]
       },
-      { text: 'When your next payments will be paid', style: 'header3' },
+      { text: 'When your next payments will be paid', style: 'header2' },
 
       getPaymentPeriodsTable(periodStart, sfi23QuarterlyStatement.agreementEnd),
 
-      { text: 'If you\'ve any questions about this statement', style: 'header3' },
+      { text: 'If you\'ve any questions about this statement', style: 'header2' },
       {
         text: [
           'You can email ',

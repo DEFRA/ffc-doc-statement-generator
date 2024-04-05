@@ -11,7 +11,7 @@ const part3 = (sfi23QuarterlyStatement) => {
 
   return {
     stack: [
-      { text: 'How your payment was calculated', style: 'header3' },
+      { text: 'How your payment was calculated', style: 'header2' },
       { text: 'We calculated your total payment by adding together:' },
       {
         ul: [{
