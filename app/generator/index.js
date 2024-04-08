@@ -1,8 +1,6 @@
 const PdfPrinter = require('pdfmake')
 const moment = require('moment')
 
-const config = require('../config')
-
 const { SFI23QUARTERLYSTATEMENT } = require('../constants/document-types')
 
 const getGenerations = require('./get-generations')
