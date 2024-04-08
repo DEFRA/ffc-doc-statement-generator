@@ -17,10 +17,10 @@ const part2 = (sfi23QuarterlyStatement) => {
           body: [
             [{
               stack: [
-                { text: [{ text: 'Period: ', bold: true, lineBreak : false }, `${ sfi23QuarterlyStatement.paymentPeriod }`] },
-                { text: [{ text: 'Payment: ', bold: true, lineBreak : false }, `${ toCurrencyString(Math.abs(sfi23QuarterlyStatement.paymentAmount).toFixed(2)) }`] },
-                { text: `This is usually paid into your account within 2 working days of ${ moment(sfi23QuarterlyStatement.transactionDate).format('LL') }.` },
-                { text: [{ text: 'Payment reference: ', bold: true, lineBreak : false }, `${ sfi23QuarterlyStatement.paymentReference }`] }
+                { text: [{ text: 'Period: ', bold: true, lineBreak: false }, `${sfi23QuarterlyStatement.paymentPeriod}`] },
+                { text: [{ text: 'Payment: ', bold: true, lineBreak: false }, `${toCurrencyString(Math.abs(sfi23QuarterlyStatement.paymentAmount).toFixed(2))}`] },
+                { text: `This is usually paid into your account within 2 working days of ${moment(sfi23QuarterlyStatement.transactionDate).format('LL')}.` },
+                { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, `${sfi23QuarterlyStatement.paymentReference}`] }
               ]
             }]
           ]

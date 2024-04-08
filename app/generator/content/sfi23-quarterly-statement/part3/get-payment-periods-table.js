@@ -19,22 +19,19 @@ const getPaymentPeriodsTable = (paymentPeriodStart, agreementEnd) => {
           { text: 'Estimated payment', style: 'tableHeader' }
         ]
       ]
-    },
+    }
 
   }
 
   const paymentPeriods = getPaymentPeriodsFromPaymentPeriodStart(paymentPeriodStart, agreementEnd)
-  for( const paymentPeriod of paymentPeriods) {
-  
+  for (const paymentPeriod of paymentPeriods) {
     const estimatedPayment = moment(paymentPeriod.payDue).format('MMMM YYYY')
     paymentPeriodTable.table.body.push([
       { text: `${moment(paymentPeriod.periodStart).format('LL')} to ${moment(paymentPeriod.periodEnd).format('LL')}` },
       { text: estimatedPayment }
     ])
-
   }
   return paymentPeriodTable
 }
 
 module.exports = getPaymentPeriodsTable
-

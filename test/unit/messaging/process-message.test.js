@@ -123,6 +123,8 @@ describe('process statement message', () => {
     expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
 
+  mockValidation.mockImplementation(mockValidationImplementation)
+
   test('dead letters message if validation error', async () => {
     const message = {
       body: mockStatement,
@@ -130,7 +132,6 @@ describe('process statement message', () => {
         type: STATEMENT.type
       }
     }
-    mockValidation.mockImplementation(() => mockValidationImplementation())
     await processMessage(message, receiver)
     expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
   })

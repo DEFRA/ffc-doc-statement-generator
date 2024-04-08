@@ -5,6 +5,5 @@ const getPeriodStartDateFromPeriod = (period) => {
   const numParts = period.split('to')
   return moment(numParts[0], 'LL').toDate()
 }
-  
-  module.exports = getPeriodStartDateFromPeriod
-  
+
+module.exports = getPeriodStartDateFromPeriod

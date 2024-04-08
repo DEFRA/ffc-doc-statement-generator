@@ -22,7 +22,7 @@ describe('get document definition', () => {
 
   test('sets left margin', () => {
     const result = getDocumentDefinition(mockStatement, STATEMENT)
-    expect(result.pageMargins[0]).toBe(42.525)
+    expect(result.pageMargins[0]).toBe(70.875)
   })
 
   test('sets top margin', () => {
@@ -32,7 +32,7 @@ describe('get document definition', () => {
 
   test('sets right margin', () => {
     const result = getDocumentDefinition(mockStatement, STATEMENT)
-    expect(result.pageMargins[2]).toBe(42.525)
+    expect(result.pageMargins[2]).toBe(70.875)
   })
 
   test('sets bottom margin', () => {

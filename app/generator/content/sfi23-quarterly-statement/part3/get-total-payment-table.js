@@ -1,7 +1,6 @@
 const toCurrencyString = require('../../../../generator/to-currency-string')
 
 const getTotalPaymentTable = (totalpayment) => {
-
   const totalPaymentTable = {
     layout: {
       hLineStyle: () => 'solid',
@@ -13,12 +12,12 @@ const getTotalPaymentTable = (totalpayment) => {
       widths: ['*', '*', '*', '*', '*', '*'],
       body: [
         [
-            { colSpan:5, text: 'Payment total',  style: 'tableNumber', bold: true },
-            { text: ''},
-            { text: '' },
-            { text: '' },
-            { text: '' },
-            { text: toCurrencyString(totalpayment), bold: true }
+          { colSpan: 5, text: 'Payment total', style: 'tableNumber', bold: true },
+          { text: '' },
+          { text: '' },
+          { text: '' },
+          { text: '' },
+          { text: toCurrencyString(totalpayment), bold: true }
         ]
       ]
     }

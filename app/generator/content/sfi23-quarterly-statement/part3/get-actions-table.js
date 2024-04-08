@@ -14,12 +14,12 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
       widths: ['*', '*', '*', '*', '*', '*'],
       body: [
         [
-            { colSpan:6, text: title, style: 'tableHeader' },
-            { text: ''},
-            { text: '' },
-            { text: '' },
-            { text: '' },
-            { text: '' }
+          { colSpan: 6, text: title, style: 'tableHeader' },
+          { text: '' },
+          { text: '' },
+          { text: '' },
+          { text: '' },
+          { text: '' }
         ],
         [
           { text: 'Code', style: 'tableHeader' },
@@ -32,21 +32,21 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
       ]
     }
   }
-   
- for( const actionGroup of actionGroups) {
-    if(showGroupName === true) {
-        actionPaymentTable.table.body.push([
-            { colSpan:6, text: actionGroup.groupName, style: 'tableHeader' },
-            { text: ''},
-            { text: '' },
-            { text: '' },
-            { text: '' },
-            { text: '' }
-          ])
+
+  for (const actionGroup of actionGroups) {
+    if (showGroupName === true) {
+      actionPaymentTable.table.body.push([
+        { colSpan: 6, text: actionGroup.groupName, style: 'tableHeader' },
+        { text: '' },
+        { text: '' },
+        { text: '' },
+        { text: '' },
+        { text: '' }
+      ])
     }
 
-    const groupActions =  actionGroup.actions
-    for( const action of groupActions) {
+    const groupActions = actionGroup.actions
+    for (const action of groupActions) {
       const landArea = action.landArea !== undefined && action.landArea !== null ? action.landArea.toString() : ''
       const uom = action.uom !== undefined && action.uom !== null ? action.uom : ''
       actionPaymentTable.table.body.push([
@@ -60,14 +60,14 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
     }
   }
 
-   actionPaymentTable.table.body.push([
-    { colSpan:5, text: 'Total',  style: 'tableNumber', bold: true },
-    { text: ''},
+  actionPaymentTable.table.body.push([
+    { colSpan: 5, text: 'Total', style: 'tableNumber', bold: true },
     { text: '' },
     { text: '' },
     { text: '' },
-    { text: toCurrencyString(totalpayment), bold: true}
-  ]) 
+    { text: '' },
+    { text: toCurrencyString(totalpayment), bold: true }
+  ])
 
   return actionPaymentTable
 }

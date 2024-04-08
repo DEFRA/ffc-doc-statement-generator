@@ -6,7 +6,6 @@ const fifteenPoints = 15
 const twentyPoints = 20
 const twentyfivePoints = 25
 const thirtyPoints = 30
-const fortyPoints = 40
 
 module.exports = {
   default: {

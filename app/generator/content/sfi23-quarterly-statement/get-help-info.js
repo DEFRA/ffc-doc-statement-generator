@@ -5,7 +5,7 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
   const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
   return {
     stack: [
-      { text: `If you think your payments are wrong`, style: 'header2' },
+      { text: 'If you think your payments are wrong', style: 'header2' },
       { text: 'You can:' },
       {
         ul: [{
@@ -18,16 +18,16 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
         {
           text: [
             { text: 'review the SFI scheme information at ' }, '\n',
-            { text: 'https://www.gov.uk/government/collections/sustainable-farming-incentive-guidance', link: 'https://www.gov.uk/government/collections/sustainable-farming-incentive-guidance', decoration: 'underline', unbreakable: true  }
+            { text: 'https://www.gov.uk/government/collections/sustainable-farming-incentive-guidance', link: 'https://www.gov.uk/government/collections/sustainable-farming-incentive-guidance', decoration: 'underline', unbreakable: true }
           ]
         },
         {
           text: [
-            { text: `check statements and letters you've received from us ` }
+            { text: 'check statements and letters you\'ve received from us ' }
           ]
         }],
         listStyle: 'square',
-        margin: [ 15, 2, 10, 20 ]
+        margin: [15, 2, 10, 20]
       },
       { text: 'When your next payments will be paid', style: 'header2' },
 

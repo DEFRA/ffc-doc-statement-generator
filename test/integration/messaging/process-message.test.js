@@ -117,9 +117,9 @@ describe('process message', () => {
           expect(log.dateGenerated).toStrictEqual(new Date())
         })
 
-        test('should send 2 messages for publish and crm', async () => {
+        test('should send 1 messages for publish and crm', async () => {
           await processMessage(message, receiver)
-          expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
+          expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
