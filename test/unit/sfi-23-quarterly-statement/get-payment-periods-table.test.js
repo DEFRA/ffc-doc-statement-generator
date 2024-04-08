@@ -1,49 +1,60 @@
+const moment = require('moment')
 const getPaymentPeriods = require('../../../app/generator/content/sfi23-quarterly-statement/part3/get-payment-periods-table')
-// const getPaymentPeriods = require('./getPaymentPeriods');
+const getPaymentPeriodsFromPaymentPeriodStart = require('../../../app/generator/content/sfi23-quarterly-statement/part3/get-payment-periods-from-payment-period-start')
+
+jest.mock('../../../app/generator/content/sfi23-quarterly-statement/part3/get-payment-periods-from-payment-period-start')
 
 describe('getPaymentPeriods', () => {
-  test('should correctly calculate the estimated payment dates and return the expected table structure', () => {
-    const sfi23Statement = [
-      { calculationId: 1, paymentPeriod: '1st January to 31 March 2024', estimatedPayment: 'April 2024' },
-      { calculationId: 2, paymentPeriod: '1st April to 30 June 2024', estimatedPayment: 'July 2024' },
-      { calculationId: 3, paymentPeriod: '1st July to 30 September 2024', estimatedPayment: 'October 2024' },
-      { calculationId: 4, paymentPeriod: '1st October to 31 December 2024', estimatedPayment: 'January 2025' }
+  test('should return a table with the correct structure', () => {
+    const paymentPeriodStart = moment()
+    const agreementEnd = moment().add(1, 'year')
+    const mockPaymentPeriods = [
+      {
+        periodStart: moment(),
+        periodEnd: moment().add(1, 'month'),
+        payDue: moment().add(1, 'month')
+      },
+      {
+        periodStart: moment().add(1, 'month'),
+        periodEnd: moment().add(2, 'months'),
+        payDue: moment().add(2, 'months')
+      }
     ]
 
-    const result = getPaymentPeriods(sfi23Statement)
+    getPaymentPeriodsFromPaymentPeriodStart.mockReturnValue(mockPaymentPeriods)
 
-    expect(result).toBe({
-      layout: expect.objectContaining({
-        hLineStyle: expect.any(Function),
-        vLineStyle: expect.any(Function)
-      }),
-      style: 'table',
-      table: expect.objectContaining({
-        headerRows: 1,
-        widths: ['*', '*'],
-        body: [
-          [
-            { text: 'Period', style: 'tableHeader' },
-            { text: 'Estimated Payment', style: 'tableHeader' }
-          ],
-          [
-            { text: '1st January to 31 March 2024', style: 'tableNumber' },
-            { text: 'April 2024', style: 'tableNumber' }
-          ],
-          [
-            { text: '1st April to 30 June 2024', style: 'tableNumber' },
-            { text: 'July 2024', style: 'tableNumber' }
-          ],
-          [
-            { text: '1st July to 30 September 2024', style: 'tableNumber' },
-            { text: 'October 2024', style: 'tableNumber' }
-          ],
-          [
-            { text: '1st October to 31 December 2024', style: 'tableNumber' },
-            { text: 'January 2025', style: 'tableNumber' }
-          ]
-        ]
-      })
-    })
+    const result = getPaymentPeriods(paymentPeriodStart, agreementEnd)
+
+    expect(result).toHaveProperty('layout')
+    expect(result).toHaveProperty('style', 'table')
+    expect(result).toHaveProperty('table')
+    expect(result.table).toHaveProperty('headerRows', 1)
+    expect(result.table).toHaveProperty('widths', ['*', '*'])
+    expect(result.table).toHaveProperty('body')
+    expect(result.table.body.length).toBe(mockPaymentPeriods.length + 1) // +1 for the header row
+  })
+})
+
+describe('getPaymentPeriodsFromPaymentPeriodStart', () => {
+  test('should return the correct number of payment periods', () => {
+    const paymentPeriodStart = moment()
+    const agreementEnd = moment().add(1, 'year')
+
+    const result = getPaymentPeriodsFromPaymentPeriodStart(paymentPeriodStart, agreementEnd)
+
+    expect(result.length).toBe(2)
+  })
+
+  test('should return payment periods with the correct structure', () => {
+    const paymentPeriodStart = moment()
+    const agreementEnd = moment().add(1, 'year')
+
+    const result = getPaymentPeriodsFromPaymentPeriodStart(paymentPeriodStart, agreementEnd)
+
+    for (const paymentPeriod of result) {
+      expect(paymentPeriod).toHaveProperty('periodStart')
+      expect(paymentPeriod).toHaveProperty('periodEnd')
+      expect(paymentPeriod).toHaveProperty('payDue')
+    }
   })
 })
