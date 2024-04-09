@@ -435,6 +435,8 @@ components:
           $ref: '#/components/schemas/FilenameStatement'
         frn:
           $ref: '#/components/schemas/FRN'
+        paymentPeriod:
+          $ref: '#/components/schemas/PaymentPeriod'
         sbi:
           $ref: '#/components/schemas/SBI'
         scheme:
@@ -726,7 +728,7 @@ components:
     PaymentPeriod:
       type: string
       description: The period covered by the payment
-      example: April 2022 to June 2022
+      example: 1 April 2022 to 30 June 2022
     PaymentReference:
       type: string
       description: Unique identifier for payment as shown on the remittance advice
