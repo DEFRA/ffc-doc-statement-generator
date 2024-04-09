@@ -31,7 +31,9 @@ describe('getPaymentPeriods', () => {
     expect(result.table).toHaveProperty('headerRows', 1)
     expect(result.table).toHaveProperty('widths', ['*', '*'])
     expect(result.table).toHaveProperty('body')
-    expect(result.table.body.length).toBe(mockPaymentPeriods.length + 1) // +1 for the header row
+    expect(result.table.body.length).toBe(mockPaymentPeriods.length + 1)
+    expect(result.layout.hLineStyle()).toBe('solid')
+    expect(result.layout.vLineStyle()).toBe('solid')
   })
 })
 

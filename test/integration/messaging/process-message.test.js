@@ -1565,7 +1565,7 @@ describe('process message', () => {
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
-        test('should send publish message with schedule fileSCHEDULE_FILENAMEname', async () => {
+        test('should send publish message with schedule file SCHEDULE_FILENAME name', async () => {
           await processMessage(message, receiver)
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(SCHEDULE_FILENAME)
         })
@@ -1753,7 +1753,7 @@ describe('process message', () => {
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
           await processMessage(message, receiver)
-
+          console.log(message)
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 

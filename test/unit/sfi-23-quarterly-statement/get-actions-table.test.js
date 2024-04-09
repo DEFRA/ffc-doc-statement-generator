@@ -40,5 +40,7 @@ describe('getActionsTable', () => {
     expect(result.table).toHaveProperty('widths', ['*', '*', '*', '*', '*', '*'])
     expect(result.table).toHaveProperty('body')
     expect(result.table.body.length).toBe(actionGroups.length * actionGroups[0].actions.length + 4)
+    expect(result.layout.hLineStyle()).toBe('solid')
+    expect(result.layout.vLineStyle()).toBe('solid')
   })
 })

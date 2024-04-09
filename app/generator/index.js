@@ -2,6 +2,7 @@ const PdfPrinter = require('pdfmake')
 const moment = require('moment')
 
 const { SFI23QUARTERLYSTATEMENT } = require('../constants/document-types')
+// const { STATEMENT, SCHEDULE } = require('../constants/document-types')
 
 const getGenerations = require('./get-generations')
 const getDocumentDefinition = require('./get-document-definition')
@@ -24,9 +25,28 @@ const generateDocument = async (request, type) => {
     const pdfDoc = printer.createPdfKitDocument(docDefinition)
     const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
 
-    if (type.type === SFI23QUARTERLYSTATEMENT.type) {
-      await sendPublishMessage(request, filename, type.id)
+    switch (type.type) {
+      case SFI23QUARTERLYSTATEMENT.type:
+        await sendPublishMessage(request, filename, type.id)
+        break
+      // case STATEMENT.type:
+      //   await sendPublishMessage(request, filename, type.id)
+      //   break
+      // case SCHEDULE.type:
+      //   await sendPublishMessage(request, filename, type.id)
+      //   break
+      // default:
+      //   break
     }
+    // if (type.type === SFI23QUARTERLYSTATEMENT.type) {
+    //   await sendPublishMessage(request, filename, type.id)
+    // }
+    // if (type.type === STATEMENT.type) {
+    //   await sendPublishMessage(request, filename, type.id)
+    // }
+    // if (type.type === SCHEDULE.type) {
+    //   await sendPublishMessage(request, filename, type.id)
+    // }
 
     await sendCrmMessage(request, filename, type)
     await saveLog(request, filename, timestamp)
