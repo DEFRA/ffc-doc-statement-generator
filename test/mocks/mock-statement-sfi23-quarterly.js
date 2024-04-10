@@ -55,6 +55,5 @@ module.exports = {
     }
   ],
   previousPaymentCount: 1,
-  documentReference: 1,
-  type: 'uk.gov.doc.sfi-23-quarterly-statement'
+  documentReference: 1
 }
