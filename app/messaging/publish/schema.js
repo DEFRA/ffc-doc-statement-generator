@@ -10,6 +10,7 @@ const scheme = require('../schemas/scheme')
 const documentReference = require('../schemas/document-reference')
 const type = require('../schemas/type')
 const source = require('../schemas/source')
+const paymentPeriod = require('../schemas/payment-period')
 
 module.exports = Joi.object({
   body: Joi.object({
@@ -20,7 +21,8 @@ module.exports = Joi.object({
     email,
     filename,
     scheme,
-    documentReference
+    documentReference,
+    paymentPeriod
   }).required(),
   type,
   source

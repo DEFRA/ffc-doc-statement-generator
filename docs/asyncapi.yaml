@@ -10,6 +10,7 @@ channels:
         oneOf:
           - $ref: '#/components/messages/PaymentSchedule'
           - $ref: '#/components/messages/PaymentStatement'
+          - $ref: '#/components/messages/Sfi23QuarterlyStatement'
   ffc-doc-statement-publish:
     publish:
       message:
@@ -35,6 +36,12 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/PaymentStatement'
+    Sfi23QuarterlyStatement:
+      title: Sfi23 Quarterly Statement
+      name: Sfi23 Quarterly Statement
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/SFI23QuarterlyPaymentStatement'
     DocumentSchedule:
       title: Payment schedule
       name: Payment schedule
@@ -171,6 +178,133 @@ components:
           $ref: '#/components/schemas/DocumentReference'
         remainingAmount:
           $ref: '#/components/schemas/RemainingAmount'
+
+    SFI23QuarterlyPaymentStatement:
+      type: object
+      properties:
+        businessName:
+          $ref: '#/components/schemas/BusinessName'
+        sbi:
+          $ref: '#/components/schemas/SBI'
+        frn:
+          $ref: '#/components/schemas/FRN'
+        email:
+          $ref: '#/components/schemas/EmailAddress'
+        address:
+          $ref: '#/components/schemas/Address'
+        scheme:
+          $ref: '#/components/schemas/Scheme'
+        calculationReference:
+          $ref: '#/components/schemas/CalculationId'
+        agreementNumber:
+          $ref: '#/components/schemas/AgreementNumber'
+        agreementEnd:
+          $ref: '#/components/schemas/AgreementEnd'
+        agreementStart:
+          $ref: '#/components/schemas/AgreementStart'
+        claimReference:
+          $ref: '#/components/schemas/ClaimId'
+        calculationDate:
+          $ref: '#/components/schemas/CalculationDate'
+        invoiceNumber:
+          $ref: '#/components/schemas/InvoiceNumber'
+        schemeCode:
+          $ref: '#/components/schemas/SchemeCode'
+        totalActionPayments:
+          $ref: '#/components/schemas/TotalActionPayments'
+        totalAdditionalPayments:
+          $ref: '#/components/schemas/TotalAdditionalPayments'
+        totalPayments:
+          $ref: '#/components/schemas/TotalPayments'
+        paymentReference:
+          $ref: '#/components/schemas/PaymentReference'
+        calculationId:
+          $ref: '#/components/schemas/CalculationId'
+        paymentPeriod:
+          $ref: '#/components/schemas/PaymentPeriod'
+        paymentAmount:
+          $ref: '#/components/schemas/PaymentAmount'
+        transactionDate:
+          $ref: '#/components/schemas/TransactionDate'
+        actionGroups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActionGroup'
+        previousPaymentCount:
+           $ref: '#/components/schemas/PreviousPaymentCount' 
+        documentReference:
+          $ref: '#/components/schemas/DocumentReference'
+
+    ActionGroup:
+      type: object
+      properties:
+        groupName:
+          $ref: '#/components/schemas/GroupName'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Action'
+    Action:
+      type: object
+      properties:
+        actionReference:
+          $ref: '#/components/schemas/ActionId'
+        calculationReference:
+          $ref: '#/components/schemas/CalculationId'
+        actionCode:
+          $ref: '#/components/schemas/ActionCode'
+        actionName:
+          $ref: '#/components/schemas/ActionName'
+        annualValue:
+          $ref: '#/components/schemas/AnnualValue'
+        fundingCode:
+          $ref: '#/components/schemas/FundingCode'
+        groupName:
+          $ref: '#/components/schemas/GroupName'
+        landArea:
+          $ref: '#/components/schemas/AreaClaimed'
+        overDeclarationPenalty:
+          $ref: '#/components/schemas/OverDeclarationPenalty'
+        quarterlyPaymentAmount:
+          $ref: '#/components/schemas/QuarterlyPaymentAmount'
+        quarterlyValue:
+          $ref: '#/components/schemas/QuarterlyValue'
+        rate:
+          $ref: '#/components/schemas/Rate'
+        uom:
+          $ref: '#/components/schemas/UnitOfMeasure'    
+    ActionCode:
+      type: string
+      description: Identifier for action code within scheme
+      example: 80001
+    ActionId:
+      type: number
+      description: Unique identifier (pkId) for action
+      example: 1234567
+    ActionName:
+      type: string
+      description: Name of the action
+      example: Manage hedgerows
+    AgreementNumber:
+      type: number
+      description: Unique identifier for agreement
+      example: 123456789
+    AgreementEnd:
+      type: string
+      format: date-time
+      description: The date the Agreement End
+      example: '2022-08-22T16:45:20.891Z'
+    AgreementStart:
+      type: string
+      format: date-time
+      description: The date the Agreement Start
+      example: '2022-08-22T16:45:20.891Z'
+
+
+
+
+
+    
     Address:
       additionalProperties: false
       required:
@@ -205,6 +339,16 @@ components:
           $ref: '#/components/schemas/AdjustmentNewValue'
         adjustmentValue:
           $ref: '#/components/schemas/AdjustmentValue'
+    AnnualValue:
+      type: string
+      description: The annual value of the action
+      example: £1200 + £22.5/ha
+
+    AreaClaimed:
+      type: number
+      format: decimal
+      description: The area claimed for the calculation in hectares
+      example: 84.05
     BodySchedule:
       additionalProperties: false
       type: object
@@ -291,6 +435,8 @@ components:
           $ref: '#/components/schemas/FilenameStatement'
         frn:
           $ref: '#/components/schemas/FRN'
+        paymentPeriod:
+          $ref: '#/components/schemas/PaymentPeriod'
         sbi:
           $ref: '#/components/schemas/SBI'
         scheme:
@@ -325,6 +471,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Reduction'
+    FundingCode:
+      type: string
+      description: Identifier for funding code within scheme
+      example: 80001    
+    
     FundingTotal:
       additionalProperties: false
       type: object
@@ -351,6 +502,12 @@ components:
           $ref: '#/components/schemas/FundingQuarterlyReduction'
         quarterlyPayment:
           $ref: '#/components/schemas/FundingQuarterlyPayment'
+
+    GroupName:
+      type: string
+      description: The group name of the action
+      example: Actions for hedgerows
+
     Payment:
       type: object
       required:
@@ -440,10 +597,23 @@ components:
       type: string
       description: The calculated date of the payment request
       example: 16 Jun 2022
+    CalculationDate:
+      type: string
+      format: date-time
+      description: The date the calculation was performed
+      example: '2022-08-22T16:45:20.891Z'
+    CalculationId:
+      type: number
+      description: Key field for calculation Data 
+      example: 1234567
     County:
       type: string
       description: The fifth line of the address
       example: Some County
+    ClaimId:
+      type: number
+      description: Unique Identifier for claim
+      example: 12345687
     DocumentReference:
       type: number
       description: Unique identifier of the document
@@ -463,6 +633,10 @@ components:
     Email:
       type: string
       description: The business email address
+      example: farm@farms.com
+    EmailAddress:
+      type: string
+      description: Primary email address of an organisation
       example: farm@farms.com
     FRN:
       type: number
@@ -540,6 +714,25 @@ components:
       format: integer
       description: The order in which the schedule columns are displayed
       example: 2
+
+    OverDeclarationPenalty:
+      type: string
+      format: decimal
+      description: The over declaration penalty
+      example: 120.50
+    PaymentAmount:
+      type: number
+      format: decimal
+      description: The payment amount
+      example: 800.05
+    PaymentPeriod:
+      type: string
+      description: The period covered by the payment
+      example: 1 April 2022 to 30 June 2022
+    PaymentReference:
+      type: string
+      description: Unique identifier for payment as shown on the remittance advice
+      example: PY1234545
     PaymentType:
       type: string
       description: The payment description 
@@ -566,6 +759,27 @@ components:
       type: string
       description: The postcode
       example: FA1 2PY
+    PreviousPaymentCount:
+      type: number
+      description: >-
+        No of previous payment(s) that have been made on a calculation
+      minimum: 0
+      example: 0
+
+    QuarterlyPaymentAmount:
+      type: string
+      format: decimal
+      description: The quarterly payment amount
+      example: 100.50
+    QuarterlyValue:
+      type: string
+      description: The quarterly value
+      example: £100.50
+
+    Rate:
+      type: string
+      description: Payment in pounds sterling per hectare
+      example: £22.5/ha
     Reduction:
       type: object
       required:
@@ -603,6 +817,12 @@ components:
         - year
         - frequency
         - agreementNumber
+    SchemeCode:
+      type: string
+      description: Unique funding option code
+      example: 80001
+      enum:
+        - 80001 (Arable and horticultural soils Introductory)
       properties:
         name:
           $ref: '#/components/schemas/SchemeName'
@@ -646,10 +866,30 @@ components:
       type: string
       description: The first line of the address
       example: 1 Some Street
+    TotalActionPayments:
+      type: string
+      format: decimal
+      description: Sum of all Action Payment
+      example: 100.5
+    TotalAdditionalPayments:
+      type: string
+      format: decimal
+      description: Sum of all Additional Payment
+      example: 50.2
+    TotalPayments:
+      type: string
+      format: decimal
+      description: Sum of all Payment
+      example: 150.7
     Town:
       type: string
       description: The third line of the address
       example: Some Town
+    TransactionDate:
+      type: string
+      format: date-time
+      description: The date the transaction was made
+      example: '2022-08-22T16:45:20.891Z'
     Type:
       type: string
       description: The type of message being sent
@@ -664,6 +904,10 @@ components:
       type: string
       description: The statement type of message being sent
       example: uk.gov.doc.statement.publish
+    UnitOfMeasure:
+      type: string
+      description: The unit of measure
+      example: Ha
     Value:
       type: string
       description: The value of the payment

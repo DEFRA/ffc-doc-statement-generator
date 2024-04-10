@@ -10,7 +10,8 @@ const mapPublish = (document, filename, type) => {
       email: document.email,
       filename,
       scheme: document.scheme,
-      documentReference: document?.documentReference ?? null
+      documentReference: document?.documentReference ?? null,
+      paymentPeriod: document?.paymentPeriod ?? ''
     },
     type: `uk.gov.doc.${type}.publish`,
     source: MESSAGE_SOURCE
