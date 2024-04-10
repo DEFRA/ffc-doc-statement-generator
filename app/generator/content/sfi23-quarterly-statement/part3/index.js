@@ -1,5 +1,9 @@
 const getActionsTable = require('./get-actions-table')
 const getTotalPaymentTable = require('./get-total-payment-table')
+const number2 = 2
+const number10 = 10
+const number15 = 15
+const number20 = 20
 
 const part3 = (sfi23QuarterlyStatement) => {
   const actions = sfi23QuarterlyStatement.actionGroups
@@ -24,7 +28,7 @@ const part3 = (sfi23QuarterlyStatement) => {
           ]
         }],
         listStyle: 'square',
-        margin: [15, 2, 10, 20]
+        margin: [number15, number2, number10, number20]
       },
       {
         text: [

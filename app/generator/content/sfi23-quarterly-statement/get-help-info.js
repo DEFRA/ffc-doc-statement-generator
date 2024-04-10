@@ -1,5 +1,9 @@
 const getPaymentPeriodsTable = require('./part3/get-payment-periods-table')
 const getPeriodStartDateFromPeriod = require('./get-period-start-date-from-period')
+const number2 = 2
+const number10 = 10
+const number15 = 15
+const number20 = 20
 
 const getHelpInfo = (sfi23QuarterlyStatement) => {
   const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
@@ -27,7 +31,7 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
           ]
         }],
         listStyle: 'square',
-        margin: [15, 2, 10, 20]
+        margin: [number15, number2, number10, number20]
       },
       { text: 'When your next payments will be paid', style: 'header2' },
 

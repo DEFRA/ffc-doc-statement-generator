@@ -1,4 +1,6 @@
 const moment = require('moment')
+const number3 = 3
+const number2 = 2
 
 const getPaymentPeriodsFromPaymentPeriodStart = (paymentPeriodStart, agreementEnd) => {
   moment.locale('en-gb')
@@ -7,15 +9,15 @@ const getPaymentPeriodsFromPaymentPeriodStart = (paymentPeriodStart, agreementEn
   const paymentPeriods = []
 
   let startQuarter = 1
-  if (remainingPaymentYearMonths / 3 > 3) {
-    startQuarter = (remainingPaymentYearMonths / 3) - 2
+  if (remainingPaymentYearMonths / number3 > number3) {
+    startQuarter = (remainingPaymentYearMonths / number3) - number2
   }
 
-  for (let quarter = startQuarter; quarter <= remainingPaymentYearMonths / 3; quarter++) {
-    const month = quarter * 3
+  for (let quarter = startQuarter; quarter <= remainingPaymentYearMonths / number3; quarter++) {
+    const month = quarter * number3
     const periodStart = moment(paymentPeriodStart).add(month, 'months').startOf('month')
-    const periodEnd = moment(periodStart).add(3, 'months').subtract(1, 'day').endOf('month')
-    const payDue = moment(periodStart).add(3, 'months')
+    const periodEnd = moment(periodStart).add(number3, 'months').subtract(1, 'day').endOf('month')
+    const payDue = moment(periodStart).add(number3, 'months')
     paymentPeriods.push({ quarter, periodStart, periodEnd, payDue })
   }
 
