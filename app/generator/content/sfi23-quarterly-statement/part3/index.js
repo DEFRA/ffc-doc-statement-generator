@@ -39,8 +39,7 @@ const part3 = (sfi23QuarterlyStatement) => {
       getActionsTable(nonAdditionalPaymentActionGroup, nonAdditionalPaymentGroupName, true, sfi23QuarterlyStatement.totalActionPayments),
       getActionsTable(additionalPaymentActionGroup, additionalPaymentGroupName, false, sfi23QuarterlyStatement.totalAdditionalPayments),
       getTotalPaymentTable(sfi23QuarterlyStatement.totalPayments)
-    ],
-    unbreakable: true
+    ]
   }
 }
 
