@@ -1,9 +1,5 @@
 const getActionsTable = require('./get-actions-table')
 const getTotalPaymentTable = require('./get-total-payment-table')
-const number2 = 2
-const number10 = 10
-const number15 = 15
-const number20 = 20
 
 const part3 = (sfi23QuarterlyStatement) => {
   const actions = sfi23QuarterlyStatement.actionGroups
@@ -14,7 +10,7 @@ const part3 = (sfi23QuarterlyStatement) => {
 
   return {
     stack: [
-      { text: 'How your payment was calculated', style: 'header2' },
+      [{stack: [{ text: 'How your payment was calculated', style: 'header2' },
       { text: 'We calculated your total payment by adding together:' },
       {
         ul: [{
@@ -28,14 +24,17 @@ const part3 = (sfi23QuarterlyStatement) => {
           ]
         }],
         listStyle: 'square',
-        margin: [number15, number2, number10, number20]
+        margin: [15, 2, 10, 20]
       },
       {
         text: [
           'You can check which of your land parcels are part of each action in your SFI 2023 agreement. Find your SFI 2023 agreement by logging into the Rural Payments service at ',
           { text: 'https://www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' }
         ]
-      },
+      }],
+      unbreakable: true
+    }
+    ],
       getActionsTable(nonAdditionalPaymentActionGroup, nonAdditionalPaymentGroupName, true, sfi23QuarterlyStatement.totalActionPayments),
       getActionsTable(additionalPaymentActionGroup, additionalPaymentGroupName, false, sfi23QuarterlyStatement.totalAdditionalPayments),
       getTotalPaymentTable(sfi23QuarterlyStatement.totalPayments)
