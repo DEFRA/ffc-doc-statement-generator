@@ -36,7 +36,7 @@ describe('getActionsTable', () => {
     expect(result).toHaveProperty('layout')
     expect(result).toHaveProperty('style', 'table')
     expect(result).toHaveProperty('table')
-    expect(result.table).toHaveProperty('headerRows', 1)
+    expect(result.table).toHaveProperty('headerRows', 2)
     expect(result.table).toHaveProperty('widths', ['*', '*', '*', '*', '*', '*'])
     expect(result.table).toHaveProperty('body')
     expect(result.table.body.length).toBe(actionGroups.length * actionGroups[0].actions.length + 4)

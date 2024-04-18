@@ -9,7 +9,8 @@ const getActionsTable = (actionGroups, title, showGroupName, totalpayment) => {
     },
     style: 'table',
     table: {
-      headerRows: 1,
+      headerRows: 2,
+      keepWithHeaderRows: true,
       widths: ['*', '*', '*', '*', '*', '*'],
       body: [
         [
