@@ -7,6 +7,7 @@ const part3 = (sfi23QuarterlyStatement) => {
   const additionalPaymentGroupName = 'Additional payment'
   const nonAdditionalPaymentActionGroup = actions.filter(val => val.groupName !== additionalPaymentGroupName)
   const additionalPaymentActionGroup = actions.filter(val => val.groupName === additionalPaymentGroupName)
+  const listMargin = [15, 2, 10, 20]
 
   return {
     stack: [
@@ -25,7 +26,7 @@ const part3 = (sfi23QuarterlyStatement) => {
               ]
             }],
             listStyle: 'square',
-            margin: [15, 2, 10, 20]
+            margin: listMargin
           },
           {
             text: [
