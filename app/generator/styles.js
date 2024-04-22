@@ -6,13 +6,12 @@ const fifteenPoints = 15
 const twentyPoints = 20
 const twentyfivePoints = 25
 const thirtyPoints = 30
-const fortyPoints = 40
 
 module.exports = {
   default: {
     font: 'Arial',
     fontSize: 12,
-    lineHeight: 1.15
+    lineHeight: 1.5
   },
   header1: {
     fontSize: 16,
@@ -22,12 +21,12 @@ module.exports = {
   header2: {
     fontSize: 14,
     bold: true,
-    margin: [zeroPoint, fortyPoints, zeroPoint, tenPoints]
+    margin: [zeroPoint, twentyPoints, zeroPoint, tenPoints]
   },
   header3: {
     fontSize: 12,
     bold: true,
-    margin: [zeroPoint, tenPoints, zeroPoint, tenPoints]
+    margin: [zeroPoint, fivePoints, zeroPoint, fivePoints]
   },
   subTitle: {
     fontSize: 18,
@@ -60,7 +59,7 @@ module.exports = {
   address: {
     margin: [zeroPoint, fivePoints, zeroPoint, millimetresToPoints(twentyfivePoints)],
     fontSize: 9.5,
-    lineHeight: 1
+    lineHeight: 1.5
   },
   style: {
     margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]

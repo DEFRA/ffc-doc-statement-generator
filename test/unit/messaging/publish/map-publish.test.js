@@ -1,7 +1,7 @@
 const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE } = require('../../../../app/constants/document-types')
 
-const { STATEMENT_MESSAGE, SCHEDULE_MESSAGE } = require('../../../mocks/messages/mock-process-message')
-const { STATEMENT_MESSAGE: STATEMENT_MESSAGE_MAPPED, SCHEDULE_MESSAGE: SCHEDULE_MESSAGE_MAPPED } = require('../../../mocks/messages/publish')
+const { STATEMENT_MESSAGE, SCHEDULE_MESSAGE, SFI23QUARTERLYSTATEMENT_MESSAGE } = require('../../../mocks/messages/mock-process-message')
+const { STATEMENT_MESSAGE: STATEMENT_MESSAGE_MAPPED, SCHEDULE_MESSAGE: SCHEDULE_MESSAGE_MAPPED, SFI23QUARTERLYSTATEMENT_MESSAGE: SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED } = require('../../../mocks/messages/publish')
 const { STATEMENT: STATEMENT_FILENAME, SCHEDULE: SCHEDULE_FILENAME } = require('../../../mocks/components/filename')
 
 const mapPublish = require('../../../../app/messaging/publish/map-publish')
@@ -201,6 +201,44 @@ describe('map publish', () => {
         const result = mapPublish(document, filename, type)
         expect(result).toStrictEqual(mappedPublish)
       })
+    })
+  })
+
+  describe('when document has paymentPeriod', () => {
+    beforeEach(() => {
+      document = {
+        ...SFI23QUARTERLYSTATEMENT_MESSAGE.body,
+        paymentPeriod: 'some period'
+      }
+      mappedPublish = {
+        ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED,
+        body: {
+          ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED.body,
+          paymentPeriod: 'some period'
+        }
+      }
+    })
+
+    test('returns paymentPeriod in body', () => {
+      const result = mapPublish(document, filename, type)
+      expect(result.body.paymentPeriod).toEqual('some period')
+    })
+  })
+
+  describe('when document does not have paymentPeriod', () => {
+    beforeEach(() => {
+      document = {
+        ...SFI23QUARTERLYSTATEMENT_MESSAGE.body
+      }
+      delete document.paymentPeriod
+      mappedPublish = {
+        ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED
+      }
+    })
+
+    test('does not return paymentPeriod in body', () => {
+      const result = mapPublish(document, filename, type)
+      expect(result.body).not.toHaveProperty('paymentPeriod')
     })
   })
 

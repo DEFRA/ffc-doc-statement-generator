@@ -1,9 +1,8 @@
 const PdfPrinter = require('pdfmake')
 const moment = require('moment')
-
 const config = require('../config')
 
-const { SCHEDULE } = require('../constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, SCHEDULE } = require('../constants/document-types')
 
 const getGenerations = require('./get-generations')
 const getDocumentDefinition = require('./get-document-definition')
@@ -27,15 +26,19 @@ const generateDocument = async (request, type) => {
     const pdfDoc = printer.createPdfKitDocument(docDefinition)
     const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
 
-    if (type.type === SCHEDULE.type) {
-      if (config.schedulesArePublished) {
-        await sendPublishMessage(request, filename, type.id)
-      }
+    let shouldSendPublishMessage = false
+
+    if (type.type === SFI23QUARTERLYSTATEMENT.type) {
+      shouldSendPublishMessage = true
+    } else if (type.type === SCHEDULE.type) {
+      shouldSendPublishMessage = config.schedulesArePublished
     } else {
       const isNoNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
-      if (!isNoNotify) {
-        await sendPublishMessage(request, filename, type.id)
-      }
+      shouldSendPublishMessage = !isNoNotify
+    }
+
+    if (shouldSendPublishMessage) {
+      await sendPublishMessage(request, filename, type.id)
     }
 
     await sendCrmMessage(request, filename, type)

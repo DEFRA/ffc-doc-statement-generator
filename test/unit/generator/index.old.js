@@ -1,15 +1,17 @@
 const config = require('../../../app/config')
 
-const { SCHEDULE, STATEMENT } = require('../../../app/constants/document-types')
+const { SCHEDULE, STATEMENT, SFI23QUARTERLYSTATEMENT } = require('../../../app/constants/document-types')
 
 const { DATE: SYSTEM_TIME, TIMESTAMP: TIMESTAMP_SYSTEM_TIME } = require('../../mocks/components/system-time')
 
 const { topUpSchedule: MOCK_SCHEDULE } = require('../../mocks/mock-schedule')
 const MOCK_STATEMENT = require('../../mocks/mock-statement')
+const MOCK_SFI23QUARTERLYSTATEMENT = require('../../mocks/mock-statement-sfi23-quarterly')
 
 const {
   SCHEDULE: MOCK_SCHEDULE_FILENAME,
-  STATEMENT: MOCK_STATEMENT_FILENAME
+  STATEMENT: MOCK_STATEMENT_FILENAME,
+  SFI23QUARTERLYSTATEMENT: MOCK_SFI23QUARTERLYSTATEMENT_FILENAME
 } = require('../../mocks/components/filename')
 
 const { mockPdfPrinter } = require('../../mocks/objects/pdfPrinter')
@@ -55,6 +57,177 @@ describe('Generate document', () => {
   describe('When schedulesArePublished is false', () => {
     beforeEach(() => {
       config.schedulesArePublished = false
+    })
+
+    describe('When document is an sfi23 quarterly-statement statement', () => {
+      beforeEach(() => {
+        publish.mockResolvedValue(MOCK_SFI23QUARTERLYSTATEMENT_FILENAME)
+
+        request = MOCK_SFI23QUARTERLYSTATEMENT
+        type = SFI23QUARTERLYSTATEMENT
+      })
+
+      describe('When sfi23-quarterly statement has not been processed before', () => {
+        beforeEach(() => {
+          getGenerations.mockResolvedValue(null)
+        })
+
+        test('sfi23-quarterly should call getGenerations', async () => {
+          await generateDocument(request, type)
+          expect(getGenerations).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call getGenerations once', async () => {
+          await generateDocument(request, type)
+          expect(getGenerations).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call getGenerations with request.documentReference', async () => {
+          await generateDocument(request, type)
+          expect(getGenerations).toHaveBeenCalledWith(request.documentReference)
+        })
+
+        test('sfi23-quarterly should call getDocumentDefinition', async () => {
+          await generateDocument(request, type)
+          expect(getDocumentDefinition).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call getDocumentDefinition once', async () => {
+          await generateDocument(request, type)
+          expect(getDocumentDefinition).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call getDocumentDefinition with request and type', async () => {
+          await generateDocument(request, type)
+          expect(getDocumentDefinition).toHaveBeenCalledWith(request, type)
+        })
+
+        test('sfi23-quarterly should call mockPdfPrinter.createPdfKitDocument', async () => {
+          await generateDocument(request, type)
+          expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call mockPdfPrinter.createPdfKitDocument once', async () => {
+          await generateDocument(request, type)
+          expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call mockPdfPrinter.createPdfKitDocument with getDocumentDefinition', async () => {
+          await generateDocument(request, type)
+          expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledWith(getDocumentDefinition())
+        })
+
+        test('sfi23-quarterly should call publish', async () => {
+          await generateDocument(request, type)
+          expect(publish).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call publish once', async () => {
+          await generateDocument(request, type)
+          expect(publish).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call publish with mockPdfPrinter.createPdfKitDocument, request, TIMESTAMP_SYSTEM_TIME and type', async () => {
+          await generateDocument(request, type)
+          expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
+        })
+
+        test('sfi23-quarterly should call sendPublishMessage', async () => {
+          await generateDocument(request, type)
+          expect(sendPublishMessage).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call sendPublishMessage once', async () => {
+          await generateDocument(request, type)
+          expect(sendPublishMessage).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call sendPublishMessage with request, publish() and type.id', async () => {
+          await generateDocument(request, type)
+          expect(sendPublishMessage).toHaveBeenCalledWith(request, (await publish()), type.id)
+        })
+
+        test('sfi23-quarterly should call sendCrmMessage', async () => {
+          await generateDocument(request, type)
+          expect(sendCrmMessage).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call sendCrmMessage once', async () => {
+          await generateDocument(request, type)
+          expect(sendCrmMessage).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call sendCrmMessage with request, publish() and type', async () => {
+          await generateDocument(request, type)
+          expect(sendCrmMessage).toHaveBeenCalledWith(request, (await publish()), type)
+        })
+
+        test('sfi23-quarterly should call saveLog', async () => {
+          await generateDocument(request, type)
+          expect(saveLog).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call saveLog once', async () => {
+          await generateDocument(request, type)
+          expect(saveLog).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call saveLog with request, publish() and SYSTEM_TIME', async () => {
+          await generateDocument(request, type)
+          expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
+        })
+      })
+
+      describe('When sfi23-quarterly statement has been processed before', () => {
+        beforeEach(() => {
+          getGenerations.mockResolvedValue(true) // come back to
+        })
+
+        test('sfi23-quarterly should call getGenerations', async () => {
+          await generateDocument(request, type)
+          expect(getGenerations).toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should call getGenerations once', async () => {
+          await generateDocument(request, type)
+          expect(getGenerations).toHaveBeenCalledTimes(1)
+        })
+
+        test('sfi23-quarterly should call getGenerations with request.documentReference', async () => {
+          await generateDocument(request, type)
+          expect(getGenerations).toHaveBeenCalledWith(request.documentReference)
+        })
+
+        test('sfi23-quarterly should not call getDocumentDefinition', async () => {
+          await generateDocument(request, type)
+          expect(getDocumentDefinition).not.toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should not call mockPdfPrinter.createPdfKitDocument', async () => {
+          await generateDocument(request, type)
+          expect(mockPdfPrinter().createPdfKitDocument).not.toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should not call publish', async () => {
+          await generateDocument(request, type)
+          expect(publish).not.toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should not call sendPublishMessage', async () => {
+          await generateDocument(request, type)
+          expect(sendPublishMessage).not.toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should not call sendCrmMessage', async () => {
+          await generateDocument(request, type)
+          expect(sendCrmMessage).not.toHaveBeenCalled()
+        })
+
+        test('sfi23-quarterly should not call saveLog', async () => {
+          await generateDocument(request, type)
+          expect(saveLog).not.toHaveBeenCalled()
+        })
+      })
     })
 
     describe('When document is a statement', () => {
