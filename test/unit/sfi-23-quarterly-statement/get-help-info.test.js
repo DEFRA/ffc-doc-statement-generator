@@ -20,7 +20,6 @@ describe('getHelpInfo', () => {
     expect(getPeriodStartDateFromPeriod).toHaveBeenCalledWith(mockPaymentPeriod)
     expect(getPaymentPeriodsTable).toHaveBeenCalledWith(mockPeriodStart, mockAgreementEnd)
     expect(helpInfo).toHaveProperty('stack')
-    expect(helpInfo.stack).toContainEqual({ text: 'The payment amount in ‘What you’ve been paid’ may be different to the ‘Payment total’ amount. The payment amount in ‘What you’ve been paid’ is what you’ll receive.' })
     expect(helpInfo.stack).toContainEqual({ text: 'If you think your payments are wrong', style: 'header2' })
     expect(helpInfo.stack).toContainEqual({ text: 'When your next payments will be paid', style: 'header2' })
     expect(helpInfo.stack).toContainEqual({ text: 'If you\'ve any questions about this statement', style: 'header2' })

@@ -9,7 +9,6 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
   const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
   return {
     stack: [
-      { text: 'The payment amount in ‘What you’ve been paid’ may be different to the ‘Payment total’ amount. The payment amount in ‘What you’ve been paid’ is what you’ll receive.' },
       { text: 'If you think your payments are wrong', style: 'header2' },
       { text: 'You can:' },
       {
