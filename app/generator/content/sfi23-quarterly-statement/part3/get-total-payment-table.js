@@ -21,7 +21,13 @@ const getTotalPaymentTable = (totalpayment) => {
       ]
     }
   }
-  return totalPaymentTable
+  return {
+    stack: [
+      totalPaymentTable,
+      { text: 'The payment amount in ‘What you’ve been paid’ may be different to the ‘Payment total’ amount. The payment amount in ‘What you’ve been paid’ is what you’ll receive.' }
+    ],
+    unbreakable: true
+  }
 }
 
 module.exports = getTotalPaymentTable

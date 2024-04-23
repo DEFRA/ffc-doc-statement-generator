@@ -15,12 +15,12 @@ const number100 = 100
 const number200 = 200
 
 const addressSchema = Joi.object({
-  line1: Joi.string().max(number100).required(),
-  line2: Joi.string().max(number100).optional(),
-  line3: Joi.string().max(number100).optional(),
-  line4: Joi.string().max(number100).required(),
-  line5: Joi.string().max(number100).required(),
-  postcode: Joi.string().max(number20).required()
+  line1: Joi.string().optional().allow('', null),
+  line2: Joi.string().optional().allow('', null),
+  line3: Joi.string().optional().allow('', null),
+  line4: Joi.string().optional().allow('', null),
+  line5: Joi.string().optional().allow('', null),
+  postcode: Joi.string().optional().allow('', null)
 })
 
 const schemeSchema = Joi.object({

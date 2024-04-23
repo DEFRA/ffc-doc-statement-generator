@@ -26,8 +26,10 @@ describe('getTotalPaymentTable', () => {
     }
 
     const result = getTotalPaymentTable(totalpayment)
-    expect(result).toEqual(expectedTable)
-    expect(result.layout.hLineStyle()).toBe('solid')
-    expect(result.layout.vLineStyle()).toBe('solid')
+    expect(result.stack[0]).toEqual(expectedTable)
+    expect(result.stack[0].layout.hLineStyle()).toBe('solid')
+    expect(result.stack[0].layout.vLineStyle()).toBe('solid')
+    expect(result.stack[1]).toEqual({ text: 'The payment amount in ‘What you’ve been paid’ may be different to the ‘Payment total’ amount. The payment amount in ‘What you’ve been paid’ is what you’ll receive.' })
+    expect(result.unbreakable).toBeTruthy()
   })
 })
