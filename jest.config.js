@@ -2,8 +2,7 @@ module.exports = {
   collectCoverage: true,
   collectCoverageFrom: [
     '**/*.js',
-    '!**/*.test.js',
-    '!**/jest.setup.js'
+    '!**/*.test.js'
   ],
   coverageDirectory: 'test-output',
   coverageReporters: [
