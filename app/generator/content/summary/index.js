@@ -9,6 +9,7 @@ const summary = (document) => {
     stack: [
       rpaLogo(),
       getAddress(document.businessName, document.address),
+      '\n\n\n',
       getSBI(document.sbi),
       getBusinessName(document.businessName),
       getAgreementNumber(document.scheme.agreementNumber),
