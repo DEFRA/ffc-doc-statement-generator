@@ -30,6 +30,7 @@ services:
       STATEMENT_RECEIVER_API_VERSION: v1
       STATEMENT_RECEIVER_ENDPOINT: http://localhost:3021
       SCHEDULES_ARE_PUBLISHED: "false"
+      SHOW_SFI_23_PAYMENT_PERIOD: "false"
 
   ffc-doc-statement-generator-postgres:
     image: postgres:11.4-alpine

@@ -9,14 +9,16 @@ const schema = Joi.object({
   env: Joi.string().valid(DEVELOPMENT, TEST, PRODUCTION).default(DEVELOPMENT),
   statementReceiverApiVersion: Joi.string().required(),
   statementReceiverEndpoint: Joi.string().required(),
-  schedulesArePublished: Joi.boolean().required().default(false)
+  schedulesArePublished: Joi.boolean().required().default(false),
+  showSfi23PaymentPeriod: Joi.boolean().optional().default(false)
 })
 
 const config = {
   env: process.env.NODE_ENV,
   statementReceiverApiVersion: process.env.STATEMENT_RECEIVER_API_VERSION,
   statementReceiverEndpoint: process.env.STATEMENT_RECEIVER_ENDPOINT,
-  schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED
+  schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED,
+  showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD
 }
 
 const result = schema.validate(config, {

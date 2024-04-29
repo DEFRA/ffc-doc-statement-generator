@@ -42,6 +42,7 @@ container:
   statementReceiverApiVersion: v1
   statementReceiverEndpoint: https://ffc-pay-statement-receiver
   schedulesArePublished: false
+  showSfi23PaymentPeriod: false
   emailAddress: dummy
   apiKey: dummy
   emailTemplateKey: dummy
