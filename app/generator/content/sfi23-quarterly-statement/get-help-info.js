@@ -8,7 +8,6 @@ const number15 = 15
 const number20 = 20
 
 const getHelpInfo = (sfi23QuarterlyStatement) => {
-  const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
   const helpInfo = [
     { text: 'If you think your payments are wrong', style: 'header2' },
     { text: 'You can:' },
@@ -36,6 +35,7 @@ const getHelpInfo = (sfi23QuarterlyStatement) => {
     }
   ]
   if (config.showSfi23PaymentPeriod) {
+    const periodStart = getPeriodStartDateFromPeriod(sfi23QuarterlyStatement.paymentPeriod)
     helpInfo.push({ text: 'When your next payments will be paid', style: 'header2' })
     helpInfo.push(getPaymentPeriodsTable(periodStart, sfi23QuarterlyStatement.agreementEnd))
   }
