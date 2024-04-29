@@ -34,4 +34,5 @@ data:
   STATEMENT_RECEIVER_ENDPOINT: {{ .Values.container.statementReceiverEndpoint }}.{{ .Values.ingress.server }}
   {{- end }}
   SCHEDULES_ARE_PUBLISHED: {{ quote .Values.container.schedulesArePublished }}
+  SHOW_SFI_23_PAYMENT_PERIOD: {{ quote .Values.container.showSfi23PaymentPeriod }}
 {{- end -}}
