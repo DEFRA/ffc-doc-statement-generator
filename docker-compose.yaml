@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 services:
   ffc-doc-statement-generator:
     build:
@@ -18,7 +18,7 @@ services:
       STATEMENT_TOPIC_ADDRESS: ${STATEMENT_TOPIC_ADDRESS:-ffc-doc-statements}${MESSAGE_QUEUE_SUFFIX}
       STATEMENT_SUBSCRIPTION_ADDRESS: ${STATEMENT_SUBSCRIPTION_ADDRESS:-ffc-doc-statement-generator}${MESSAGE_QUEUE_SUFFIX}
       PUBLISH_TOPIC_ADDRESS: ${PUBLISH_TOPIC_ADDRESS:-ffc-doc-statement-publish}${MESSAGE_QUEUE_SUFFIX}
-      CRM_TOPIC_ADDRESS: ${CRM_TOPIC_ADDRESS:-ffc-doc-statement-crm}${MESSAGE_QUEUE_SUFFIX}
+      CRM_TOPIC_ADDRESS: ${CRM_TOPIC_ADDRESS:-ffc-pay-statement-crm}${MESSAGE_QUEUE_SUFFIX}
       POSTGRES_DB: ffc_doc_statement_generator
       POSTGRES_HOST: ${POSTGRES_HOST:-ffc-doc-statement-generator-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_SCHEMA_PASSWORD:-ppp}
