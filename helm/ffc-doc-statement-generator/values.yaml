@@ -32,7 +32,7 @@ container:
   statementTopicAddress: ffc-doc-statements
   statementSubscriptionAddress: ffc-doc-statement-generator
   publishTopicAddress: ffc-doc-statement-publish
-  crmTopicAddress: ffc-doc-statement-crm
+  crmTopicAddress: ffc-pay-statement-crm
   azureStorageAccountName: ffcdoc
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
@@ -42,6 +42,7 @@ container:
   statementReceiverApiVersion: v1
   statementReceiverEndpoint: https://ffc-pay-statement-receiver
   schedulesArePublished: false
+  showSfi23PaymentPeriod: false
   emailAddress: dummy
   apiKey: dummy
   emailTemplateKey: dummy

@@ -23,6 +23,11 @@ module.exports = {
     bold: true,
     margin: [zeroPoint, twentyPoints, zeroPoint, tenPoints]
   },
+  tableHeader2: {
+    fontSize: 14,
+    bold: true,
+    margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]
+  },
   header3: {
     fontSize: 12,
     bold: true,
