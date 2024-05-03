@@ -32,7 +32,7 @@ container:
   statementTopicAddress: ffc-doc-statements
   statementSubscriptionAddress: ffc-doc-statement-generator
   publishTopicAddress: ffc-doc-statement-publish
-  crmTopicAddress: ffc-doc-statement-crm
+  crmTopicAddress: ffc-pay-statement-crm
   azureStorageAccountName: ffcdoc
   azureStorageConnectionString: dummy
   azureStorageUseConnectionString: false
