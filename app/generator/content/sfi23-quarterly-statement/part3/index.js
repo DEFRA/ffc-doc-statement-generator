@@ -1,7 +1,11 @@
 const getActionsTable = require('./get-actions-table')
 const getTotalPaymentTable = require('./get-total-payment-table')
+const { SFI23QUARTERLYSTATEMENT } = require('../../../../constants/document-types')
 
 const part3 = (sfi23QuarterlyStatement) => {
+  if (SFI23QUARTERLYSTATEMENT.showCalculation === false) {
+    return {}
+  }
   const actions = sfi23QuarterlyStatement.actionGroups
   const nonAdditionalPaymentGroupName = 'Actions'
   const additionalPaymentGroupName = 'Additional payment'

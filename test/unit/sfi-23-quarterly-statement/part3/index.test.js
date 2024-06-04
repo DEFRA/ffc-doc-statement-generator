@@ -1,6 +1,7 @@
 const getActionsTable = require('../../../../app/generator/content/sfi23-quarterly-statement/part3/get-actions-table')
 const getTotalPaymentTable = require('../../../../app/generator/content/sfi23-quarterly-statement/part3/get-total-payment-table')
 const part3 = require('../../../../app/generator/content/sfi23-quarterly-statement/part3')
+const { SFI23QUARTERLYSTATEMENT } = require('../../../../app/constants/document-types')
 
 jest.mock('../../../../app/generator/content/sfi23-quarterly-statement/part3/get-actions-table', () => jest.fn())
 jest.mock('../../../../app/generator/content/sfi23-quarterly-statement/part3/get-total-payment-table', () => jest.fn())
@@ -11,7 +12,8 @@ describe('part3', () => {
     getTotalPaymentTable.mockClear()
   })
 
-  test('should correctly generate the part3 object', () => {
+  test('should correctly generate the part3 object when showCalculation is true', () => {
+    SFI23QUARTERLYSTATEMENT.showCalculation = true
     const sfi23QuarterlyStatement = {
       actionGroups: [
         { groupName: 'Actions' },
@@ -67,5 +69,28 @@ describe('part3', () => {
         'mockedTotalPaymentTable'
       ]
     })
+  })
+
+  test('should not generate calculation tables when showCalculation is false', () => {
+    SFI23QUARTERLYSTATEMENT.showCalculation = false
+    const sfi23QuarterlyStatement = {
+      actionGroups: [
+        { groupName: 'Actions' },
+        { groupName: 'Additional payment' },
+        { groupName: 'Actions' }
+      ],
+      totalActionPayments: 1000,
+      totalAdditionalPayments: 500,
+      totalPayments: 1500
+    }
+
+    getActionsTable.mockReturnValueOnce('mockedActionsTable1')
+    getActionsTable.mockReturnValueOnce('mockedActionsTable2')
+    getTotalPaymentTable.mockReturnValue('mockedTotalPaymentTable')
+
+    part3(sfi23QuarterlyStatement)
+
+    expect(getActionsTable).not.toHaveBeenCalled()
+    expect(getTotalPaymentTable).not.toHaveBeenCalled()
   })
 })
