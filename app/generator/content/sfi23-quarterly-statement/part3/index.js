@@ -7,34 +7,38 @@ const part3 = (sfi23QuarterlyStatement) => {
   const margin10 = 10
   const margin15 = 15
   const margin20 = 20
+  const ruralPaymentLoginUrl = 'https://www.ruralpayments.service.gov.uk/customer-account/login'
+  const paymentCalculationMessage = {
+    stack: [{ text: 'How your payment was calculated', style: 'header2' },
+      { text: 'We calculated your total payment by adding together:' },
+      {
+        ul: [{
+          text: [
+            'the quarterly payments for your actions '
+          ]
+        },
+        {
+          text: [
+            'any additional payments '
+          ]
+        }],
+        listStyle: 'square',
+        margin: [margin15, margin2, margin10, margin20]
+      },
+      {
+        text: [
+          'You can check which of your land parcels are part of each action in your SFI 2023 agreement. Find your SFI 2023 agreement by logging into the Rural Payments service at ',
+          { text: ruralPaymentLoginUrl, link: ruralPaymentLoginUrl, decoration: 'underline' }
+        ]
+      }]
+  }
 
   if (SFI23QUARTERLYSTATEMENT.showCalculation === false) {
+    paymentCalculationMessage.stack.push('\n')
     return {
       stack: [
         [{
-          stack: [{ text: 'How your payment was calculated', style: 'header2' },
-            { text: 'We calculated your total payment by adding together:' },
-            {
-              ul: [{
-                text: [
-                  'the quarterly payments for your actions '
-                ]
-              },
-              {
-                text: [
-                  'any additional payments '
-                ]
-              }],
-              listStyle: 'square',
-              margin: [margin15, margin2, margin10, margin20]
-            },
-            {
-              text: [
-                'You can check which of your land parcels are part of each action in your SFI 2023 agreement. Find your SFI 2023 agreement by logging into the Rural Payments service at ',
-                { text: 'https://www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' }
-              ]
-            },
-            '\n'],
+          stack: paymentCalculationMessage.stack,
           unbreakable: true
         }
         ]
@@ -50,28 +54,7 @@ const part3 = (sfi23QuarterlyStatement) => {
   return {
     stack: [
       [{
-        stack: [{ text: 'How your payment was calculated', style: 'header2' },
-          { text: 'We calculated your total payment by adding together:' },
-          {
-            ul: [{
-              text: [
-                'the quarterly payments for your actions '
-              ]
-            },
-            {
-              text: [
-                'any additional payments '
-              ]
-            }],
-            listStyle: 'square',
-            margin: [margin15, margin2, margin10, margin20]
-          },
-          {
-            text: [
-              'You can check which of your land parcels are part of each action in your SFI 2023 agreement. Find your SFI 2023 agreement by logging into the Rural Payments service at ',
-              { text: 'https://www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' }
-            ]
-          }],
+        stack: paymentCalculationMessage.stack,
         unbreakable: true
       }
       ],
