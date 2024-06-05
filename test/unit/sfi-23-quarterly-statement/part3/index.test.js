@@ -117,7 +117,8 @@ describe('part3', () => {
                 'You can check which of your land parcels are part of each action in your SFI 2023 agreement. Find your SFI 2023 agreement by logging into the Rural Payments service at ',
                 { text: 'https://www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' }
               ]
-            }],
+            },
+            '\n'],
           unbreakable: true
         }
         ]
