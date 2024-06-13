@@ -2,7 +2,7 @@ const Joi = require('joi')
 
 module.exports = Joi.object({
   currentValue: Joi.number().required().messages({
-    'any.required': 'currentValue numbers is missing but it is required.',
+    'any.required': 'currentValue number is missing but it is required.',
     'number.base': 'The current value must be a number.'
   }),
   newValue: Joi.number().required().messages({
