@@ -32,7 +32,7 @@ module.exports = Joi.object({
   documentType: Joi.string().required().allow(STATEMENT).messages({
     'any.required': 'Document type is missing but it is required.',
     'string.base': 'Document type must be a string.',
-    'any.only': `Document type must be "${STATEMENT}".`
+    'any.only': `Document type must be "STATEMENT".`
   })
 }).required().messages({
   'any.required': 'crm-schema object is missing, but it is required.'
