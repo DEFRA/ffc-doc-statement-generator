@@ -19,7 +19,7 @@ module.exports = Joi.object({
     'number.base': 'The annual value must be a number.'
   }),
   quarterlyValue: Joi.number().required().messages({
-    'any.required': 'perquarterlyValueiod is missing but it is required.',
+    'any.required': 'quarterlyValue is missing but it is required.',
     'number.base': 'The quarterly value must be a number.'
   }),
   quarterlyReduction: Joi.number().required().messages({

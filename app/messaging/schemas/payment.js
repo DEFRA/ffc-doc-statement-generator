@@ -10,7 +10,7 @@ module.exports = Joi.object({
     'string.base': 'The reference must be a string.'
   }),
   dueDate: Joi.date().raw().required().messages({
-    'any.required': 'dueDateis missing but it is required.',
+    'any.required': 'dueDate is missing but it is required.',
     'date.base': 'The due date must be a date.'
   }),
   settled: Joi.string().required().messages({
