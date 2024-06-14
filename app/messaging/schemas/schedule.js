@@ -21,5 +21,10 @@ module.exports = Joi.object({
   documentReference,
   adjustment,
   remainingAmount,
-  schedule: Joi.array().items(paymentSchedule).required()
-}).required()
+  schedule: Joi.array().items(paymentSchedule).required().messages({
+    'any.required': 'paymentSchedule array is missing but it is required.',
+    'array.base': 'The schedule must be an array.'
+  })
+}).required().messages({
+  'any.required': 'Schedule object is missing but it is required.'
+})

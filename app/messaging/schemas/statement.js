@@ -18,6 +18,17 @@ module.exports = Joi.object({
   address,
   scheme,
   documentReference,
-  payments: Joi.array().items(payment).required().min(1),
-  funding: Joi.array().items(funding).required().min(2).has(funding.keys({ name: 'Total' }).required())
-}).required()
+  payments: Joi.array().items(payment).required().min(1).messages({
+    'any.required': 'Statement payments array is missing, but is is required.',
+    'array.base': 'The payments must be an array.',
+    'array.min': 'There must be at least one payment.'
+  }),
+  funding: Joi.array().items(funding).required().min(2).has(funding.keys({ name: 'Total' }).required()).messages({
+    'any.required': 'Statement funding array is missing, but is is required.',
+    'array.base': 'The funding must be an array.',
+    'array.min': 'There must be at least two funding items.',
+    'array.includesRequiredUnknowns': 'The funding must include an item with the name "Total".'
+  })
+}).required().messages({
+  'any.required': 'Statement object is missing, but is is required.'
+})
