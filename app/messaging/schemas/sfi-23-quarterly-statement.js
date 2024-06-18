@@ -20,7 +20,7 @@ const addressSchema = Joi.object({
     'string.base': 'Line 1 must be a string'
   }),
   line2: Joi.string().optional().allow('', null).messages({
-    'string.base': 'Line 2 must be a string'
+    'string.base': 'Line 2 must be a  string'
   }),
   line3: Joi.string().optional().allow('', null).messages({
     'string.base': 'Line 3 must be a string'
