@@ -5,6 +5,7 @@ const maxSbi = 999999999
 const minFrn = 1000000000
 const maxFrn = 9999999999
 const maxSchemeNameLength = 100
+const maxBusinessNameLength = 100
 const maxSchemeShortNameLength = 10
 const maxYearLength = 4
 const maxFrequencyLength = 10
@@ -151,9 +152,9 @@ const actionGroupsSchema = Joi.object({
 
 module.exports = Joi.object({
   address: addressSchema,
-  businessName: Joi.string().max(maxSchemeNameLength).required().messages({
+  businessName: Joi.string().max(maxBusinessNameLength).required().messages({
     'string.base': 'Business name must be a string',
-    'string.max': `Business name must be at most ${maxSchemeNameLength} characters`,
+    'string.max': `Business name must be at most ${maxBusinessNameLength} characters`,
     'any.required': 'Business name is required'
   }),
   email: Joi.string().email().required().messages({
@@ -183,6 +184,14 @@ module.exports = Joi.object({
     'number.base': 'Calculation ID must be a number',
     'number.integer': 'Calculation ID must be an integer',
     'any.required': 'Calculation ID is required'
+  }),
+  paymentAmount: Joi.number().required().messages({
+    'number.base': 'Payment amount must be a number.',
+    'any.required': 'Payment amount is required.'
+  }),
+  transactionDate: Joi.date().required().messages({
+    'date.base': 'Transaction date must be a valid date.',
+    'any.required': 'Transaction date is required.'
   }),
   paymentPeriod: Joi.string().max(maxPaymentPeriodLength).required().messages({
     'string.base': 'Payment period must be a string',
