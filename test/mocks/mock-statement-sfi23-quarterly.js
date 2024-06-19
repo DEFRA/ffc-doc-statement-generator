@@ -27,11 +27,6 @@ module.exports = {
   totalAdditionalPayments: 1000,
   totalActionPayments: 35483.37,
   totalPayments: 36483.37,
-  paymentRequestId: 123456,
-  paymentRequestNumber: 123456,
-  paymentRequestStatus: 'some-status',
-  paymentRequestor: 'some-requestor',
-  claimId: 123456,
   scheme: {
     name: 'Sustainable Farming Incentive 23 Quarterly Payment Statement',
     shortName: 'SFI-23',

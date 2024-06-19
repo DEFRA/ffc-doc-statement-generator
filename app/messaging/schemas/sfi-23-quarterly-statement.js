@@ -184,33 +184,10 @@ module.exports = Joi.object({
     'number.integer': 'Calculation ID must be an integer',
     'any.required': 'Calculation ID is required'
   }),
-  paymentRequestId: Joi.number().integer().required().messages({
-    'number.base': 'Payment request ID must be a number',
-    'number.integer': 'Payment request ID must be an integer',
-    'any.required': 'Payment request ID is required'
-  }),
-  paymentRequestNumber: Joi.number().integer().required().messages({
-    'number.base': 'Payment request number must be a number',
-    'number.integer': 'Payment request number must be an integer',
-    'any.required': 'Payment request number is required'
-  }),
-  paymentRequestStatus: Joi.string().required().messages({
-    'string.base': 'Payment request status must be a string',
-    'any.required': 'Payment request status is required'
-  }),
   paymentPeriod: Joi.string().max(maxPaymentPeriodLength).required().messages({
     'string.base': 'Payment period must be a string',
     'string.max': `Payment period must be at most ${maxPaymentPeriodLength} characters`,
     'any.required': 'Payment period is required'
-  }),
-  paymentRequestor: Joi.string().required().messages({
-    'string.base': 'Payment requestor must be a string',
-    'any.required': 'Payment requestor is required'
-  }),
-  claimId: Joi.number().integer().required().messages({
-    'number.base': 'Claim ID must be a number',
-    'number.integer': 'Claim ID must be an integer',
-    'any.required': 'Claim ID is required'
   }),
   agreementNumber: Joi.number().integer().required().messages({
     'number.base': 'Agreement number must be a number',
