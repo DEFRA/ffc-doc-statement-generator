@@ -2,7 +2,7 @@ const styles = require('../../../app/generator/styles')
 const getDocumentDefinition = require('../../../app/generator/get-document-definition')
 const { generateContent } = require('../../../app/generator/content')
 const { A4 } = require('../../../app/generator/page-sizes')
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT } = require('../../../app/constants/document-types')
+const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../../../app/constants/document-types')
 
 jest.mock('../../../app/generator/content')
 
@@ -14,7 +14,7 @@ describe('getDocumentDefinition', () => {
     generateContent.mockReturnValue(mockContent)
   })
 
-  const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT]
+  const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT]
 
   documentTypes.forEach(type => {
     test(`returns correct pageSize for ${type}`, () => {
