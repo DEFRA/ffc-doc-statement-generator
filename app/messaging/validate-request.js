@@ -2,12 +2,13 @@ const statementSchema = require('./schemas/statement')
 const scheduleSchema = require('./schemas/schedule')
 const sfi23QuarterlyStatementSchema = require('./schemas/sfi-23-quarterly-statement')
 const { VALIDATION } = require('../errors')
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT } = require('../constants/document-types')
+const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../constants/document-types')
 
 const validateRequest = (request, type) => {
   let validationResult
   switch (type) {
     case STATEMENT:
+    case SFI23ADVANCEDSTATEMENT:
       validationResult = statementSchema.validate(request, { abortEarly: false, allowUnknown: true })
       break
     case SCHEDULE:
