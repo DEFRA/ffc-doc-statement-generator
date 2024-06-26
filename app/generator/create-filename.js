@@ -1,4 +1,4 @@
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT } = require('../constants/document-types')
+const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../constants/document-types')
 const { schemeShortName, schemeYear, frn, timestampRegex } = require('../constants/filenameRegex')
 
 const createFilename = (statement, timestamp, type) => {
@@ -26,6 +26,7 @@ const createFilename = (statement, timestamp, type) => {
 const getPrefix = (type) => {
   switch (type) {
     case STATEMENT:
+    case SFI23ADVANCEDSTATEMENT:
       return 'Statement'
     case SCHEDULE:
       return 'Schedule'
