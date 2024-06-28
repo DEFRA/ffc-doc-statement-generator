@@ -1,5 +1,5 @@
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT } = require('../../../../app/constants/document-types')
-const TYPES = [`uk.gov.doc.${STATEMENT.id}.publish`, `uk.gov.doc.${SCHEDULE.id}.publish`, `uk.gov.doc.${SFI23QUARTERLYSTATEMENT.id}.publish`]
+const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../../../../app/constants/document-types')
+const TYPES = [`uk.gov.doc.${STATEMENT.id}.publish`, `uk.gov.doc.${SCHEDULE.id}.publish`, `uk.gov.doc.${SFI23QUARTERLYSTATEMENT.id}.publish`, `uk.gov.doc.${SFI23ADVANCEDSTATEMENT.id}.publish`]
 
 const schema = require('../../../../app/messaging/schemas/type')
 
