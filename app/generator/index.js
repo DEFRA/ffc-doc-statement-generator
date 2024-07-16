@@ -1,6 +1,5 @@
 const PdfPrinter = require('pdfmake')
 const moment = require('moment')
-const config = require('../config')
 
 const { SFI23QUARTERLYSTATEMENT, SCHEDULE } = require('../constants/document-types')
 
@@ -15,6 +14,12 @@ const getNoNotifyByAgreementNumber = require('./get-no-notify-by-agreement-numbe
 const fonts = require('./fonts')
 const printer = new PdfPrinter(fonts)
 
+const FEATURES = {
+  SEND_PUBLISH_MESSAGE: process.env.SEND_PUBLISH_MESSAGE === 'true',
+  SEND_CRM_MESSAGE: process.env.SEND_CRM_MESSAGE === 'true',
+  SAVE_LOG: process.env.SAVE_LOG === 'true'
+}
+
 const generateDocument = async (request, type) => {
   const existingDocument = await getGenerations(request.documentReference)
 
@@ -26,23 +31,19 @@ const generateDocument = async (request, type) => {
     const pdfDoc = printer.createPdfKitDocument(docDefinition)
     const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
 
-    let shouldSendPublishMessage = false
+    const isNoNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
 
-    if (type.type === SFI23QUARTERLYSTATEMENT.type) {
-      shouldSendPublishMessage = true
-    } else if (type.type === SCHEDULE.type) {
-      shouldSendPublishMessage = config.schedulesArePublished
-    } else {
-      const isNoNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
-      shouldSendPublishMessage = !isNoNotify
-    }
-
-    if (shouldSendPublishMessage) {
+    if (FEATURES.SEND_PUBLISH_MESSAGE && ((type.type === SFI23QUARTERLYSTATEMENT.type) || (type.type !== SCHEDULE.type && !isNoNotify))) {
       await sendPublishMessage(request, filename, type.id)
     }
 
-    await sendCrmMessage(request, filename, type)
-    await saveLog(request, filename, timestamp)
+    if (FEATURES.SEND_CRM_MESSAGE) {
+      await sendCrmMessage(request, filename, type)
+    }
+
+    if (FEATURES.SAVE_LOG) {
+      await saveLog(request, filename, timestamp)
+    }
   }
 }
 
