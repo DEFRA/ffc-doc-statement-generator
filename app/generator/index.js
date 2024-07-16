@@ -1,7 +1,6 @@
 const PdfPrinter = require('pdfmake')
 const moment = require('moment')
-
-const { SFI23QUARTERLYSTATEMENT, SCHEDULE } = require('../constants/document-types')
+const config = require('../config')
 
 const getGenerations = require('./get-generations')
 const getDocumentDefinition = require('./get-document-definition')
@@ -14,12 +13,6 @@ const getNoNotifyByAgreementNumber = require('./get-no-notify-by-agreement-numbe
 const fonts = require('./fonts')
 const printer = new PdfPrinter(fonts)
 
-const FEATURES = {
-  SEND_PUBLISH_MESSAGE: process.env.SEND_PUBLISH_MESSAGE === 'true',
-  SEND_CRM_MESSAGE: process.env.SEND_CRM_MESSAGE === 'true',
-  SAVE_LOG: process.env.SAVE_LOG === 'true'
-}
-
 const generateDocument = async (request, type) => {
   const existingDocument = await getGenerations(request.documentReference)
 
@@ -31,17 +24,21 @@ const generateDocument = async (request, type) => {
     const pdfDoc = printer.createPdfKitDocument(docDefinition)
     const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
 
-    const isNoNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
+    // Simplified shouldSendPublishMessage determination
+    const shouldSendPublishMessage = (type.type === 'SFI23QUARTERLYSTATEMENT' && config.SFI23QUARTERLYSTATEMENT_ENABLED === 'true') ||
+                                      (type.type === 'SCHEDULE' && config.SCHEDULE_ENABLED === 'true' && config.schedulesArePublished) ||
+                                      !(await getNoNotifyByAgreementNumber(request.scheme.agreementNumber))
 
-    if (FEATURES.SEND_PUBLISH_MESSAGE && ((type.type === SFI23QUARTERLYSTATEMENT.type) || (type.type !== SCHEDULE.type && !isNoNotify))) {
+    if (shouldSendPublishMessage) {
       await sendPublishMessage(request, filename, type.id)
     }
 
-    if (FEATURES.SEND_CRM_MESSAGE) {
+    // Check if CRM message sending is enabled
+    if (config.SEND_CRM_MESSAGE_ENABLED === 'true') {
       await sendCrmMessage(request, filename, type)
     }
-
-    if (FEATURES.SAVE_LOG) {
+    // Check if log saving is enabled
+    if (config.SAVE_LOG_ENABLED === 'true') {
       await saveLog(request, filename, timestamp)
     }
   }

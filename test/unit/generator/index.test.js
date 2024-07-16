@@ -41,6 +41,11 @@ let type
 
 describe('Generate document', () => {
   beforeEach(() => {
+    // Set environment variables to 'true'
+    config.SFI23QUARTERLYSTATEMENT_ENABLED = 'true'
+    config.SCHEDULE_ENABLED = 'true'
+    config.SEND_CRM_MESSAGE_ENABLED = 'true'
+    config.SAVE_LOG_ENABLED = 'true'
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
 
     getGenerations.mockResolvedValue(null)
@@ -51,6 +56,11 @@ describe('Generate document', () => {
   })
 
   afterEach(() => {
+    // Reset environment variables after each test
+    delete config.SFI23QUARTERLYSTATEMENT_ENABLED
+    delete config.SCHEDULE_ENABLED
+    delete config.SEND_CRM_MESSAGE_ENABLED
+    delete config.SAVE_LOG_ENABLED
     jest.clearAllMocks()
   })
 
