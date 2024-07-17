@@ -17,32 +17,41 @@ const printer = new PdfPrinter(fonts)
 
 const generateDocument = async (request, type) => {
   const existingDocument = await getGenerations(request.documentReference)
-
   if (existingDocument) {
     console.info(`Duplicate document received, skipping ${existingDocument.documentReference}`)
-  } else {
-    const docDefinition = getDocumentDefinition(request, type)
-    const timestamp = new Date()
-    const pdfDoc = printer.createPdfKitDocument(docDefinition)
-    const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
+    return
+  }
 
-    if (type.type === SFI23QUARTERLYSTATEMENT.type && config.SFI23QUARTERLYSTATEMENT_ENABLED === 'true') {
-      await sendPublishMessage(request, filename, type.id)
-    } else if (type.type === SCHEDULE.type && config.SCHEDULE_ENABLED === 'true') {
-      await sendPublishMessage(request, filename, type.id)
-    } else if (type.type !== SFI23QUARTERLYSTATEMENT.type && type.type !== SCHEDULE.type) {
-      const isNoNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
-      if (!isNoNotify) {
-        await sendPublishMessage(request, filename, type.id)
-      }
-    }
+  const filename = await createAndPublishDocument(request, type)
+  await handleNotification(request, filename, type)
+  await handleAdditionalOperations(request, filename, type)
+}
 
-    if (config.SEND_CRM_MESSAGE_ENABLED === 'true') {
-      await sendCrmMessage(request, filename, type)
-    }
-    if (config.SAVE_LOG_ENABLED === 'true') {
-      await saveLog(request, filename, timestamp)
-    }
+async function createAndPublishDocument (request, type) {
+  const docDefinition = getDocumentDefinition(request, type)
+  const timestamp = new Date()
+  const pdfDoc = printer.createPdfKitDocument(docDefinition)
+  return await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
+}
+
+async function shouldSendNotification (request, type) {
+  const isPublishEnabledForType = (type.type === SFI23QUARTERLYSTATEMENT.type && config.SFI23QUARTERLYSTATEMENT_ENABLED === 'true') || (type.type === SCHEDULE.type && config.SCHEDULE_ENABLED === 'true')
+  const isNotifyAllowed = type.type !== SFI23QUARTERLYSTATEMENT.type && type.type !== SCHEDULE.type && !(await getNoNotifyByAgreementNumber(request.scheme.agreementNumber))
+  return isPublishEnabledForType || isNotifyAllowed
+}
+
+async function handleNotification (request, filename, type) {
+  if (await shouldSendNotification(request, type)) {
+    await sendPublishMessage(request, filename, type.id)
+  }
+}
+
+async function handleAdditionalOperations (request, filename, type) {
+  if (config.SEND_CRM_MESSAGE_ENABLED === 'true') {
+    await sendCrmMessage(request, filename, type)
+  }
+  if (config.SAVE_LOG_ENABLED === 'true') {
+    await saveLog(request, filename, new Date())
   }
 }
 
