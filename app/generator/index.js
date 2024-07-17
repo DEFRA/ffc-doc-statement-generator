@@ -31,7 +31,7 @@ async function createAndPublishDocument (request, type) {
   const docDefinition = getDocumentDefinition(request, type)
   const timestamp = new Date()
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
-  return await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
+  return publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
 }
 
 async function shouldSendNotification (request, type) {
