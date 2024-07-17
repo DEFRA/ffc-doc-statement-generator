@@ -37,7 +37,6 @@ const generateDocument = async (request, type) => {
       }
     }
 
-    // Conditional CRM message and log saving, assuming these are also feature-toggled
     if (config.SEND_CRM_MESSAGE_ENABLED === 'true') {
       await sendCrmMessage(request, filename, type)
     }
