@@ -2,6 +2,8 @@ const PdfPrinter = require('pdfmake')
 const moment = require('moment')
 const config = require('../config')
 
+const { SFI23QUARTERLYSTATEMENT, SCHEDULE } = require('../constants/document-types')
+
 const getGenerations = require('./get-generations')
 const getDocumentDefinition = require('./get-document-definition')
 const publish = require('./publish')
@@ -24,20 +26,21 @@ const generateDocument = async (request, type) => {
     const pdfDoc = printer.createPdfKitDocument(docDefinition)
     const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
 
-    // Simplified shouldSendPublishMessage determination
-    const shouldSendPublishMessage = (type.type === 'SFI23QUARTERLYSTATEMENT' && config.SFI23QUARTERLYSTATEMENT_ENABLED === 'true') ||
-                                      (type.type === 'SCHEDULE' && config.SCHEDULE_ENABLED === 'true' && config.schedulesArePublished) ||
-                                      !(await getNoNotifyByAgreementNumber(request.scheme.agreementNumber))
-
-    if (shouldSendPublishMessage) {
+    if (type.type === SFI23QUARTERLYSTATEMENT.type && config.SFI23QUARTERLYSTATEMENT_ENABLED === 'true') {
       await sendPublishMessage(request, filename, type.id)
+    } else if (type.type === SCHEDULE.type && config.SCHEDULE_ENABLED === 'true') {
+      await sendPublishMessage(request, filename, type.id)
+    } else if (type.type !== SFI23QUARTERLYSTATEMENT.type && type.type !== SCHEDULE.type) {
+      const isNoNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
+      if (!isNoNotify) {
+        await sendPublishMessage(request, filename, type.id)
+      }
     }
 
-    // Check if CRM message sending is enabled
+    // Conditional CRM message and log saving, assuming these are also feature-toggled
     if (config.SEND_CRM_MESSAGE_ENABLED === 'true') {
       await sendCrmMessage(request, filename, type)
     }
-    // Check if log saving is enabled
     if (config.SAVE_LOG_ENABLED === 'true') {
       await saveLog(request, filename, timestamp)
     }
