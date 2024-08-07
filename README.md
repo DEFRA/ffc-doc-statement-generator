@@ -6,27 +6,27 @@
 - Docker Compose
 
 Optional:
+
 - Kubernetes
 - Helm
 
 ## Azure Service Bus
 
 This service depends on a valid Azure Service Bus connection string for
-asynchronous communication.  The following environment variables need to be set
+asynchronous communication. The following environment variables need to be set
 in any non-production (`!config.isProd`) environment before the Docker
-container is started or tests are run. 
+container is started or tests are run.
 
 When deployed into an appropriately configured AKS
 cluster (where [AAD Pod Identity](https://github.com/Azure/aad-pod-identity) is
 configured) the microservice will use AAD Pod Identity.
 
-| Name | Description |
-| ---| --- |
-| MESSAGE_QUEUE_HOST | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
-| MESSAGE_QUEUE_PASSWORD | Azure Service Bus SAS policy key |
-| MESSAGE_QUEUE_USER | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`    |
-| MESSAGE_QUEUE_SUFFIX | Developer initials |
-
+| Name                   | Description                                                            |
+| ---------------------- | ---------------------------------------------------------------------- |
+| MESSAGE_QUEUE_HOST     | Azure Service Bus hostname, e.g. `myservicebus.servicebus.windows.net` |
+| MESSAGE_QUEUE_PASSWORD | Azure Service Bus SAS policy key                                       |
+| MESSAGE_QUEUE_USER     | Azure Service Bus SAS policy name, e.g. `RootManageSharedAccessKey`    |
+| MESSAGE_QUEUE_SUFFIX   | Developer initials                                                     |
 
 ## Message schemas
 
