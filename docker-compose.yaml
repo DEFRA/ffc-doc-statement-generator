@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   ffc-doc-statement-generator:
     build:
@@ -18,7 +17,7 @@ services:
       STATEMENT_TOPIC_ADDRESS: ${STATEMENT_TOPIC_ADDRESS:-ffc-doc-statements}${MESSAGE_QUEUE_SUFFIX}
       STATEMENT_SUBSCRIPTION_ADDRESS: ${STATEMENT_SUBSCRIPTION_ADDRESS:-ffc-doc-statement-generator}${MESSAGE_QUEUE_SUFFIX}
       PUBLISH_TOPIC_ADDRESS: ${PUBLISH_TOPIC_ADDRESS:-ffc-doc-statement-publish}${MESSAGE_QUEUE_SUFFIX}
-      CRM_TOPIC_ADDRESS: ${CRM_TOPIC_ADDRESS:-ffc-pay-statement-crm}${MESSAGE_QUEUE_SUFFIX}
+      CRM_TOPIC_ADDRESS: ${CRM_TOPIC_ADDRESS:-ffc-doc-statement-crm}${MESSAGE_QUEUE_SUFFIX}
       POSTGRES_DB: ffc_doc_statement_generator
       POSTGRES_HOST: ${POSTGRES_HOST:-ffc-doc-statement-generator-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_SCHEMA_PASSWORD:-ppp}
@@ -28,8 +27,12 @@ services:
       AZURE_STORAGE_ACCOUNT_NAME: ${AZURE_STORAGE_ACCOUNT_NAME:-devstoreaccount1}
       AZURE_STORAGE_USE_CONNECTION_STRING: "true"
       STATEMENT_RECEIVER_API_VERSION: v1
-      STATEMENT_RECEIVER_ENDPOINT: http://localhost:3021
+      STATEMENT_RECEIVER_ENDPOINT: http://localhost:3022
       SCHEDULES_ARE_PUBLISHED: "false"
+      SFI23QUARTERLYSTATEMENT_ENABLED: "true"
+      SCHEDULE_ENABLED: "true"
+      SEND_CRM_MESSAGE_ENABLED: "true"
+      SAVE_LOG_ENABLED: "true"
       SHOW_SFI_23_PAYMENT_PERIOD: "false"
 
   ffc-doc-statement-generator-postgres:

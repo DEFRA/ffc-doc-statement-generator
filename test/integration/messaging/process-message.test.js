@@ -30,6 +30,10 @@ let message
 
 describe('process message', () => {
   beforeEach(async () => {
+    // Set environment variables to 'true'
+    config.SFI23QUARTERLYSTATEMENT_ENABLED = 'true'
+    config.SEND_CRM_MESSAGE_ENABLED = 'true'
+    config.SAVE_LOG_ENABLED = 'true'
     jest.useFakeTimers().setSystemTime(DATE)
 
     blobServiceClient = BlobServiceClient.fromConnectionString(config.storageConfig.connectionStr)
@@ -44,6 +48,10 @@ describe('process message', () => {
   })
 
   afterEach(async () => {
+    // Reset environment variables after each test
+    delete config.SFI23QUARTERLYSTATEMENT_ENABLED
+    delete config.SEND_CRM_MESSAGE_ENABLED
+    delete config.SAVE_LOG_ENABLED
     jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
   })
@@ -54,7 +62,7 @@ describe('process message', () => {
 
   describe('When schedulesArePublished is false', () => {
     beforeEach(() => {
-      config.schedulesArePublished = false
+      config.SCHEDULE_ENABLED = 'false'
     })
 
     describe('when message is a statement', () => {
@@ -1369,6 +1377,7 @@ describe('process message', () => {
 
     describe('when message is a schedule', () => {
       beforeEach(async () => {
+        config.SCHEDULE_ENABLED = 'true'
         schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
         statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
         message = {
@@ -1583,6 +1592,7 @@ describe('process message', () => {
 
       describe('When schedule has null documentReference and no nulls exist in table', () => {
         beforeEach(async () => {
+          config.SCHEDULE_ENABLED = 'true'
           message = {
             body: { ...schedule, documentReference: null },
             applicationProperties: {
