@@ -29,7 +29,8 @@ describe('process statement message', () => {
     jest.resetAllMocks()
     receiver = {
       completeMessage: jest.fn(),
-      deadLetterMessage: jest.fn()
+      deadLetterMessage: jest.fn(),
+      abandonMessage: jest.fn()
     }
   })
 
@@ -42,6 +43,58 @@ describe('process statement message', () => {
     }
     await processMessage(message, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('abandon message if SFI23QUARTERLYSTATEMENT processing is disabled', async () => {
+    const config = require('../../../app/config')
+    config.SFI23QUARTERLYSTATEMENT_ENABLED = 'false'
+    const message = {
+      body: mockStatement,
+      applicationProperties: {
+        type: 'SFI23QUARTERLYSTATEMENT'
+      }
+    }
+    await processMessage(message, receiver)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('abandon message if SCHEDULE processing is disabled', async () => {
+    const config = require('../../../app/config')
+    config.SCHEDULE_ENABLED = 'false'
+    const message = {
+      body: mockStatement,
+      applicationProperties: {
+        type: 'SCHEDULE'
+      }
+    }
+    await processMessage(message, receiver)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('abandon message if SEND_CRM_MESSAGE processing is disabled', async () => {
+    const config = require('../../../app/config')
+    config.SEND_CRM_MESSAGE_ENABLED = 'false'
+    const message = {
+      body: mockStatement,
+      applicationProperties: {
+        type: 'SEND_CRM_MESSAGE'
+      }
+    }
+    await processMessage(message, receiver)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith(message)
+  })
+
+  test('abandon message if SAVE_LOG processing is disabled', async () => {
+    const config = require('../../../app/config')
+    config.SAVE_LOG_ENABLED = 'false'
+    const message = {
+      body: mockStatement,
+      applicationProperties: {
+        type: 'SAVE_LOG'
+      }
+    }
+    await processMessage(message, receiver)
+    expect(receiver.abandonMessage).toHaveBeenCalledWith(message)
   })
 
   test('completes message on success only once', async () => {
@@ -178,7 +231,6 @@ describe('process statement message', () => {
       body: mockStatement,
       applicationProperties: {
         type: STATEMENT.type
-
       }
     }
     mockGenerator.mockImplementation(() => {
