@@ -3,18 +3,24 @@ const { MessageSender } = require('ffc-messaging')
 const createMessage = require('./create-message')
 
 const sendPublishMessage = async (statement, filename, typeId) => {
-  const featureFlags = [
-    'SFI23QUARTERLYSTATEMENT_ENABLED',
-    'SCHEDULE_ENABLED',
-    'SEND_CRM_MESSAGE_ENABLED',
-    'SAVE_LOG_ENABLED'
-  ]
+  if (config.SFI23QUARTERLYSTATEMENT_ENABLED !== 'true') {
+    console.log('SFI23QUARTERLYSTATEMENT publishing is disabled')
+    return
+  }
 
-  for (const flag of featureFlags) {
-    if (!config[flag]) {
-      console.log(`Feature flag has disabled publishing: ${flag}`)
-      return
-    }
+  if (config.SCHEDULE_ENABLED !== 'true') {
+    console.log('SCHEDULE publishing is disabled')
+    return
+  }
+
+  if (config.SEND_CRM_MESSAGE_ENABLED !== 'true') {
+    console.log('SEND_CRM_MESSAGE publishing is disabled')
+    return
+  }
+
+  if (config.SAVE_LOG_ENABLED !== 'true') {
+    console.log('SAVE_LOG publishing is disabled')
+    return
   }
 
   const message = createMessage(statement, filename, typeId)
