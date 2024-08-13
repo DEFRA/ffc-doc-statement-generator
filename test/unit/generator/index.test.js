@@ -41,7 +41,7 @@ let type
 
 describe('Generate document', () => {
   beforeEach(() => {
-    // Set environment variables to 'true'
+    // Set environment variables to true
     config.sfi23QuarterlyStatementEnabled = true
     config.sendCrmMessageEnabled = true
     config.saveLogEnabled = true

@@ -30,7 +30,7 @@ let message
 
 describe('process message', () => {
   beforeEach(async () => {
-    // Set environment variables to 'true'
+    // Set environment variables to true
     config.sfi23QuarterlyStatementEnabled = true
     config.sendCrmMessageEnabled = true
     config.saveLogEnabled = true
