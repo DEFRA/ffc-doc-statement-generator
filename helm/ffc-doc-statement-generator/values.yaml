@@ -46,6 +46,10 @@ container:
   emailAddress: dummy
   apiKey: dummy
   emailTemplateKey: dummy
+  sfi23QuarterlyStatementEnabled: false
+  scheduleEnabled: false
+  sendCrmMessageEnabled: false
+  saveLogEnabled: false
 
 ingress:
   server: example.com
