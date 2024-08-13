@@ -42,9 +42,9 @@ let type
 describe('Generate document', () => {
   beforeEach(() => {
     // Set environment variables to 'true'
-    config.SFI23QUARTERLYSTATEMENT_ENABLED = 'true'
-    config.SEND_CRM_MESSAGE_ENABLED = 'true'
-    config.SAVE_LOG_ENABLED = 'true'
+    config.sfi23QuarterlyStatementEnabled = true
+    config.sendCrmMessageEnabled = true
+    config.saveLogEnabled = true
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
 
     getGenerations.mockResolvedValue(null)
@@ -56,15 +56,15 @@ describe('Generate document', () => {
 
   afterEach(() => {
     // Reset environment variables after each test
-    delete config.SFI23QUARTERLYSTATEMENT_ENABLED
-    delete config.SEND_CRM_MESSAGE_ENABLED
-    delete config.SAVE_LOG_ENABLED
+    delete config.sfi23QuarterlyStatementEnabled
+    delete config.sendCrmMessageEnabled
+    delete config.saveLogEnabled
     jest.clearAllMocks()
   })
 
   describe('When schedulesArePublished is false', () => {
     beforeEach(() => {
-      config.SCHEDULE_ENABLED = 'false'
+      config.scheduleEnabled = false
     })
 
     describe('When document is an sfi23 quarterly-statement statement', () => {

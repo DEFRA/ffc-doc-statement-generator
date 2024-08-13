@@ -31,9 +31,9 @@ let message
 describe('process message', () => {
   beforeEach(async () => {
     // Set environment variables to 'true'
-    config.SFI23QUARTERLYSTATEMENT_ENABLED = 'true'
-    config.SEND_CRM_MESSAGE_ENABLED = 'true'
-    config.SAVE_LOG_ENABLED = 'true'
+    config.sfi23QuarterlyStatementEnabled = true
+    config.sendCrmMessageEnabled = true
+    config.saveLogEnabled = true
     jest.useFakeTimers().setSystemTime(DATE)
 
     blobServiceClient = BlobServiceClient.fromConnectionString(config.storageConfig.connectionStr)
@@ -49,9 +49,9 @@ describe('process message', () => {
 
   afterEach(async () => {
     // Reset environment variables after each test
-    delete config.SFI23QUARTERLYSTATEMENT_ENABLED
-    delete config.SEND_CRM_MESSAGE_ENABLED
-    delete config.SAVE_LOG_ENABLED
+    delete config.sfi23QuarterlyStatementEnabled
+    delete config.sendCrmMessageEnabled
+    delete config.saveLogEnabled
     jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
   })
@@ -62,7 +62,7 @@ describe('process message', () => {
 
   describe('When schedulesArePublished is false', () => {
     beforeEach(() => {
-      config.SCHEDULE_ENABLED = 'false'
+      config.scheduleEnabled = false
     })
 
     describe('when message is a statement', () => {
@@ -1377,7 +1377,7 @@ describe('process message', () => {
 
     describe('when message is a schedule', () => {
       beforeEach(async () => {
-        config.SCHEDULE_ENABLED = 'true'
+        config.scheduleEnabled = true
         schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
         statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
         message = {
@@ -1592,7 +1592,7 @@ describe('process message', () => {
 
       describe('When schedule has null documentReference and no nulls exist in table', () => {
         beforeEach(async () => {
-          config.SCHEDULE_ENABLED = 'true'
+          config.scheduleEnabled = true
           message = {
             body: { ...schedule, documentReference: null },
             applicationProperties: {
