@@ -35,7 +35,7 @@ async function createAndPublishDocument (request, type) {
 }
 
 async function shouldSendNotification (request, type) {
-  const isPublishEnabledForType = (type.type === SFI23QUARTERLYSTATEMENT.type && config.SFI23QUARTERLYSTATEMENT_ENABLED) || (type.type === SCHEDULE.type && config.SCHEDULE_ENABLED)
+  const isPublishEnabledForType = (type.type === SFI23QUARTERLYSTATEMENT.type && config.sfi23QuarterlyStatementEnabled) || (type.type === SCHEDULE.type && config.scheduleEnabled)
   const isNotifyAllowed = type.type !== SFI23QUARTERLYSTATEMENT.type && type.type !== SCHEDULE.type && !(await getNoNotifyByAgreementNumber(request.scheme.agreementNumber))
   return isPublishEnabledForType || isNotifyAllowed
 }
@@ -47,10 +47,10 @@ async function handleNotification (request, filename, type) {
 }
 
 async function handleAdditionalOperations (request, filename, type) {
-  if (config.SEND_CRM_MESSAGE_ENABLED) {
+  if (config.sendCrmMessageEnabled) {
     await sendCrmMessage(request, filename, type)
   }
-  if (config.SAVE_LOG_ENABLED) {
+  if (config.saveLogEnabled) {
     await saveLog(request, filename, new Date())
   }
 }
