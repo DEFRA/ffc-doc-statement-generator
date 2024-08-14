@@ -11,10 +11,10 @@ const schema = Joi.object({
   statementReceiverEndpoint: Joi.string().required(),
   schedulesArePublished: Joi.boolean().required().default(false),
   showSfi23PaymentPeriod: Joi.boolean().optional().default(false),
-  sfi23QuarterlyStatementEnabled: Joi.boolean().required().default(false),
-  scheduleEnabled: Joi.boolean().required().default(false),
-  sendCrmMessageEnabled: Joi.boolean().required().default(false),
-  saveLogEnabled: Joi.boolean().required().default(false)
+  sfi23QuarterlyStatementEnabled: Joi.boolean().optional().default(false),
+  scheduleEnabled: Joi.boolean().optional().default(false),
+  sendCrmMessageEnabled: Joi.boolean().optional().default(false),
+  saveLogEnabled: Joi.boolean().optional().default(false)
 })
 
 const config = {
