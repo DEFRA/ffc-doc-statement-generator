@@ -12,28 +12,29 @@ describe('getDocumentDefinition', () => {
 
   beforeEach(() => {
     generateContent.mockReturnValue(mockContent)
+    console.log(mockContent)
   })
 
   const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT]
 
   documentTypes.forEach(type => {
-    test(`returns correct pageSize for ${type}`, () => {
+    test(`returns correct pageSize for type: ${type.id}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
       expect(result.pageSize).toBe(A4)
     })
 
-    test(`returns correct content for ${type}`, () => {
+    test(`returns correct content for type: ${type.id}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
       expect(result.content).toBe(mockContent)
       expect(generateContent).toHaveBeenCalledWith(mockRequest, type)
     })
 
-    test(`returns all defined styles for ${type}`, () => {
+    test(`returns all defined styles for type: ${type.id}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
       expect(result.styles).toStrictEqual(styles)
     })
 
-    test(`sets default style as default style for ${type}`, () => {
+    test(`sets default style as default style for type: ${type.id}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
       expect(result.defaultStyle).toBe(styles.default)
     })
