@@ -29,7 +29,8 @@ describe('process statement message', () => {
     jest.resetAllMocks()
     receiver = {
       completeMessage: jest.fn(),
-      deadLetterMessage: jest.fn()
+      deadLetterMessage: jest.fn(),
+      abandonMessage: jest.fn()
     }
   })
 
@@ -178,7 +179,6 @@ describe('process statement message', () => {
       body: mockStatement,
       applicationProperties: {
         type: STATEMENT.type
-
       }
     }
     mockGenerator.mockImplementation(() => {

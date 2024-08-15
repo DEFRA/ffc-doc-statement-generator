@@ -10,7 +10,11 @@ const schema = Joi.object({
   statementReceiverApiVersion: Joi.string().required(),
   statementReceiverEndpoint: Joi.string().required(),
   schedulesArePublished: Joi.boolean().required().default(false),
-  showSfi23PaymentPeriod: Joi.boolean().optional().default(false)
+  showSfi23PaymentPeriod: Joi.boolean().optional().default(false),
+  sfi23QuarterlyStatementEnabled: Joi.boolean().default(false),
+  scheduleEnabled: Joi.boolean().default(false),
+  sendCrmMessageEnabled: Joi.boolean().default(false),
+  saveLogEnabled: Joi.boolean().default(false)
 })
 
 const config = {
@@ -18,7 +22,11 @@ const config = {
   statementReceiverApiVersion: process.env.STATEMENT_RECEIVER_API_VERSION,
   statementReceiverEndpoint: process.env.STATEMENT_RECEIVER_ENDPOINT,
   schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED,
-  showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD
+  showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD,
+  sfi23QuarterlyStatementEnabled: process.env.SFI23QUARTERLYSTATEMENT_ENABLED,
+  scheduleEnabled: process.env.SCHEDULE_ENABLED,
+  sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
+  saveLogEnabled: process.env.SAVE_LOG_ENABLED
 }
 
 const result = schema.validate(config, {
@@ -39,4 +47,5 @@ value.publishTopic = mqConfig.publishTopic
 value.crmTopic = mqConfig.crmTopic
 value.dbConfig = dbConfig
 value.storageConfig = storageConfig
+
 module.exports = value
