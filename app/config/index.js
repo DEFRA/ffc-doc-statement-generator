@@ -29,8 +29,6 @@ const config = {
   saveLogEnabled: process.env.SAVE_LOG_ENABLED
 }
 
-console.log(config)
-
 const result = schema.validate(config, {
   abortEarly: false
 })
