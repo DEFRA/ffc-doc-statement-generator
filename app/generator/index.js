@@ -36,7 +36,7 @@ async function createAndPublishDocument (request, type) {
 
 async function shouldSendNotification (request, type) {
   const isPublishEnabledForType = (type.type === SFI23QUARTERLYSTATEMENT.type && config.sfi23QuarterlyStatementEnabled) || (type.type === SCHEDULE.type && config.scheduleEnabled)
-  const isNotifyAllowed = type.type !== SFI23QUARTERLYSTATEMENT.type && type.type !== SCHEDULE.type && !(await getNoNotifyByAgreementNumber(request.scheme.agreementNumber))
+  const isNotifyAllowed = (type.type !== SFI23QUARTERLYSTATEMENT.type && type.type !== SCHEDULE.type && !(await getNoNotifyByAgreementNumber(request.scheme.agreementNumber))) || (type.type === SFI23QUARTERLYSTATEMENT.type && !request.excludedFromNotify)
   return isPublishEnabledForType || isNotifyAllowed
 }
 

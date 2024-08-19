@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "2.5.20",
+  "version": "2.5.21",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -21,7 +21,8 @@
     "Marc Templeton m.templeton@kainos.com",
     "Abidemi Adio abidemi.adio@defra.gov.uk",
     "Leigh Godson leigh.godson.external@eviden.com",
-    "Amirs Ishmuhametovs amirs.ishmuhametovs@defra.gov.uk "
+    "Amirs Ishmuhametovs amirs.ishmuhametovs@defra.gov.uk",
+    "Sam Plackett samuel.plackett@eviden.com"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {

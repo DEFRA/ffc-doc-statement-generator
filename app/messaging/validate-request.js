@@ -21,7 +21,7 @@ const validateRequest = (request, type) => {
       throw new Error(`Unknown request type: ${type}`)
   }
   if (validationResult.error) {
-    const error = new Error(`Request content is invalid for ${type}, ${validationResult.error.message}`)
+    const error = new Error(`Request content is invalid for ${type.name}, ${validationResult.error.message}`)
     error.category = VALIDATION
     throw error
   }

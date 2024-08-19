@@ -265,5 +265,9 @@ module.exports = Joi.object({
     'number.base': 'Document reference must be a number',
     'number.integer': 'Document reference must be an integer',
     'any.required': 'Document reference is required'
+  }),
+  excludedFromNotify: Joi.boolean().required().messages({
+    'boolean.base': 'Excluded from notify must be a boolean',
+    'any.required': 'Excluded from notify is required'
   })
 }).required()
