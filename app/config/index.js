@@ -23,10 +23,10 @@ const config = {
   statementReceiverEndpoint: process.env.STATEMENT_RECEIVER_ENDPOINT,
   schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED,
   showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD,
-  sfi23QuarterlyStatementEnabled: process.env.SFI23QUARTERLYSTATEMENT_ENABLED,
-  scheduleEnabled: process.env.SCHEDULE_ENABLED,
-  sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
-  saveLogEnabled: process.env.SAVE_LOG_ENABLED
+  sfi23QuarterlyStatementEnabled: typeof process.env.SFI23QUARTERLYSTATEMENT_ENABLED === 'boolean' ? process.env.SFI23QUARTERLYSTATEMENT_ENABLED : false,
+  scheduleEnabled: typeof process.env.SCHEDULE_ENABLED === 'boolean' ? process.env.SCHEDULE_ENABLED : false,
+  sendCrmMessageEnabled: typeof process.env.SEND_CRM_MESSAGE_ENABLED === 'boolean' ? process.env.SEND_CRM_MESSAGE_ENABLED : false,
+  saveLogEnabled: typeof process.env.SAVE_LOG_ENABLED === 'boolean' ? process.env.SAVE_LOG_ENABLED : false
 }
 
 const result = schema.validate(config, {
