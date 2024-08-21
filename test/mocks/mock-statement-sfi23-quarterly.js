@@ -55,5 +55,6 @@ module.exports = {
     }
   ],
   previousPaymentCount: 1,
-  documentReference: 1
+  documentReference: 1,
+  excludedFromNotify: false
 }
