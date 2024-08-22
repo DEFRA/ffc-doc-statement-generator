@@ -71,7 +71,7 @@ describe('Generate document', () => {
       beforeEach(() => {
         publish.mockResolvedValue(MOCK_SFI23QUARTERLYSTATEMENT_FILENAME)
 
-        request = MOCK_SFI23QUARTERLYSTATEMENT
+        request = JSON.parse(JSON.stringify(MOCK_SFI23QUARTERLYSTATEMENT))
         type = SFI23QUARTERLYSTATEMENT
       })
 
@@ -138,6 +138,12 @@ describe('Generate document', () => {
         test('sfi23-quarterly should call publish with mockPdfPrinter.createPdfKitDocument, request, TIMESTAMP_SYSTEM_TIME and type', async () => {
           await generateDocument(request, type)
           expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
+        })
+
+        test('sfi23-quarterly should not call sendPublishMessage if excludedFromNotify is true', async () => {
+          request.excludedFromNotify = true
+          await generateDocument(request, type)
+          expect(sendPublishMessage).not.toHaveBeenCalled()
         })
 
         test('sfi23-quarterly should call sendPublishMessage', async () => {
