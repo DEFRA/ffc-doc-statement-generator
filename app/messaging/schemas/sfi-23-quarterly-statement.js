@@ -251,7 +251,7 @@ module.exports = Joi.object({
     'any.required': 'Total payments are required'
   }),
   scheme: schemeSchema,
-  actionGroups: Joi.array().items(actionGroupsSchema).min(1).required().messages({
+  actionGroups: Joi.array().items(actionGroupsSchema).optional().messages({
     'array.base': 'Action groups must be an array',
     'array.min': 'Action groups array must have at least one item',
     'any.required': 'Action groups array is required'
