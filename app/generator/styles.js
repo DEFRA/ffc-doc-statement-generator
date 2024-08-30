@@ -11,34 +11,40 @@ module.exports = {
   default: {
     font: 'Arial',
     fontSize: 12,
-    lineHeight: 1.5
+    lineHeight: 1.2
   },
   header1: {
     fontSize: 16,
+    lineHeight: 1.2,
     bold: true,
     margin: [zeroPoint, tenPoints, zeroPoint, tenPoints]
   },
   header2: {
     fontSize: 14,
+    lineHeight: 1.2,
     bold: true,
     margin: [zeroPoint, twentyPoints, zeroPoint, tenPoints]
   },
   tableHeader2: {
     fontSize: 14,
+    lineHeight: 1.2,
     bold: true,
     margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]
   },
   header3: {
     fontSize: 12,
+    lineHeight: 1.2,
     bold: true,
     margin: [zeroPoint, fivePoints, zeroPoint, fivePoints]
   },
   subTitle: {
     fontSize: 18,
+    lineHeight: 1.2,
     margin: [zeroPoint, zeroPoint, zeroPoint, thirtyPoints]
   },
   SFIAHeader: {
     fontSize: 16,
+    lineHeight: 1.2,
     bold: true,
     margin: [zeroPoint, twentyPoints, zeroPoint, tenPoints]
   },
@@ -52,6 +58,7 @@ module.exports = {
   },
   tableHeader: {
     fontSize: 12,
+    lineHeight: 1.2,
     bold: true,
     margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]
   },
@@ -63,8 +70,8 @@ module.exports = {
   },
   address: {
     margin: [zeroPoint, fivePoints, zeroPoint, millimetresToPoints(twentyfivePoints)],
-    fontSize: 9.5,
-    lineHeight: 1.5
+    fontSize: 12,
+    lineHeight: 1.2
   },
   style: {
     margin: [zeroPoint, zeroPoint, zeroPoint, fivePoints]
