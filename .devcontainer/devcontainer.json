@@ -7,7 +7,7 @@
 		"docker-compose.yml"
 	],
 	"service": "ffc-doc-statement-generator",
-	"workspaceFolder": "/home/node",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	//"features": {
 	//	"ghcr.io/devcontainers/features/node:1": {}
 	//},
