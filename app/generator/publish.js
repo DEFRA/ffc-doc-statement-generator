@@ -7,10 +7,14 @@ const publish = (pdfDoc, statement, timestamp, type) => {
     const chunks = []
     pdfDoc.on('data', chunk => chunks.push(chunk))
     pdfDoc.on('end', async () => {
-      await uploadToStorage(chunks, filename)
-      resolve(filename)
+      try {
+        await uploadToStorage(chunks, filename)
+        resolve(filename)
+      } catch (err) {
+        reject(err instanceof Error ? err : new Error(err))
+      }
     })
-    pdfDoc.on('error', (err) => reject(err))
+    pdfDoc.on('error', (err) => reject(err instanceof Error ? err : new Error(err)))
     pdfDoc.end()
   })
 }

@@ -3,11 +3,15 @@ const imagePath = path.join(__dirname, '..', 'images')
 const { millimetresToPoints } = require('../conversion')
 
 const rpaLogo = () => {
-  const leftMargin = 200
-  const topMargin = 25
+  const width = 200
+  const height = 25
   return {
     stack: [
-      { image: `${imagePath}/v2/rpa-logo.png`, fit: [millimetresToPoints(leftMargin), millimetresToPoints(topMargin)], style: 'logo' }
+      {
+        image: `${imagePath}/v2/rpa-logo.png`,
+        fit: [millimetresToPoints(width), millimetresToPoints(height)],
+        style: 'logo'
+      }
     ]
   }
 }
