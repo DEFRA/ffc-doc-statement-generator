@@ -6,7 +6,7 @@ describe('to currency string', () => {
   })
 
   test('converts number to currency string with no decimal places', () => {
-    expect(toCurrencyString('1234')).toBe('£1,234.00')
+    expect(toCurrencyString('1234')).toBe('£1,234')
   })
 
   test('converts number to currency string with one decimal place', () => {

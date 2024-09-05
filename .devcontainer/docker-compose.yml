@@ -1,0 +1,29 @@
+services:
+  ffc-doc-statement-generator:
+    build:
+      target: development
+    image: ffc-doc-statement-generator-development
+    container_name: ffc-doc-statement-generator-development
+    ports:
+      - "9288:9229"
+    volumes:
+      - ../.gitignore:/workspaces:cached/.gitignore
+      - ..:/workspaces:cached
+    environment:
+      AZURE_STORAGE_CONNECTION_STRING: DefaultEndpointsProtocol=http;AccountName=devstoreaccount1;AccountKey=Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;BlobEndpoint=http://ffc-doc-statement-azurite:10000/devstoreaccount1;
+
+  ffc-doc-statement-generator-postgres:
+    ports:
+      - "5488:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  ffc-doc-statement-azurite:
+    volumes:
+      - azurite_data:/data
+    ports:
+      - "10081:10000"
+
+volumes:
+  azurite_data:
+  postgres_data:
