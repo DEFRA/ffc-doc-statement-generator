@@ -18,6 +18,13 @@ jest.mock('../../../app/generator/content/get-address', () => {
   })
 })
 
+// Mock the rpaLogo module
+jest.mock('../../../app/generator/content/rpa-logo', () => {
+  return jest.fn().mockImplementation(() => {
+    return 'Mocked RPA Logo'
+  })
+})
+
 describe('summary', () => {
   test('should correctly generate the summary', () => {
     const mockSfi23QuarterlyStatement = {
@@ -30,8 +37,11 @@ describe('summary', () => {
     const summaryResult = summary(mockSfi23QuarterlyStatement)
 
     expect(moment.locale).toHaveBeenCalledWith('en-gb')
-    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Single Business Identifier (SBI): ', bold: true, lineBreak: false }, `${mockSfi23QuarterlyStatement.sbi}`] })
-    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Business name: ', bold: true, lineBreak: false }, `${mockSfi23QuarterlyStatement.businessName}`] })
-    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Statement date: ', bold: true, lineBreak: false }, `${moment(mockSfi23QuarterlyStatement.transactionDate).format('LL')}`] })
+    expect(summaryResult.stack).toContainEqual('Mocked RPA Logo')
+    expect(summaryResult.stack).toContainEqual('Mocked Address')
+    expect(summaryResult.stack).toContainEqual({ text: '', style: 'notifyMargin' })
+    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Single Business Identifier (SBI): ', bold: true, style: 'separator' }, `${mockSfi23QuarterlyStatement.sbi}`] })
+    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Business name: ', bold: true }, `${mockSfi23QuarterlyStatement.businessName}`] })
+    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Statement date: ', bold: true }, `${moment(mockSfi23QuarterlyStatement.transactionDate).format('LL')}`] })
   })
 })

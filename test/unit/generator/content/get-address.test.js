@@ -13,22 +13,12 @@ describe('get address', () => {
 
     test('should return business name and new line', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n`)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -39,22 +29,12 @@ describe('get address', () => {
 
     test('should return business name and each address value in order separated by new lines', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line1}\n${address.line2}\n${address.line3}\n${address.line4}\n${address.line5}\n${address.postcode}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line1}\n${address.line2}\n${address.line3}\n${address.line4}\n${address.line5}\n${address.postcode}\n`)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -70,22 +50,12 @@ describe('get address', () => {
 
     test('should return business name and each address value in order separated by new lines ignoring those which are undefined', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -101,22 +71,12 @@ describe('get address', () => {
 
     test('should return business name and each address value in order separated by new lines ignoring those which are null', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -132,22 +92,12 @@ describe('get address', () => {
 
     test('should return business name and each address value in order separated by new lines ignoring those which are empty', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 })

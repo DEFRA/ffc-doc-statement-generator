@@ -1,7 +1,8 @@
-const styles = require('../../../app/generator/styles')
+const styles = require('../../../app/generator/print-styles')
 const getDocumentDefinition = require('../../../app/generator/get-document-definition')
 const { generateContent } = require('../../../app/generator/content')
 const { A4 } = require('../../../app/generator/page-sizes')
+const { millimetresToPoints } = require('../../../app/generator/conversion')
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../../../app/constants/document-types')
 
 jest.mock('../../../app/generator/content')
@@ -12,7 +13,6 @@ describe('getDocumentDefinition', () => {
 
   beforeEach(() => {
     generateContent.mockReturnValue(mockContent)
-    console.log(mockContent)
   })
 
   const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT]
@@ -39,24 +39,24 @@ describe('getDocumentDefinition', () => {
       expect(result.defaultStyle).toBe(styles.default)
     })
 
-    test(`sets the left margin for ${type}`, () => {
+    test(`sets the left margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[0]).toBe(70.875)
+      expect(result.pageMargins[0]).toBe(millimetresToPoints(15))
     })
 
-    test(`sets the top margin for ${type}`, () => {
+    test(`sets the top margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[1]).toBe(14.175)
+      expect(result.pageMargins[1]).toBe(millimetresToPoints(5))
     })
 
-    test(`sets the right margin for ${type}`, () => {
+    test(`sets the right margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[2]).toBe(70.875)
+      expect(result.pageMargins[2]).toBe(millimetresToPoints(15))
     })
 
-    test(`sets the bottom margin for ${type}`, () => {
+    test(`sets the bottom margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[3]).toBe(14.175)
+      expect(result.pageMargins[3]).toBe(millimetresToPoints(5))
     })
   })
 })
@@ -72,5 +72,9 @@ describe('generateContent', () => {
 
   test('handles SFI23QUARTERLYSTATEMENT type', () => {
     expect(() => generateContent({}, SFI23QUARTERLYSTATEMENT)).not.toThrow()
+  })
+
+  test('handles SFI23ADVANCEDSTATEMENT type', () => {
+    expect(() => generateContent({}, SFI23ADVANCEDSTATEMENT)).not.toThrow()
   })
 })

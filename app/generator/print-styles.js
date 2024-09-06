@@ -3,15 +3,13 @@ const { millimetresToPoints } = require('./conversion')
 const zeroMillimeters = 0
 const fiveMillimeters = 5
 const tenMillimeters = 10
-const fifteenMillimeters = 15
 const twentyFiveMillimeters = 25
+const thirtyFiveMillimeters = 35
 const twoHundredMillimeters = 200
-const ninetyFivePointFourMillimeters = 95.4
-const twentySixPointEightMillimeters = 26.8
-const addressPaneLeft = 24.6
-const addressPaneTop = 14
-const pageMarginTop = millimetresToPoints(zeroMillimeters)
-const pageMarginLeft = millimetresToPoints(fifteenMillimeters)
+const addressPaneWidth = 95.4
+const addressPaneHeight = 26.8
+const addressPaneLeft = 20
+const addressPaneTop = 10
 
 module.exports = {
   default: {
@@ -65,32 +63,31 @@ module.exports = {
     fontSize: 12,
     lineHeight: 1.2,
     bold: true,
-    margin: [zeroMillimeters, millimetresToPoints(fiveMillimeters), zeroMillimeters, millimetresToPoints(fiveMillimeters)]
+    margin: [zeroMillimeters, zeroMillimeters, zeroMillimeters, millimetresToPoints(fiveMillimeters)]
   },
   tableNumber: {
     alignment: 'right'
   },
   logo: {
     width: millimetresToPoints(twoHundredMillimeters),
-    height: millimetresToPoints(twentyFiveMillimeters),
-    margin: [zeroMillimeters, zeroMillimeters, zeroMillimeters, zeroMillimeters]
+    height: millimetresToPoints(twentyFiveMillimeters)
   },
   address: {
     margin: [
-      millimetresToPoints(addressPaneLeft) - pageMarginLeft,
-      millimetresToPoints(addressPaneTop) - pageMarginTop,
+      millimetresToPoints(addressPaneLeft),
+      millimetresToPoints(addressPaneTop),
       zeroMillimeters,
       zeroMillimeters
     ],
     fontSize: 8.5,
-    width: millimetresToPoints(ninetyFivePointFourMillimeters),
-    height: millimetresToPoints(twentySixPointEightMillimeters),
+    width: millimetresToPoints(addressPaneWidth),
+    height: millimetresToPoints(addressPaneHeight),
     lineHeight: 1
+  },
+  notifyMargin: {
+    margin: [zeroMillimeters, millimetresToPoints(thirtyFiveMillimeters), zeroMillimeters, zeroMillimeters]
   },
   separator: {
     margin: [zeroMillimeters, millimetresToPoints(tenMillimeters), zeroMillimeters, zeroMillimeters]
-  },
-  pageMargin: {
-    margin: [pageMarginLeft, pageMarginTop, pageMarginLeft, pageMarginTop]
   }
 }
