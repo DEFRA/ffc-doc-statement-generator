@@ -63,6 +63,15 @@ describe('getDocumentDefinition', () => {
       const result = getDocumentDefinition(mockRequest, type)
       expect(result.pageMargins[3]).toBe(millimetresToPoints(bottomMargin))
     })
+
+    test(`returns an object with the correct structure for type: ${type.id}`, () => {
+      const result = getDocumentDefinition(mockRequest, type)
+      expect(result).toHaveProperty('content')
+      expect(result).toHaveProperty('pageSize')
+      expect(result).toHaveProperty('pageMargins')
+      expect(result).toHaveProperty('styles')
+      expect(result).toHaveProperty('defaultStyle')
+    })
   })
 })
 
