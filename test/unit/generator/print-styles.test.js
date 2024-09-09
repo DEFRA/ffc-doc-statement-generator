@@ -1,7 +1,18 @@
 const styles = require('../../../app/generator/print-styles')
 const { millimetresToPoints } = require('../../../app/generator/conversion')
 
-describe('Print Valid Styles - to pass through Notify Letter validation', () => {
+describe('Print Styles', () => {
+  const zeroMillimeters = 0
+  const fiveMillimeters = 5
+  const tenMillimeters = 10
+  const twentyFiveMillimeters = 25
+  const thirtyFiveMillimeters = 35
+  const twoHundredMillimeters = 200
+  const addressPaneWidth = 95.4
+  const addressPaneHeight = 26.8
+  const addressPaneLeft = 20
+  const addressPaneTop = 10
+
   test('default style', () => {
     expect(styles.default).toEqual({
       font: 'Arial',
@@ -16,10 +27,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
       lineHeight: 1.2,
       bold: true,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -30,10 +41,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
       lineHeight: 1.2,
       bold: true,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -52,10 +63,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
       lineHeight: 1.2,
       bold: true,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -65,10 +76,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
       fontSize: 19,
       lineHeight: 1.2,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -79,10 +90,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
       lineHeight: 1.2,
       bold: true,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(zeroMillimeters),
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -98,10 +109,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
     expect(styles.table).toEqual({
       fontSize: 10,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(5),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        zeroMillimeters,
+        millimetresToPoints(fiveMillimeters),
+        zeroMillimeters,
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -112,10 +123,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
       lineHeight: 1.2,
       bold: true,
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(0),
-        millimetresToPoints(0),
-        millimetresToPoints(5)
+        zeroMillimeters,
+        zeroMillimeters,
+        zeroMillimeters,
+        millimetresToPoints(fiveMillimeters)
       ]
     })
   })
@@ -128,22 +139,22 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
 
   test('logo style', () => {
     expect(styles.logo).toEqual({
-      width: millimetresToPoints(200),
-      height: millimetresToPoints(25)
+      width: millimetresToPoints(twoHundredMillimeters),
+      height: millimetresToPoints(twentyFiveMillimeters)
     })
   })
 
   test('address style', () => {
     expect(styles.address).toEqual({
       margin: [
-        millimetresToPoints(20),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(0)
+        millimetresToPoints(addressPaneLeft),
+        millimetresToPoints(addressPaneTop),
+        zeroMillimeters,
+        zeroMillimeters
       ],
       fontSize: 8.5,
-      width: millimetresToPoints(95.4),
-      height: millimetresToPoints(26.8),
+      width: millimetresToPoints(addressPaneWidth),
+      height: millimetresToPoints(addressPaneHeight),
       lineHeight: 1
     })
   })
@@ -151,10 +162,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
   test('notifyMargin style', () => {
     expect(styles.notifyMargin).toEqual({
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(35),
-        millimetresToPoints(0),
-        millimetresToPoints(0)
+        zeroMillimeters,
+        millimetresToPoints(thirtyFiveMillimeters),
+        zeroMillimeters,
+        zeroMillimeters
       ]
     })
   })
@@ -162,10 +173,10 @@ describe('Print Valid Styles - to pass through Notify Letter validation', () => 
   test('separator style', () => {
     expect(styles.separator).toEqual({
       margin: [
-        millimetresToPoints(0),
-        millimetresToPoints(10),
-        millimetresToPoints(0),
-        millimetresToPoints(0)
+        zeroMillimeters,
+        millimetresToPoints(tenMillimeters),
+        zeroMillimeters,
+        zeroMillimeters
       ]
     })
   })

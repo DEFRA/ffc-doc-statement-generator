@@ -11,6 +11,11 @@ describe('getDocumentDefinition', () => {
   const mockRequest = {}
   const mockContent = {}
 
+  const leftMargin = 15
+  const topMargin = 5
+  const rightMargin = 15
+  const bottomMargin = 5
+
   beforeEach(() => {
     generateContent.mockReturnValue(mockContent)
   })
@@ -41,22 +46,22 @@ describe('getDocumentDefinition', () => {
 
     test(`sets the left margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[0]).toBe(millimetresToPoints(15))
+      expect(result.pageMargins[0]).toBe(millimetresToPoints(leftMargin))
     })
 
     test(`sets the top margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[1]).toBe(millimetresToPoints(5))
+      expect(result.pageMargins[1]).toBe(millimetresToPoints(topMargin))
     })
 
     test(`sets the right margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[2]).toBe(millimetresToPoints(15))
+      expect(result.pageMargins[2]).toBe(millimetresToPoints(rightMargin))
     })
 
     test(`sets the bottom margin for ${type.name}`, () => {
       const result = getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[3]).toBe(millimetresToPoints(5))
+      expect(result.pageMargins[3]).toBe(millimetresToPoints(bottomMargin))
     })
   })
 })
