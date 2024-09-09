@@ -10,7 +10,7 @@ ARG PORT_DEBUG
 EXPOSE ${PORT_DEBUG}
 
 USER root
-RUN apk upgrade --no-cache && apk add openjdk17-jre --no-cache
+RUN apk upgrade --no-cache && apk --no-cache add openjdk17-jre
 
 USER node
 COPY --chown=node:node package*.json ./
