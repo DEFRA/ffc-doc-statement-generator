@@ -1,11 +1,11 @@
 const { millimetresToPoints } = require('./conversion')
 
 const zeroMillimeters = 0
-const fiveMillimeters = 5
-const tenMillimeters = 10
-const twentyFiveMillimeters = 25
-const thirtyFiveMillimeters = 35
-const twoHundredMillimeters = 200
+const topBottomMargin = 5
+const topMargin = 10
+const logoHeight = 25
+const notifyTopMargin = 35
+const logoWidth = 200
 const addressPaneWidth = 95.4
 const addressPaneHeight = 26.8
 const addressPaneLeft = 20
@@ -21,13 +21,13 @@ module.exports = {
     fontSize: 20,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(tenMillimeters), millimetresToPoints(zeroMillimeters), millimetresToPoints(fiveMillimeters)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
   },
   header2: {
     fontSize: 19,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(tenMillimeters), millimetresToPoints(zeroMillimeters), millimetresToPoints(fiveMillimeters)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
   },
   tableHeader2: {
     fontSize: 14,
@@ -38,18 +38,18 @@ module.exports = {
     fontSize: 14,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(tenMillimeters), millimetresToPoints(zeroMillimeters), millimetresToPoints(fiveMillimeters)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
   },
   subTitle: {
     fontSize: 19,
     lineHeight: 1.2,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(tenMillimeters), millimetresToPoints(zeroMillimeters), millimetresToPoints(fiveMillimeters)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
   },
   SFIAHeader: {
     fontSize: 20,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(tenMillimeters), millimetresToPoints(zeroMillimeters), millimetresToPoints(fiveMillimeters)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
   },
   link: {
     decoration: 'underline',
@@ -57,20 +57,20 @@ module.exports = {
   },
   table: {
     fontSize: 10,
-    margin: [zeroMillimeters, millimetresToPoints(fiveMillimeters), zeroMillimeters, millimetresToPoints(fiveMillimeters)]
+    margin: [zeroMillimeters, millimetresToPoints(topBottomMargin), zeroMillimeters, millimetresToPoints(topBottomMargin)]
   },
   tableHeader: {
     fontSize: 12,
     lineHeight: 1.2,
     bold: true,
-    margin: [zeroMillimeters, zeroMillimeters, zeroMillimeters, millimetresToPoints(fiveMillimeters)]
+    margin: [zeroMillimeters, zeroMillimeters, zeroMillimeters, millimetresToPoints(topBottomMargin)]
   },
   tableNumber: {
     alignment: 'right'
   },
   logo: {
-    width: millimetresToPoints(twoHundredMillimeters),
-    height: millimetresToPoints(twentyFiveMillimeters)
+    width: millimetresToPoints(logoWidth),
+    height: millimetresToPoints(logoHeight)
   },
   address: {
     margin: [
@@ -85,9 +85,9 @@ module.exports = {
     lineHeight: 1
   },
   notifyMargin: {
-    margin: [zeroMillimeters, millimetresToPoints(thirtyFiveMillimeters), zeroMillimeters, zeroMillimeters]
+    margin: [zeroMillimeters, millimetresToPoints(notifyTopMargin), zeroMillimeters, zeroMillimeters]
   },
   separator: {
-    margin: [zeroMillimeters, millimetresToPoints(tenMillimeters), zeroMillimeters, zeroMillimeters]
+    margin: [zeroMillimeters, millimetresToPoints(topMargin), zeroMillimeters, zeroMillimeters]
   }
 }
