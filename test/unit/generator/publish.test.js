@@ -71,4 +71,18 @@ describe('publish', () => {
 
     await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('uploadError')
   })
+
+  test('should reject with error on getOutboundBlobClient error', async () => {
+    const mockError = new Error('blobClientError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
+    })
+    getOutboundBlobClient.mockRejectedValue(mockError)
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('blobClientError')
+  })
 })

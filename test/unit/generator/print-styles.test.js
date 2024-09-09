@@ -3,11 +3,11 @@ const { millimetresToPoints } = require('../../../app/generator/conversion')
 
 describe('Print Styles', () => {
   const zeroMillimeters = 0
-  const fiveMillimeters = 5
-  const tenMillimeters = 10
-  const twentyFiveMillimeters = 25
-  const thirtyFiveMillimeters = 35
-  const twoHundredMillimeters = 200
+  const topBottomMargin = 5
+  const topMargin = 10
+  const logoHeight = 25
+  const notifyTopMargin = 35
+  const logoWidth = 200
   const addressPaneWidth = 95.4
   const addressPaneHeight = 26.8
   const addressPaneLeft = 20
@@ -28,9 +28,9 @@ describe('Print Styles', () => {
       bold: true,
       margin: [
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -42,9 +42,9 @@ describe('Print Styles', () => {
       bold: true,
       margin: [
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -64,9 +64,9 @@ describe('Print Styles', () => {
       bold: true,
       margin: [
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -77,9 +77,9 @@ describe('Print Styles', () => {
       lineHeight: 1.2,
       margin: [
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -91,9 +91,9 @@ describe('Print Styles', () => {
       bold: true,
       margin: [
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -110,9 +110,9 @@ describe('Print Styles', () => {
       fontSize: 10,
       margin: [
         zeroMillimeters,
-        millimetresToPoints(fiveMillimeters),
+        millimetresToPoints(topBottomMargin),
         zeroMillimeters,
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -126,7 +126,7 @@ describe('Print Styles', () => {
         zeroMillimeters,
         zeroMillimeters,
         zeroMillimeters,
-        millimetresToPoints(fiveMillimeters)
+        millimetresToPoints(topBottomMargin)
       ]
     })
   })
@@ -139,8 +139,8 @@ describe('Print Styles', () => {
 
   test('logo style', () => {
     expect(styles.logo).toEqual({
-      width: millimetresToPoints(twoHundredMillimeters),
-      height: millimetresToPoints(twentyFiveMillimeters)
+      width: millimetresToPoints(logoWidth),
+      height: millimetresToPoints(logoHeight)
     })
   })
 
@@ -163,7 +163,7 @@ describe('Print Styles', () => {
     expect(styles.notifyMargin).toEqual({
       margin: [
         zeroMillimeters,
-        millimetresToPoints(thirtyFiveMillimeters),
+        millimetresToPoints(notifyTopMargin),
         zeroMillimeters,
         zeroMillimeters
       ]
@@ -174,7 +174,7 @@ describe('Print Styles', () => {
     expect(styles.separator).toEqual({
       margin: [
         zeroMillimeters,
-        millimetresToPoints(tenMillimeters),
+        millimetresToPoints(topMargin),
         zeroMillimeters,
         zeroMillimeters
       ]
@@ -194,9 +194,9 @@ describe('Print Styles', () => {
         bold: true,
         margin: [
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(tenMillimeters),
+          millimetresToPoints(topMargin),
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       header2: {
@@ -205,9 +205,9 @@ describe('Print Styles', () => {
         bold: true,
         margin: [
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(tenMillimeters),
+          millimetresToPoints(topMargin),
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       tableHeader2: {
@@ -221,9 +221,9 @@ describe('Print Styles', () => {
         bold: true,
         margin: [
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(tenMillimeters),
+          millimetresToPoints(topMargin),
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       subTitle: {
@@ -231,9 +231,9 @@ describe('Print Styles', () => {
         lineHeight: 1.2,
         margin: [
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(tenMillimeters),
+          millimetresToPoints(topMargin),
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       SFIAHeader: {
@@ -242,9 +242,9 @@ describe('Print Styles', () => {
         bold: true,
         margin: [
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(tenMillimeters),
+          millimetresToPoints(topMargin),
           millimetresToPoints(zeroMillimeters),
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       link: {
@@ -255,9 +255,9 @@ describe('Print Styles', () => {
         fontSize: 10,
         margin: [
           zeroMillimeters,
-          millimetresToPoints(fiveMillimeters),
+          millimetresToPoints(topBottomMargin),
           zeroMillimeters,
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       tableHeader: {
@@ -268,15 +268,15 @@ describe('Print Styles', () => {
           zeroMillimeters,
           zeroMillimeters,
           zeroMillimeters,
-          millimetresToPoints(fiveMillimeters)
+          millimetresToPoints(topBottomMargin)
         ]
       },
       tableNumber: {
         alignment: 'right'
       },
       logo: {
-        width: millimetresToPoints(twoHundredMillimeters),
-        height: millimetresToPoints(twentyFiveMillimeters)
+        width: millimetresToPoints(logoWidth),
+        height: millimetresToPoints(logoHeight)
       },
       address: {
         margin: [
@@ -293,7 +293,7 @@ describe('Print Styles', () => {
       notifyMargin: {
         margin: [
           zeroMillimeters,
-          millimetresToPoints(thirtyFiveMillimeters),
+          millimetresToPoints(notifyTopMargin),
           zeroMillimeters,
           zeroMillimeters
         ]
@@ -301,7 +301,7 @@ describe('Print Styles', () => {
       separator: {
         margin: [
           zeroMillimeters,
-          millimetresToPoints(tenMillimeters),
+          millimetresToPoints(topMargin),
           zeroMillimeters,
           zeroMillimeters
         ]
