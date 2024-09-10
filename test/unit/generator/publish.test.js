@@ -127,4 +127,31 @@ describe('publish', () => {
 
     await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
   })
+
+  test('should reject with new Error if pdfDoc emits non-error value', async () => {
+    const mockError = 'testError'
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'error') {
+        callback(mockError)
+      }
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
+
+  test('should reject with new Error if uploadToStorage throws non-error value', async () => {
+    const mockError = 'uploadError'
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
+    })
+    mockBlobClient.upload.mockImplementation(() => {
+      throw mockError
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('uploadError')
+  })
 })
