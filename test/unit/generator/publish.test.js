@@ -101,4 +101,30 @@ describe('publish', () => {
 
     await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('uploadError')
   })
+
+  test('should reject with error if pdfDoc emits error after data event', async () => {
+    const mockError = new Error('testError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'error') {
+        callback(mockError)
+      }
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
+
+  test('should reject with error if pdfDoc emits error after end event', async () => {
+    const mockError = new Error('testError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'end') {
+        callback()
+      } else if (event === 'error') {
+        callback(mockError)
+      }
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
 })
