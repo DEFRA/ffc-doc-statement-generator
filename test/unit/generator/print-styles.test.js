@@ -5,12 +5,13 @@ describe('Print Styles', () => {
   const zeroMillimeters = 0
   const topBottomMargin = 5
   const topMargin = 10
+  const headerTextMargin = 5
   const logoHeight = 25
   const notifyTopMargin = 35
   const logoWidth = 200
   const addressPaneWidth = 95.4
   const addressPaneHeight = 26.8
-  const addressPaneLeft = 20
+  const addressPaneLeft = 10
   const addressPaneTop = 10
 
   test('default style', () => {
@@ -30,7 +31,7 @@ describe('Print Styles', () => {
         millimetresToPoints(zeroMillimeters),
         millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(topBottomMargin)
+        millimetresToPoints(headerTextMargin)
       ]
     })
   })
@@ -44,7 +45,7 @@ describe('Print Styles', () => {
         millimetresToPoints(zeroMillimeters),
         millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(topBottomMargin)
+        millimetresToPoints(headerTextMargin)
       ]
     })
   })
@@ -66,7 +67,7 @@ describe('Print Styles', () => {
         millimetresToPoints(zeroMillimeters),
         millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(topBottomMargin)
+        millimetresToPoints(headerTextMargin)
       ]
     })
   })
@@ -79,7 +80,7 @@ describe('Print Styles', () => {
         millimetresToPoints(zeroMillimeters),
         millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(topBottomMargin)
+        millimetresToPoints(headerTextMargin)
       ]
     })
   })
@@ -93,7 +94,7 @@ describe('Print Styles', () => {
         millimetresToPoints(zeroMillimeters),
         millimetresToPoints(topMargin),
         millimetresToPoints(zeroMillimeters),
-        millimetresToPoints(topBottomMargin)
+        millimetresToPoints(headerTextMargin)
       ]
     })
   })

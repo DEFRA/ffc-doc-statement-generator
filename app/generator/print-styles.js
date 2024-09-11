@@ -8,7 +8,7 @@ const notifyTopMargin = 35
 const logoWidth = 200
 const addressPaneWidth = 95.4
 const addressPaneHeight = 26.8
-const addressPaneLeft = 20
+const addressPaneLeft = 10
 const addressPaneTop = 10
 
 module.exports = {
