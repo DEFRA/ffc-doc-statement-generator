@@ -1,7 +1,7 @@
 const { millimetresToPoints } = require('./conversion')
 
 const zeroMillimeters = 0
-const topBottomMargin = 5
+const headerVerticalMargin = 5
 const topMargin = 10
 const logoHeight = 25
 const notifyTopMargin = 35
@@ -21,13 +21,13 @@ module.exports = {
     fontSize: 20,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(headerVerticalMargin)]
   },
   header2: {
     fontSize: 19,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(headerVerticalMargin)]
   },
   tableHeader2: {
     fontSize: 14,
@@ -38,18 +38,18 @@ module.exports = {
     fontSize: 14,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(headerVerticalMargin)]
   },
   subTitle: {
     fontSize: 19,
     lineHeight: 1.2,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(headerVerticalMargin)]
   },
   SFIAHeader: {
     fontSize: 20,
     lineHeight: 1.2,
     bold: true,
-    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(topBottomMargin)]
+    margin: [millimetresToPoints(zeroMillimeters), millimetresToPoints(topMargin), millimetresToPoints(zeroMillimeters), millimetresToPoints(headerVerticalMargin)]
   },
   link: {
     decoration: 'underline',
@@ -57,13 +57,13 @@ module.exports = {
   },
   table: {
     fontSize: 10,
-    margin: [zeroMillimeters, millimetresToPoints(topBottomMargin), zeroMillimeters, millimetresToPoints(topBottomMargin)]
+    margin: [zeroMillimeters, millimetresToPoints(headerVerticalMargin), zeroMillimeters, millimetresToPoints(headerVerticalMargin)]
   },
   tableHeader: {
     fontSize: 12,
     lineHeight: 1.2,
     bold: true,
-    margin: [zeroMillimeters, zeroMillimeters, zeroMillimeters, millimetresToPoints(topBottomMargin)]
+    margin: [zeroMillimeters, zeroMillimeters, zeroMillimeters, millimetresToPoints(headerVerticalMargin)]
   },
   tableNumber: {
     alignment: 'right'
