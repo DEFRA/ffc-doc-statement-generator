@@ -1,4 +1,4 @@
-const MAX_CHARACTERS_PER_LINE = 50 // Define the maximum number of characters per line
+const MAX_CHARACTERS_PER_LINE = 50
 
 const getAddress = (businessName, address) => {
   let fullAddress = `${businessName.toUpperCase()}\n`
