@@ -1,5 +1,5 @@
 const Joi = require('joi')
-const { STATEMENT } = require('../../constants/document-types')
+const { STATEMENT, SCHEDULE, SFI23ADVANCEDSTATEMENT, SFI23QUARTERLYSTATEMENT } = require('../../constants/document-types')
 const minSbi = 105000000
 const maxSbi = 999999999
 const minFrn = 1000000000
@@ -29,7 +29,7 @@ module.exports = Joi.object({
     'any.required': 'Scheme is missing but it is required.',
     'string.base': 'Scheme must be a string.'
   }),
-  documentType: Joi.string().required().allow(STATEMENT).messages({
+  documentType: Joi.string().required().valid(STATEMENT.name, SCHEDULE.name, SFI23ADVANCEDSTATEMENT.name, SFI23QUARTERLYSTATEMENT.name).messages({
     'any.required': 'Document type is missing but it is required.',
     'string.base': 'Document type must be a string.',
     'any.only': 'Document type must be STATEMENT.'
