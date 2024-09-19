@@ -11,9 +11,9 @@ describe('get address', () => {
       address = {}
     })
 
-    test('should return business name and new line', () => {
+    test('should return business name and six new lines', () => {
       const result = getAddress(businessName, address)
-      expect(result.stack[0].text).toBe(`${businessName}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n\n\n\n\n\n\n`)
     })
 
     test('should return style as address', () => {
@@ -48,9 +48,9 @@ describe('get address', () => {
       }
     })
 
-    test('should return business name and each address value in order separated by new lines ignoring those which are undefined', () => {
+    test('should return business name and each address value in order separated by new lines with blank lines for undefined values', () => {
       const result = getAddress(businessName, address)
-      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n\n\n\n`)
     })
 
     test('should return style as address', () => {
@@ -69,9 +69,9 @@ describe('get address', () => {
       }
     })
 
-    test('should return business name and each address value in order separated by new lines ignoring those which are null', () => {
+    test('should return business name and each address value in order separated by new lines with blank lines for null values', () => {
       const result = getAddress(businessName, address)
-      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n\n\n\n`)
     })
 
     test('should return style as address', () => {
@@ -90,9 +90,9 @@ describe('get address', () => {
       }
     })
 
-    test('should return business name and each address value in order separated by new lines ignoring those which are empty', () => {
+    test('should return business name and each address value in order separated by new lines with blank lines for empty values', () => {
       const result = getAddress(businessName, address)
-      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      expect(result.stack[0].text).toBe(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n\n\n\n`)
     })
 
     test('should return style as address', () => {

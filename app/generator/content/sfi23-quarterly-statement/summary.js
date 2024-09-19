@@ -10,7 +10,7 @@ const summary = ({ businessName, address, sbi, transactionDate }) => {
       rpaLogo(),
       getAddress(businessName, address),
       { text: '', style: 'notifyMargin' },
-      { text: [{ text: 'Single Business Identifier (SBI): ', bold: true, style: 'separator' }, `${sbi}`] },
+      { text: [{ text: 'Single Business Identifier (SBI): ', bold: true, style: 'letterSeparator' }, `${sbi}`] },
       { text: [{ text: 'Business name: ', bold: true }, `${businessName}`] },
       { text: [{ text: 'Statement date: ', bold: true }, `${moment(transactionDate).format('LL')}`] }
     ],

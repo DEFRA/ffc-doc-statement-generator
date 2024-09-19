@@ -155,6 +155,8 @@ describe('Print Styles', () => {
       fontSize: 8.5,
       width: millimetresToPoints(addressPaneWidth),
       height: millimetresToPoints(addressPaneHeight),
+      minHeight: millimetresToPoints(addressPaneHeight),
+      minWidth: millimetresToPoints(addressPaneWidth),
       lineHeight: 1
     })
   })
@@ -175,6 +177,18 @@ describe('Print Styles', () => {
       margin: [
         zeroMillimeters,
         millimetresToPoints(topMargin),
+        zeroMillimeters,
+        zeroMillimeters
+      ]
+    })
+  })
+
+  test('letterSeparator style', () => {
+    const minLetterSeparatorTopMargin = 103
+    expect(styles.letterSeparator).toEqual({
+      margin: [
+        zeroMillimeters,
+        millimetresToPoints(minLetterSeparatorTopMargin),
         zeroMillimeters,
         zeroMillimeters
       ]

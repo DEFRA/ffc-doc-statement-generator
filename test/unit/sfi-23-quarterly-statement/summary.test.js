@@ -40,7 +40,7 @@ describe('summary', () => {
     expect(summaryResult.stack).toContainEqual('Mocked RPA Logo')
     expect(summaryResult.stack).toContainEqual('Mocked Address')
     expect(summaryResult.stack).toContainEqual({ text: '', style: 'notifyMargin' })
-    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Single Business Identifier (SBI): ', bold: true, style: 'separator' }, `${mockSfi23QuarterlyStatement.sbi}`] })
+    expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Single Business Identifier (SBI): ', bold: true, style: 'letterSeparator' }, `${mockSfi23QuarterlyStatement.sbi}`] })
     expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Business name: ', bold: true }, `${mockSfi23QuarterlyStatement.businessName}`] })
     expect(summaryResult.stack).toContainEqual({ text: [{ text: 'Statement date: ', bold: true }, `${moment(mockSfi23QuarterlyStatement.transactionDate).format('LL')}`] })
   })

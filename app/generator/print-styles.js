@@ -10,6 +10,7 @@ const addressPaneWidth = 95.4
 const addressPaneHeight = 26.8
 const addressPaneLeft = 20
 const addressPaneTop = 10
+const minLetterSeparatorTopMargin = 103
 
 module.exports = {
   default: {
@@ -82,6 +83,8 @@ module.exports = {
     fontSize: 8.5,
     width: millimetresToPoints(addressPaneWidth),
     height: millimetresToPoints(addressPaneHeight),
+    minHeight: millimetresToPoints(addressPaneHeight), // !!important
+    minWidth: millimetresToPoints(addressPaneWidth), // Ensure minimum width so small addresses pass print validation
     lineHeight: 1
   },
   notifyMargin: {
@@ -89,5 +92,8 @@ module.exports = {
   },
   separator: {
     margin: [zeroMillimeters, millimetresToPoints(topMargin), zeroMillimeters, zeroMillimeters]
+  },
+  letterSeparator: {
+    margin: [zeroMillimeters, millimetresToPoints(minLetterSeparatorTopMargin), zeroMillimeters, zeroMillimeters]
   }
 }
