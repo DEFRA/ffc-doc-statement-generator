@@ -1,17 +1,22 @@
-const styles = require('./styles')
-const { generateContent } = require('./content')
 const { A4 } = require('./page-sizes')
+const style = require('./print-styles')
+const { generateContent } = require('./content')
 const { millimetresToPoints } = require('./conversion')
+const horizontalMargin = 15
+const verticalMargin = 5
 
 const getDocumentDefinition = (request, type) => {
-  const topMargin = 5
-  const sideMargin = 25
   return {
-    pageSize: A4,
     content: generateContent(request, type),
-    styles,
-    defaultStyle: styles.default,
-    pageMargins: [millimetresToPoints(sideMargin), millimetresToPoints(topMargin), millimetresToPoints(sideMargin), millimetresToPoints(topMargin)]
+    pageSize: A4,
+    pageMargins: [
+      millimetresToPoints(horizontalMargin),
+      millimetresToPoints(verticalMargin),
+      millimetresToPoints(horizontalMargin),
+      millimetresToPoints(verticalMargin)
+    ],
+    styles: style,
+    defaultStyle: style.default
   }
 }
 

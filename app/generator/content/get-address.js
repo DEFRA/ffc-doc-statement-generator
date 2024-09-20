@@ -1,14 +1,25 @@
-const { millimetresToPoints } = require('../conversion')
-
+const MAX_CHARACTERS_PER_LINE = 50
+const addressLineAmount = 7
 const getAddress = (businessName, address) => {
-  let fullAddress = `${businessName}\n`
+  let fullAddress = `${businessName.toUpperCase().substring(0, MAX_CHARACTERS_PER_LINE)}\n`
   const addressLines = Object.values(address)
-  const topMargin = 45
-  const leftMargin = 0
-  addressLines.filter(x => x !== undefined && x !== null && x !== '').forEach(x => {
-    fullAddress += `${x}\n`
+
+  const sanitizedAddressLines = addressLines.filter(line => line !== null && line !== undefined && line !== '')
+
+  // !!important - Ensure there are always 7 lines
+  while (sanitizedAddressLines.length < addressLineAmount) {
+    sanitizedAddressLines.push('')
+  }
+
+  sanitizedAddressLines.forEach((x) => {
+    fullAddress += `${x.toUpperCase().substring(0, MAX_CHARACTERS_PER_LINE)}\n`
   })
-  return { text: fullAddress, style: 'address', absolutePosition: { x: millimetresToPoints(leftMargin), y: millimetresToPoints(topMargin) } }
+
+  return {
+    stack: [
+      { text: fullAddress, style: 'address' }
+    ]
+  }
 }
 
 module.exports = getAddress

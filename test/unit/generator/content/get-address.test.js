@@ -11,24 +11,14 @@ describe('get address', () => {
       address = {}
     })
 
-    test('should return business name and new line', () => {
+    test('should return business name in uppercase and new line', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n`)
+      expect(result.stack[0].text).toBe(`${businessName.toUpperCase()}\n\n\n\n\n\n\n\n`)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -37,24 +27,15 @@ describe('get address', () => {
       address = fullAddress
     })
 
-    test('should return business name and each address value in order separated by new lines', () => {
+    test('should return business name and each address value in uppercase and truncated to 50 characters, separated by new lines', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line1}\n${address.line2}\n${address.line3}\n${address.line4}\n${address.line5}\n${address.postcode}\n`)
+      const expectedAddress = `${businessName.toUpperCase()}\n${address.line1.toUpperCase().substring(0, 50)}\n${address.line2.toUpperCase().substring(0, 50)}\n${address.line3.toUpperCase().substring(0, 50)}\n${address.line4.toUpperCase().substring(0, 50)}\n${address.line5.toUpperCase().substring(0, 50)}\n${address.postcode.toUpperCase().substring(0, 50)}\n\n`
+      expect(result.stack[0].text).toBe(expectedAddress)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -68,24 +49,15 @@ describe('get address', () => {
       }
     })
 
-    test('should return business name and each address value in order separated by new lines ignoring those which are undefined', () => {
+    test('should return business name and each address value in uppercase and truncated to 50 characters, separated by new lines ignoring those which are undefined', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      const expectedAddress = `${businessName.toUpperCase()}\n${address.line2.toUpperCase().substring(0, 50)}\n${address.line3.toUpperCase().substring(0, 50)}\n${address.line5.toUpperCase().substring(0, 50)}\n\n\n\n\n`
+      expect(result.stack[0].text).toBe(expectedAddress)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -99,24 +71,15 @@ describe('get address', () => {
       }
     })
 
-    test('should return business name and each address value in order separated by new lines ignoring those which are null', () => {
+    test('should return business name and each address value in uppercase and truncated to 50 characters, separated by new lines ignoring those which are null', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      const expectedAddress = `${businessName.toUpperCase()}\n${address.line2.toUpperCase().substring(0, 50)}\n${address.line3.toUpperCase().substring(0, 50)}\n${address.line5.toUpperCase().substring(0, 50)}\n\n\n\n\n`
+      expect(result.stack[0].text).toBe(expectedAddress)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 
@@ -130,24 +93,15 @@ describe('get address', () => {
       }
     })
 
-    test('should return business name and each address value in order separated by new lines ignoring those which are empty', () => {
+    test('should return business name and each address value in uppercase and truncated to 50 characters, separated by new lines ignoring those which are empty', () => {
       const result = getAddress(businessName, address)
-      expect(result.text).toMatch(`${businessName}\n${address.line2}\n${address.line3}\n${address.line5}\n`)
+      const expectedAddress = `${businessName.toUpperCase()}\n${address.line2.toUpperCase().substring(0, 50)}\n${address.line3.toUpperCase().substring(0, 50)}\n${address.line5.toUpperCase().substring(0, 50)}\n\n\n\n\n`
+      expect(result.stack[0].text).toBe(expectedAddress)
     })
 
     test('should return style as address', () => {
       const result = getAddress(businessName, address)
-      expect(result.style).toMatch('address')
-    })
-
-    test('should return correct x-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.x).toBe(0)
-    })
-
-    test('should return correct y-axis location', () => {
-      const result = getAddress(businessName, address)
-      expect(result.absolutePosition.y).toBe(127.575)
+      expect(result.stack[0].style).toBe('address')
     })
   })
 })

@@ -68,4 +68,8 @@ describe('to currency string', () => {
   test('converts number to currency string when greater than 100000000000', () => {
     expect(toCurrencyString('123456789012.34')).toBe('£123,456,789,012.34')
   })
+
+  test('throws error when value is not a number', () => {
+    expect(() => toCurrencyString('abc')).toThrow('Currency value is not a number')
+  })
 })

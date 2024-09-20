@@ -1,4 +1,3 @@
-
 const getPaymentSummary = require('./get-payment-summary')
 
 const part2 = (sfi23QuarterlyStatement) => {
