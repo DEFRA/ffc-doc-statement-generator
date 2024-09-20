@@ -47,6 +47,7 @@ container:
   apiKey: dummy
   emailTemplateKey: dummy
   sfi23QuarterlyStatementEnabled: false
+  delinkedPaymentStatementEnabled: false
   scheduleEnabled: false
   sendCrmMessageEnabled: false
   saveLogEnabled: false

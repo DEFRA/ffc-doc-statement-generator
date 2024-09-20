@@ -36,6 +36,7 @@ data:
   SCHEDULES_ARE_PUBLISHED: {{ quote .Values.container.schedulesArePublished }}
   SHOW_SFI_23_PAYMENT_PERIOD: {{ quote .Values.container.showSfi23PaymentPeriod }}
   SFI23QUARTERLYSTATEMENT_ENABLED: {{ quote .Values.container.sfi23QuarterlyStatementEnabled }}
+  DELINKEDPAYMENTSTATEMENT_ENABLED: {{ quote .Values.container.delinkedPaymentStatementEnabled }}
   SEND_CRM_MESSAGE_ENABLED: {{ quote .Values.container.sendCrmMessageEnabled }}
   SCHEDULE_ENABLED: {{ quote .Values.container.scheduleEnabled }}
   SAVE_LOG_ENABLED: {{ quote .Values.container.saveLogEnabled }}
