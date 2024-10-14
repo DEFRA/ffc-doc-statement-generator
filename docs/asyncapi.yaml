@@ -225,7 +225,7 @@ components:
           $ref: '#/components/schemas/EmailAddress'
         address:
           $ref: '#/components/schemas/Address'
-        calculationReference:
+        calculationId:
           $ref: '#/components/schemas/CalculationId'
         applicationId:
           $ref: '#/components/schemas/ApplicationId'
@@ -265,6 +265,12 @@ components:
           $ref: '#/components/schemas/TotalDelinkedPayment'
         paymentAmountCalculated:
           $ref: '#/components/schemas/PaymentAmountCalculated'
+        transactionDate:
+          $ref: '#/components/schemas/TransactionDate'
+        paymentReference:
+          $ref: '#/components/schemas/PaymentReference'
+        scheme:
+          $ref: '#/components/schemas/SchemeDelinked'
     SFI23QuarterlyPaymentStatement:
       type: object
       properties:
@@ -981,6 +987,13 @@ components:
           $ref: '#/components/schemas/SchemeFrequency'
         agreementNumber:
           $ref: '#/components/schemas/SchemeAgreementNumber'
+    SchemeDelinked:
+      additionalProperties: false
+      type: object
+      required:
+        - name
+        - shortName
+        - year
     SchemeName:
       type: string
       description: The name of the scheme
