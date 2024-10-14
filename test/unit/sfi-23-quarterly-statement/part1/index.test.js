@@ -28,9 +28,9 @@ describe('part1', () => {
 
     expect(moment.locale).toHaveBeenCalledWith('en-gb')
     expect(part1Result).toHaveProperty('stack')
-    expect(part1Result.stack).toContainEqual({ text: `${mockSfi23QuarterlyStatement.scheme.name} (${mockSfi23QuarterlyStatement.scheme.shortName}) ${mockSfi23QuarterlyStatement.scheme.year} agreement: quarterly payment statement `, style: 'header1' })
+    expect(part1Result.stack).toContainEqual({ text: `${mockSfi23QuarterlyStatement.scheme.name} (${mockSfi23QuarterlyStatement.scheme.shortName}) ${mockSfi23QuarterlyStatement.scheme.year} agreement: quarterly payment statement `, style: 'header2' })
     expect(part1Result.stack).toContainEqual({ text: `This statement explains your quarterly payment for your ${mockSfi23QuarterlyStatement.scheme.shortName} ${mockSfi23QuarterlyStatement.scheme.year} agreement.` })
-    expect(part1Result.stack).toContainEqual({ text: `Your ${mockSfi23QuarterlyStatement.scheme.shortName} ${mockSfi23QuarterlyStatement.scheme.year} agreement`, style: 'header2' })
+    expect(part1Result.stack).toContainEqual({ text: `Your ${mockSfi23QuarterlyStatement.scheme.shortName} ${mockSfi23QuarterlyStatement.scheme.year} agreement`, style: 'header3' })
     expect(part1Result.stack).toContainEqual({ text: [{ text: 'Agreement number: ', bold: true, lineBreak: false }, `${mockSfi23QuarterlyStatement.agreementNumber}`] })
     expect(part1Result.stack).toContainEqual({ text: [{ text: 'Start date: ', bold: true, lineBreak: false }, `${moment(mockSfi23QuarterlyStatement.agreementStart).format('LL')}`] })
     expect(part1Result.stack).toContainEqual({ text: [{ text: 'End date: ', bold: true, lineBreak: false }, `${moment(mockSfi23QuarterlyStatement.agreementEnd).format('LL')}`] })

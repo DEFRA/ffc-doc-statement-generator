@@ -29,8 +29,8 @@ module.exports = {
   totalPayments: 36483.37,
   scheme: {
     name: 'Sustainable Farming Incentive 23 Quarterly Payment Statement',
-    shortName: 'SFI-23',
-    year: '2024',
+    shortName: 'SFI',
+    year: '2023',
     frequency: 'Quarterly',
     agreementNumber: 1653462
   },
