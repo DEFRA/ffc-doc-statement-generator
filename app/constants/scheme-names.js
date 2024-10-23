@@ -6,7 +6,8 @@ module.exports = {
     SFIA: 'SFIA',
     SFI_PILOT: 'SFIP',
     VET_VISITS: 'Vet Visits',
-    SFI_23: 'SFI-23'
+    SFI_23: 'SFI-23',
+    DP: 'Delinked Payment'
   },
   LONG_NAMES: {
     LNR: 'Land and Nature Reserve',
@@ -15,6 +16,7 @@ module.exports = {
     SFIA: 'Sustainable Farming Incentive 2023',
     SFI_PILOT: 'Sustainable Farming Incentive: Pilot',
     VET_VISITS: 'Vet Visits',
-    SFI_23: 'SFI-23'
+    SFI_23: 'SFI-23',
+    DP: 'Delinked Payment'
   }
 }
