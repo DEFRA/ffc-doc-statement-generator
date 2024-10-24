@@ -2,7 +2,8 @@ const { createContent: createStatementContent } = require('./statement/SFI')
 const { createContent: createSFI23AdvancedStatementContent } = require('./statement/SFIA')
 const { createContent: createScheduleContent } = require('./schedule')
 const { createContent: createSFI23Content } = require('./sfi23-quarterly-statement')
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../../constants/document-types')
+const { createContent: createDelinkedContent } = require('./delinked-statement')
+const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../constants/document-types')
 
 const generateContent = (request, type) => {
   switch (type) {
@@ -14,6 +15,8 @@ const generateContent = (request, type) => {
       return createSFI23Content(request)
     case SFI23ADVANCEDSTATEMENT:
       return createSFI23AdvancedStatementContent(request)
+    case DELINKED:
+      return createDelinkedContent(request)
     default:
       throw new Error(`Unknown request type: ${type}`)
   }

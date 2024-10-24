@@ -1,7 +1,7 @@
 const { STATEMENT_MESSAGE, SCHEDULE_MESSAGE } = require('../../../mocks/messages/publish')
 const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE } = require('../../../../app/constants/document-types')
 
-const validatePublish = require('../../../../app/messaging/publish/validate-publish')
+const { validatePublish } = require('../../../../app/messaging/publish/validate-publish')
 
 let publish
 let type
@@ -42,6 +42,7 @@ describe('validate publish', () => {
         const result = validatePublish(publish, type)
         expect(Object.keys(result)).toContain('type')
       })
+
       test('returns publish.type for key "type"', () => {
         const result = validatePublish(publish, type)
         expect(result.type).toStrictEqual(publish.type)
@@ -75,7 +76,7 @@ describe('validate publish', () => {
 
       test('throws error which starts "statement does not have the required details"', () => {
         const wrapper = () => { validatePublish(publish, type) }
-        expect(wrapper).toThrow(/^statement does not have the required details/)
+        expect(wrapper).toThrow('statement does not have the required details')
       })
     })
   })
@@ -115,6 +116,7 @@ describe('validate publish', () => {
         const result = validatePublish(publish, type)
         expect(Object.keys(result)).toContain('type')
       })
+
       test('returns publish.type for key "type"', () => {
         const result = validatePublish(publish, type)
         expect(result.type).toStrictEqual(publish.type)
@@ -148,7 +150,7 @@ describe('validate publish', () => {
 
       test('throws error which starts "schedule does not have the required details"', () => {
         const wrapper = () => { validatePublish(publish, type) }
-        expect(wrapper).toThrow(/^schedule does not have the required details/)
+        expect(wrapper).toThrow('schedule does not have the required details')
       })
     })
   })

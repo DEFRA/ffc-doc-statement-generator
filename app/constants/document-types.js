@@ -20,5 +20,11 @@ module.exports = {
     type: 'uk.gov.doc.sfi-23-advanced-statement',
     name: 'SFI 23 advanced statement',
     showCalculation: false
+  },
+  DELINKED: {
+    id: 'delinked-statement',
+    type: 'uk.gov.doc.delinked-statement',
+    name: 'Delinked Statement',
+    showCalculation: true
   }
 }

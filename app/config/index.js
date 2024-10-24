@@ -12,10 +12,10 @@ const schema = Joi.object({
   schedulesArePublished: Joi.boolean().required().default(false),
   showSfi23PaymentPeriod: Joi.boolean().optional().default(false),
   sfi23QuarterlyStatementEnabled: Joi.boolean().optional().default(false),
-  delinkedPaymentStatementEnabled: Joi.boolean().optional().default(false),
   scheduleEnabled: Joi.boolean().optional().default(false),
   sendCrmMessageEnabled: Joi.boolean().optional().default(false),
-  saveLogEnabled: Joi.boolean().optional().default(false)
+  saveLogEnabled: Joi.boolean().optional().default(false),
+  delinkedGenerateStatementEnabled: Joi.boolean().optional().default(true)
 })
 
 const config = {
@@ -25,7 +25,8 @@ const config = {
   schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED,
   showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD,
   sfi23QuarterlyStatementEnabled: process.env.SFI23QUARTERLYSTATEMENT_ENABLED,
-  delinkedPaymentStatementEnabled: process.env.DELINKED_PAYMENT_STATEMENT,
+  // delinkedGenerateStatementEnabled: process.env.DELINKED_GENERATE_STATEMENT_ENABLED,
+  delinkedGenerateStatementEnabled: true,
   scheduleEnabled: process.env.SCHEDULE_ENABLED,
   sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
   saveLogEnabled: process.env.SAVE_LOG_ENABLED
