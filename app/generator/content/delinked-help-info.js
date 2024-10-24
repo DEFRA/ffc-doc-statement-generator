@@ -3,7 +3,7 @@ const rightMargin = 10
 const leftMargin = 15
 const bottomMargin = 20
 
-const delinkedHelpInfo = (delinkedStatement) => {
+const delinkedHelpInfo = (_delinkedStatement) => {
   return {
     stack: [
       {
