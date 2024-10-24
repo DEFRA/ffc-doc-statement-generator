@@ -1,6 +1,14 @@
 const getProgressiveReductionTable = require('./get-progressive-reduction-table')
 const { DELINKED } = require('../../../../constants/document-types')
 
+const formatCalculationAmount = (value) => {
+  const parsedValue = parseFloat(value)
+  const formattedValue = parsedValue > 0
+    ? parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  return `£${formattedValue}`
+}
+
 const part3 = (delinkedStatement) => {
   const marginTop = 2
   const marginRight = 10
@@ -23,7 +31,7 @@ const part3 = (delinkedStatement) => {
           },
           {
             text: [
-              { text: `Your current reference amount is £${parseFloat(delinkedStatement.referenceAmount).toFixed(2)}. You can view your current reference amount and any data transfers in the Rural Payments service at ` },
+              { text: `Your current reference amount is ${formatCalculationAmount(delinkedStatement.referenceAmount)}. You can view your current reference amount and any data transfers in the Rural Payments service at ` },
               { text: 'www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' },
               '\n',
               { text: 'Find out about data transfers at ' },
@@ -34,8 +42,8 @@ const part3 = (delinkedStatement) => {
           {
             text: [
               { text: 'How your progressive reduction was calculated', style: 'header2' },
-              '\n',
-              { text: `Your progressive reduction is the amount your annual delinked payment has been reduced. To calculate your reduction, we split your reference amount of £${parseFloat(delinkedStatement.referenceAmount).toFixed(2)} into one or more payment bands, which work like income tax bands. ` },
+              '\n\n',
+              { text: `Your progressive reduction is the amount your annual delinked payment has been reduced. To calculate your reduction, we split your reference amount of ${formatCalculationAmount(delinkedStatement.referenceAmount)} into one or more payment bands, which work like income tax bands. ` },
               '\n'
             ]
           }

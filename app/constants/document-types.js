@@ -22,9 +22,9 @@ module.exports = {
     showCalculation: false
   },
   DELINKED: {
-    id: 'delinked-payment-statement',
+    id: 'delinked-statement',
     type: 'uk.gov.doc.delinked-statement',
-    name: 'Delinked Payment Statement',
+    name: 'Delinked Statement',
     showCalculation: true
   }
 }

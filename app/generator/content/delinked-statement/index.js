@@ -1,17 +1,17 @@
 const summary = require('./summary')
-const part1 = require('./part1')
-const part2 = require('./part2')
-const part3 = require('./part3')
-const part4 = require('./part4')
+const delinkedIntroduction = require('./delinked-introduction')
+const paymentSummary = require('./payment-summary')
+const prCalculations = require('./pr-calculations')
+const paymentCalculations = require('./paymentCalculations')
 const delinkedHelpInfo = require('../delinked-help-info')
 
 const createContent = (delinkedStatement) => {
   return [
     summary(delinkedStatement),
-    part1(delinkedStatement),
-    part2(delinkedStatement),
-    part3(delinkedStatement),
-    part4(delinkedStatement),
+    delinkedIntroduction(delinkedStatement),
+    paymentSummary(delinkedStatement),
+    prCalculations(delinkedStatement),
+    paymentCalculations(delinkedStatement),
     delinkedHelpInfo(delinkedStatement)
   ]
 }

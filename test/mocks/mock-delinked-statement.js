@@ -34,7 +34,7 @@ module.exports = {
   totalDelinkedPayment: '15103.5000000000',
   paymentAmountCalculated: '7551.75',
   scheme: {
-    name: 'Delinked Payment Statement',
+    name: 'Delinked Statement',
     shortName: 'DP',
     year: '2024'
   },

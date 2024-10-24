@@ -27,7 +27,10 @@ const getProgressiveReductionTable = (delinkedStatement) => {
 
   const formatProgressiveReduction = (value) => {
     const parsedValue = parseFloat(value)
-    return parsedValue > 0 ? `£${parsedValue.toFixed(2)}` : `£${parsedValue.toFixed(0)}`
+    const formattedValue = parsedValue > 0
+      ? parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `£${formattedValue}`
   }
 
   const progressiveReductionTable = {
@@ -73,7 +76,7 @@ const getProgressiveReductionTable = (delinkedStatement) => {
         [
           { text: '' },
           { text: 'Total progressive reduction', bold: true },
-          { text: parseFloat(delinkedStatement.totalProgressiveReduction).toFixed(2), bold: true }
+          { text: formatProgressiveReduction(delinkedStatement.totalProgressiveReduction), bold: true }
         ]
       ]
     }

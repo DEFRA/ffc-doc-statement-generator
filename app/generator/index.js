@@ -31,7 +31,6 @@ async function createAndPublishDocument (request, type) {
   const docDefinition = getDocumentDefinition(request, type)
   const timestamp = new Date()
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
-  console.log('Request object:', JSON.stringify(request, null, 2))
   const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
   console.info(`Document published: ${filename}`)
   return filename
@@ -45,7 +44,7 @@ const isPublishEnabledForType = (type) => {
 
 const isNotifyAllowed = async (request, type) => {
   if (type.type === DELINKED.type) {
-    return false
+    return true
   }
   const noNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
   return type.type !== SFI23QUARTERLYSTATEMENT.type &&

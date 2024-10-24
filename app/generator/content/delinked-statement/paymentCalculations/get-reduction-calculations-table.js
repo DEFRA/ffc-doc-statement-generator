@@ -1,8 +1,12 @@
+const formatCalculationAmount = (value) => {
+  const parsedValue = parseFloat(value)
+  const formattedValue = parsedValue > 0
+    ? parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+    : parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  return `£${formattedValue}`
+}
+
 const getReductionsCalculationsTable = (delinkedStatement) => {
-  const formatCalculationAmount = (value) => {
-    const parsedValue = parseFloat(value)
-    return parsedValue > 0 ? `£${parsedValue.toFixed(2)}` : `£${parsedValue.toFixed(0)}`
-  }
   const reductionsCalculationsTable = {
     layout: {
       hLineStyle: () => 'solid',
