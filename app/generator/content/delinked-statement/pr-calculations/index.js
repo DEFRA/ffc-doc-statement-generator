@@ -1,5 +1,9 @@
 const getProgressiveReductionTable = require('./get-progressive-reduction-table')
 const { DELINKED } = require('../../../../constants/document-types')
+const marginLeft = 15
+const marginRight = 2
+const marginTop = 10
+const marginBottom = 20
 
 function prCalculations (delinkedStatement) {
   const { referenceAmount, percentageReduction1, percentageReduction2, percentageReduction3, percentageReduction4 } = delinkedStatement
@@ -9,8 +13,9 @@ function prCalculations (delinkedStatement) {
   }
 
   const percentages = [percentageReduction1, percentageReduction2, percentageReduction3, percentageReduction4]
+  const minMaxPercent = 100
   percentages.forEach((percentage, index) => {
-    if (percentage < -100 || percentage > 100) {
+    if (percentage < -minMaxPercent || percentage > minMaxPercent) {
       throw new Error(`Invalid percentage value: ${percentage}`)
     }
   })
@@ -31,7 +36,7 @@ function prCalculations (delinkedStatement) {
                 { text: 'changed following a payment query  ' }
               ],
               listStyle: 'square',
-              margin: [15, 2, 10, 20]
+              margin: [marginLeft, marginTop, marginRight, marginBottom]
             },
             {
               text: [

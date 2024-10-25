@@ -18,7 +18,8 @@ const formatPaymentBand = (value, index) => {
 }
 
 const formatPercentage = (value) => {
-  if (isNaN(value) || value < -100 || value > 100) {
+  const minMaxPercent = 100
+  if (isNaN(value) || value < -minMaxPercent || value > minMaxPercent) {
     throw new Error(`Invalid percentage value: ${value}`)
   }
   return `${parseFloat(value)}%`

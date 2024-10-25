@@ -39,5 +39,6 @@ module.exports = {
     year: '2024'
   },
   previousPaymentCount: '0',
-  documentReference: '100020'
+  documentReference: '100020',
+  type: 'uk.gov.doc.delinked-statement.publish'
 }

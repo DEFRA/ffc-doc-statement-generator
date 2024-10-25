@@ -1,7 +1,8 @@
-const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE, SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_TYPE } = require('../../../app/constants/document-types')
+const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE, SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_TYPE, DELINKED: DELINKED_TYPE } = require('../../../app/constants/document-types')
 
 const STATEMENT = require('../mock-statement')
 const SFI23QUARTERLYSTATEMENT = require('../mock-statement-sfi23-quarterly')
+const DELINKEDSTATEMENT = require('../mock-delinked-statement')
 const { topUpSchedule: SCHEDULE } = require('../mock-schedule')
 
 const BASE_SERVICE_BUS_MESSAGE = {
@@ -47,8 +48,17 @@ const SFI23QUARTERLYSTATEMENT_MESSAGE = {
   }
 }
 
+const DELINKEDSTATEMENT_MESSAGE = {
+  ...BASE_SERVICE_BUS_MESSAGE,
+  body: DELINKEDSTATEMENT,
+  applicationProperties: {
+    type: DELINKED_TYPE.type
+  }
+}
+
 module.exports = {
   STATEMENT_MESSAGE,
   SCHEDULE_MESSAGE,
-  SFI23QUARTERLYSTATEMENT_MESSAGE
+  SFI23QUARTERLYSTATEMENT_MESSAGE,
+  DELINKEDSTATEMENT_MESSAGE
 }

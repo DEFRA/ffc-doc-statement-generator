@@ -1,10 +1,11 @@
 const MESSAGE_SOURCE = require('../../../app/constants/message-source')
-const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE, SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_TYPE } = require('../../../app/constants/document-types')
+const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE, SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_TYPE, DELINKED: DELINKED_TYPE } = require('../../../app/constants/document-types')
 
-const { STATEMENT: STATEMENT_FILENAME, SCHEDULE: SCHEDULE_FILENAME, SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_FILENAME } = require('../components/filename')
+const { STATEMENT: STATEMENT_FILENAME, SCHEDULE: SCHEDULE_FILENAME, SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_FILENAME, DELINKEDSTATEMENT: DELINKEDSTATEMENT_FILENAME } = require('../components/filename')
 
 const STATEMENT = require('../mock-statement')
 const SFI23QUARTERLYSTATEMENT = require('../mock-statement-sfi23-quarterly')
+const DELINKEDSTATEMENT = require('../mock-delinked-statement')
 const { topUpSchedule: SCHEDULE } = require('../mock-schedule')
 
 const BASE_MESSAGE = {
@@ -44,6 +45,38 @@ const SFI23QUARTERLYSTATEMENT_MESSAGE = {
   type: `uk.gov.doc.${SFI23QUARTERLYSTATEMENT_TYPE.id}.publish`
 }
 
+const DELINKEDSTATEMENT_MESSAGE = {
+  ...BASE_MESSAGE,
+  body: {
+    businessName: DELINKEDSTATEMENT.businessName,
+    sbi: DELINKEDSTATEMENT.sbi,
+    frn: DELINKEDSTATEMENT.frn,
+    address: DELINKEDSTATEMENT.address,
+    email: DELINKEDSTATEMENT.email,
+    filename: DELINKEDSTATEMENT_FILENAME,
+    scheme: DELINKEDSTATEMENT.scheme,
+    documentReference: DELINKEDSTATEMENT?.documentReference ?? null,
+    paymentPeriod: DELINKEDSTATEMENT?.paymentPeriod ?? '',
+    paymentBand1: DELINKEDSTATEMENT.paymentBand1,
+    paymentBand2: DELINKEDSTATEMENT.paymentBand2,
+    paymentBand3: DELINKEDSTATEMENT.paymentBand3,
+    paymentBand4: DELINKEDSTATEMENT.paymentBand4,
+    percentageReduction1: DELINKEDSTATEMENT.percentageReduction1,
+    percentageReduction2: DELINKEDSTATEMENT.percentageReduction2,
+    percentageReduction3: DELINKEDSTATEMENT.percentageReduction3,
+    percentageReduction4: DELINKEDSTATEMENT.percentageReduction4,
+    progressiveReductions1: DELINKEDSTATEMENT.progressiveReductions1,
+    progressiveReductions2: DELINKEDSTATEMENT.progressiveReductions2,
+    progressiveReductions3: DELINKEDSTATEMENT.progressiveReductions3,
+    progressiveReductions4: DELINKEDSTATEMENT.progressiveReductions4,
+    referenceAmount: DELINKEDSTATEMENT.referenceAmount,
+    totalProgressiveReduction: DELINKEDSTATEMENT.totalProgressiveReduction,
+    totalDelinkedPayment: DELINKEDSTATEMENT.totalDelinkedPayment,
+    paymentAmountCalculated: DELINKEDSTATEMENT.paymentAmountCalculated
+  },
+  type: `uk.gov.doc.${DELINKED_TYPE.id}.publish`
+}
+
 const SCHEDULE_MESSAGE = {
   ...BASE_MESSAGE,
   body: {
@@ -62,5 +95,6 @@ const SCHEDULE_MESSAGE = {
 module.exports = {
   STATEMENT_MESSAGE,
   SFI23QUARTERLYSTATEMENT_MESSAGE,
+  DELINKEDSTATEMENT_MESSAGE,
   SCHEDULE_MESSAGE
 }

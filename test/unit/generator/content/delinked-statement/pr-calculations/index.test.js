@@ -1,6 +1,10 @@
 const getProgressiveReductionTable = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
 const prCalculations = require('../../../../../../app/generator/content/delinked-statement/pr-calculations')
 const { DELINKED } = require('../../../../../../app/constants/document-types')
+const marginLeft = 15
+const marginRight = 2
+const marginTop = 10
+const marginBottom = 20
 
 jest.mock('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table', () => jest.fn())
 
@@ -37,7 +41,7 @@ describe('prCalculations', () => {
                 { text: 'changed following a payment query  ' }
               ],
               listStyle: 'square',
-              margin: [15, 2, 10, 20]
+              margin: [marginLeft, marginTop, marginRight, marginBottom]
             },
             {
               text: [
@@ -143,7 +147,7 @@ describe('prCalculations', () => {
                 { text: 'changed following a payment query  ' }
               ],
               listStyle: 'square',
-              margin: [15, 2, 10, 20]
+              margin: [marginLeft, marginTop, marginRight, marginBottom]
             },
             {
               text: [
