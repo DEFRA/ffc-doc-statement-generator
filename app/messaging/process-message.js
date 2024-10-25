@@ -15,14 +15,14 @@ const processMessage = async (message, receiver) => {
     await generateDocument(request, documentType)
     console.log('Completing message...')
     await receiver.completeMessage(message)
-    console.log('Message completed successfully.', message)
+    console.log('Message completed successfully.')
   } catch (err) {
     console.error('Unable to process request:', err)
 
     if (err.category === VALIDATION) {
       console.error('Validation error:', err.message)
       await receiver.deadLetterMessage(message)
-      console.log('Message moved to dead letter queue due to validation error.')
+      console.log('Message moved to dead letter queue due to validation error.', err.message)
     } else {
       console.error('Processing error:', err.message)
     }

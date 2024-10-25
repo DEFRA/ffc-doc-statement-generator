@@ -1,6 +1,6 @@
 const getPaymentSummary = require('./get-payment-summary')
 
-const part2 = (delinkedStatement) => {
+const paymentSummary = (delinkedStatement) => {
   return {
     stack: [
       '\n\n',
@@ -23,4 +23,4 @@ const part2 = (delinkedStatement) => {
   }
 }
 
-module.exports = part2
+module.exports = paymentSummary

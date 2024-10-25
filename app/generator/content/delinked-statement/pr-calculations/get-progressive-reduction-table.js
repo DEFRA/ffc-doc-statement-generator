@@ -2,7 +2,7 @@ const formatPaymentBand = (value, index) => {
   if (isNaN(value) || value < 0) {
     throw new Error(`Invalid payment band value: ${value}`)
   }
-  const formattedValue = parseFloat(value).toFixed(2).toLocaleString()
+  const formattedValue = parseFloat(value).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
   switch (index) {
     case 'BAND_UP_TO_30000': // paymentBand1
       return `Up to £${formattedValue}`
@@ -18,7 +18,7 @@ const formatPaymentBand = (value, index) => {
 }
 
 const formatPercentage = (value) => {
-  if (isNaN(value) || value < 0 || value > 100) {
+  if (isNaN(value) || value < -100 || value > 100) {
     throw new Error(`Invalid percentage value: ${value}`)
   }
   return `${parseFloat(value)}%`
@@ -26,9 +26,7 @@ const formatPercentage = (value) => {
 
 const formatProgressiveReduction = (value) => {
   const parsedValue = parseFloat(value)
-  const formattedValue = parsedValue > 0
-    ? parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-    : parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+  const formattedValue = parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
   return `£${formattedValue}`
 }
 

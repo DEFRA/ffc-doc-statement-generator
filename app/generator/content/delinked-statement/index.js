@@ -1,4 +1,4 @@
-const summary = require('./summary')
+const summary = require('../summary')
 const delinkedIntroduction = require('./delinked-introduction')
 const paymentSummary = require('./payment-summary')
 const prCalculations = require('./pr-calculations')

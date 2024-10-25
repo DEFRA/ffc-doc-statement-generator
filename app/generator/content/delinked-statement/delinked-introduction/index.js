@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-const part1 = (delinkedStatement) => {
+const delinkedIntroduction = (delinkedStatement) => {
   moment.locale('en-gb')
   return {
     stack: [
@@ -13,4 +13,4 @@ const part1 = (delinkedStatement) => {
   }
 }
 
-module.exports = part1
+module.exports = delinkedIntroduction

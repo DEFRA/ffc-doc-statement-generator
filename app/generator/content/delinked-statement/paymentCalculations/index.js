@@ -1,8 +1,8 @@
 const getReductionsCalculationsTable = require('./get-reduction-calculations-table')
 const { DELINKED } = require('../../../../constants/document-types')
 
-const part4 = (delinkedStatement) => {
-  const paymentCalculationMessage = DELINKED.showCalculation === true
+const reductionsCalculations = (delinkedStatement) => {
+  const reductionsCalculationMessage = DELINKED.showCalculation === true
     ? {
         stack: [
           { text: 'How your payment was calculated', style: 'header2' },
@@ -15,8 +15,8 @@ const part4 = (delinkedStatement) => {
     getReductionsCalculationsTable(delinkedStatement)
   ]
 
-  if (paymentCalculationMessage) {
-    stack.unshift(paymentCalculationMessage)
+  if (reductionsCalculationMessage) {
+    stack.unshift(reductionsCalculationMessage)
   }
 
   return {
@@ -24,4 +24,4 @@ const part4 = (delinkedStatement) => {
   }
 }
 
-module.exports = part4
+module.exports = reductionsCalculations
