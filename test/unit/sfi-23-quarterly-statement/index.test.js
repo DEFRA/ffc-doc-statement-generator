@@ -1,11 +1,11 @@
-const summary = require('../../../app/generator/content/sfi23-quarterly-statement/summary')
+const summary = require('../../../app/generator/content/summary')
 const part1 = require('../../../app/generator/content/sfi23-quarterly-statement/part1')
 const part2 = require('../../../app/generator/content/sfi23-quarterly-statement/part2')
 const part3 = require('../../../app/generator/content/sfi23-quarterly-statement/part3')
 const getHelpInfo = require('../../../app/generator/content/sfi23-quarterly-statement/get-help-info')
 const { createContent } = require('../../../app/generator/content/sfi23-quarterly-statement/index')
 
-jest.mock('../../../app/generator/content/sfi23-quarterly-statement/summary', () => jest.fn())
+jest.mock('../../../app/generator/content/summary', () => jest.fn())
 jest.mock('../../../app/generator/content/sfi23-quarterly-statement/part1', () => jest.fn())
 jest.mock('../../../app/generator/content/sfi23-quarterly-statement/part2', () => jest.fn())
 jest.mock('../../../app/generator/content/sfi23-quarterly-statement/part3', () => jest.fn())

@@ -6,7 +6,7 @@ const paymentCalculations = require('../../../../../app/generator/content/delink
 const delinkedHelpInfo = require('../../../../../app/generator/content/delinked-help-info')
 const { createContent } = require('../../../../../app/generator/content/delinked-statement/index')
 
-jest.mock('../../../../../app/generator/content/delinked-statement/summary', () => jest.fn())
+jest.mock('../../../../../app/generator/content/summary', () => jest.fn())
 jest.mock('../../../../../app/generator/content/delinked-statement/delinked-introduction', () => jest.fn())
 jest.mock('../../../../../app/generator/content/delinked-statement/payment-summary', () => jest.fn())
 jest.mock('../../../../../app/generator/content/delinked-statement/pr-calculations', () => jest.fn())

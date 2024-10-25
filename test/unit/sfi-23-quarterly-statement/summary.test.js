@@ -1,5 +1,5 @@
 const moment = require('moment')
-const summary = require('../../../app/generator/content/sfi23-quarterly-statement/summary')
+const summary = require('../../../app/generator/content/summary')
 
 jest.mock('moment', () => {
   const originalMoment = jest.requireActual('moment')
