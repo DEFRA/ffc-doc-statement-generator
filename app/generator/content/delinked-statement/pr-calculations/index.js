@@ -14,7 +14,7 @@ function prCalculations (delinkedStatement) {
 
   const percentages = [percentageReduction1, percentageReduction2, percentageReduction3, percentageReduction4]
   const minMaxPercent = 100
-  percentages.forEach((percentage, index) => {
+  percentages.forEach((percentage, _index) => {
     if (percentage < -minMaxPercent || percentage > minMaxPercent) {
       throw new Error(`Invalid percentage value: ${percentage}`)
     }
