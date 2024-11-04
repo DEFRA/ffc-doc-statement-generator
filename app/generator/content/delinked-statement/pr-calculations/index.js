@@ -12,6 +12,14 @@ function prCalculations (delinkedStatement) {
     throw new Error(`Invalid payment band value: ${referenceAmount}`)
   }
 
+  const formatCalculationAmount = (value) => {
+    const parsedValue = parseFloat(value)
+    const formattedValue = parsedValue > 0
+      ? parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : parsedValue.toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+    return `£${formattedValue}`
+  }
+
   const percentages = [percentageReduction1, percentageReduction2, percentageReduction3, percentageReduction4]
   const minMaxPercent = 100
   percentages.forEach((percentage, _index) => {
@@ -40,7 +48,7 @@ function prCalculations (delinkedStatement) {
             },
             {
               text: [
-                { text: 'Your current reference amount is £100,000.00. You can view your current reference amount and any data transfers in the Rural Payments service at ' },
+                { text: `Your current reference amount is ${formatCalculationAmount(delinkedStatement.referenceAmount)}. You can view your current reference amount and any data transfers in the Rural Payments service at ` },
                 { text: 'www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' },
                 '\n',
                 { text: 'Find out about data transfers at ' },
