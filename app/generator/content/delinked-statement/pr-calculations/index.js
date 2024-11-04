@@ -60,7 +60,7 @@ function prCalculations (delinkedStatement) {
               text: [
                 { text: 'How your progressive reduction was calculated', style: 'header2' },
                 '\n\n',
-                { text: 'Your progressive reduction is the amount your annual delinked payment has been reduced. To calculate your reduction, we split your reference amount of £100,000.00 into one or more payment bands, which work like income tax bands. ' },
+                { text: `Your progressive reduction is the amount your annual delinked payment has been reduced. To calculate your reduction, we split your reference amount of ${formatCalculationAmount(delinkedStatement.referenceAmount)} into one or more payment bands, which work like income tax bands. ` },
                 '\n'
               ]
             }
