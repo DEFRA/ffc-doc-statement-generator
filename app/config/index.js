@@ -25,8 +25,7 @@ const config = {
   schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED,
   showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD,
   sfi23QuarterlyStatementEnabled: process.env.SFI23QUARTERLYSTATEMENT_ENABLED,
-  // delinkedGenerateStatementEnabled: process.env.DELINKED_GENERATE_STATEMENT_ENABLED,
-  delinkedGenerateStatementEnabled: true,
+  delinkedGenerateStatementEnabled: process.env.DELINKED_GENERATE_STATEMENT_ENABLED,
   scheduleEnabled: process.env.SCHEDULE_ENABLED,
   sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
   saveLogEnabled: process.env.SAVE_LOG_ENABLED
