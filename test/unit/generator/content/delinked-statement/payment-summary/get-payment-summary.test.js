@@ -29,7 +29,7 @@ describe('getPaymentSummary', () => {
     expect(moment.locale).toHaveBeenCalledWith('en-gb')
     expect(toCurrencyString).toHaveBeenCalledWith(mockDelinkedStatement.paymentAmount)
     expect(paymentSummaryResult).toEqual([
-      { text: "What you've been paid", style: 'tableHeader2' },
+      { text: 'What you\'ve been paid \n', style: 'tableHeader2' },
       { text: [{ text: 'Payment: ', bold: true, lineBreak: false, style: 'separator' }, '£1,000.00'] },
       { text: 'This is usually paid into your account within 2 working days of January 1, 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'ABC123'] }

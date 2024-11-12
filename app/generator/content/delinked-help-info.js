@@ -11,7 +11,7 @@ const delinkedHelpInfo = (_delinkedStatement) => {
           { text: 'Your next payment ', style: 'header2' },
           '\n',
           { text: 'You can find out when you\'ll receive your next payment and information on progressive reductions for 2025 to 2027 (when they\'re available) at ' },
-          { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
+          { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
         ]
       },
       { text: 'If you\'ve any questions about this statement', style: 'header2' },
@@ -22,14 +22,14 @@ const delinkedHelpInfo = (_delinkedStatement) => {
             text: [
               { text: 'find more information about delinked payments at ' },
               '\n',
-              { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
+              { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
             ]
           },
           {
             text: [
               { text: 'log in to the Rural Payments service at ' },
               '\n',
-              { text: 'www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline', unbreakable: true },
+              { text: 'www.ruralpayments.service.gov.uk/customer-account/login.', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline', unbreakable: true },
               { text: ' to send a query - this is the quickest way to get a reply' }
             ]
           },
