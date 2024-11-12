@@ -39,7 +39,7 @@ const getReductionsCalculationsTable = (delinkedStatement) => {
         ],
         [
           { text: 'Payment amount', bold: true },
-          { text: formatCalculationAmount(delinkedStatement.paymentAmountCalculated) }
+          { text: formatCalculationAmount(delinkedStatement.paymentAmountCalculated), bold: true }
         ]
       ]
     }

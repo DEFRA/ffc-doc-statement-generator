@@ -41,7 +41,7 @@ describe('getReductionsCalculationsTable', () => {
           ],
           [
             { text: 'Payment amount', bold: true },
-            { text: '£80,000.00' }
+            { text: '£80,000.00', bold: true }
           ]
         ]
       }
