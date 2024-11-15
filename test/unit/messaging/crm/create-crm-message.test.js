@@ -14,11 +14,13 @@ describe('send crm message for statement', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
+    mockStatement.scheme.shortName = 'DP'
+
     crmValid = {
       sbi: mockStatement.sbi,
       frn: mockStatement.frn,
       apiLink: `${statementReceiverEndpoint}/${statementReceiverApiVersion}/statements/statement/${FILENAME}`,
-      scheme: mockStatement.scheme.shortName,
+      scheme: 'Delinked',
       documentType: STATEMENT.name
     }
 
@@ -31,6 +33,11 @@ describe('send crm message for statement', () => {
     }
 
     schema.validate.mockReturnValue({ value: crmValid })
+  })
+
+  test('should map DP scheme to Delinked in message', async () => {
+    const result = createCrmMessage(mockStatement, FILENAME, STATEMENT)
+    expect(result.body.scheme).toBe('Delinked')
   })
 
   test('should call schema.validate when statement and filename are given', async () => {
@@ -58,11 +65,13 @@ describe('send crm message for payment schedule', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
+    mockStatement.scheme.shortName = 'DP'
+
     crmValid = {
       sbi: mockStatement.sbi,
       frn: mockStatement.frn,
       apiLink: `${statementReceiverEndpoint}/${statementReceiverApiVersion}/statements/statement/${FILENAME}`,
-      scheme: mockStatement.scheme.shortName,
+      scheme: 'Delinked',
       documentType: SCHEDULE.name
     }
 
@@ -75,6 +84,11 @@ describe('send crm message for payment schedule', () => {
     }
 
     schema.validate.mockReturnValue({ value: crmValid })
+  })
+
+  test('should map DP scheme to Delinked in schedule message', async () => {
+    const result = createCrmMessage(mockStatement, FILENAME, SCHEDULE)
+    expect(result.body.scheme).toBe('Delinked')
   })
 
   test('should call schema.validate when statement and filename are given', async () => {
