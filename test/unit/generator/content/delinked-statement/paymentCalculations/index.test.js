@@ -22,7 +22,7 @@ describe('paymentCalculations', () => {
         {
           stack: [
             { text: 'How your payment was calculated', style: 'header2' },
-            { text: 'Your annual delinked payment is your reference amount minus the progressive reduction that applies for that year. ' }
+            { text: 'Your annual delinked payment is your reference amount minus the progressive reduction that applies for that year.' }
           ]
         },
         mockTable
