@@ -1,6 +1,6 @@
 const moment = require('moment')
-const rpaLogo = require('../rpa-logo')
-const getAddress = require('../get-address')
+const rpaLogo = require('./rpa-logo')
+const getAddress = require('./get-address')
 
 moment.locale('en-gb')
 

@@ -1,4 +1,4 @@
-const summary = require('../../../../../../app/generator/content/summary')
+const summary = require('../../../../../../app/generator/content/summary/index')
 const mockStatement = require('../../../../../mocks/mock-statement')
 const getAddress = require('../../../../../../app/generator/content/get-address')
 const getSBI = require('../../../../../../app/generator/content/summary/get-sbi')

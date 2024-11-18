@@ -1,12 +1,13 @@
 const schema = require('./crm-schema')
 const { statementReceiverApiVersion, statementReceiverEndpoint } = require('../../config')
+const { SHORT_NAMES } = require('../../constants/scheme-names')
 
 const createCrmMessage = (statement, filename, type) => {
   const crm = {
     apiLink: `${statementReceiverEndpoint}/${statementReceiverApiVersion}/statements/statement/${filename}`,
     frn: statement.frn,
     sbi: statement.sbi,
-    scheme: statement.scheme.shortName,
+    scheme: SHORT_NAMES[statement.scheme.shortName] || statement.scheme.shortName,
     documentType: type.name
   }
 

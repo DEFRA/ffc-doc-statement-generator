@@ -14,7 +14,7 @@ channels:
       subscribe.message.2:
         $ref: '#/components/messages/Sfi23QuarterlyStatement'
       subscribe.message.3:
-        $ref: '#/components/messages/DelinkedPaymentStatement'
+        $ref: '#/components/messages/DelinkedStatement'
   ffc-doc-statement-publish:
     address: ffc-doc-statement-publish
     messages:
@@ -22,6 +22,8 @@ channels:
         $ref: '#/components/messages/DocumentSchedule'
       publish.message.1:
         $ref: '#/components/messages/DocumentStatement'
+      publish.message.2:
+        $ref: '#/components/messages/DelinkedStatement'
   ffc-doc-statement-crm:
     address: ffc-doc-statement-crm
     messages:
@@ -74,12 +76,12 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/SFI23QuarterlyPaymentStatement'
-    DelinkedPaymentStatement:
-      title: Delinked Payment Statement
-      name: Delinked Payment Statement
+    DelinkedStatement:
+      title: Delinked Statement
+      name: Delinked Statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/DelinkedPaymentStatement'
+        $ref: '#/components/schemas/DelinkedStatement'
     DocumentSchedule:
       title: Payment schedule
       name: Payment schedule
@@ -92,6 +94,12 @@ components:
       contentType: application/json
       payload:
         $ref: '#/components/schemas/BodyStatement'
+    DocumentDelinked:
+      title: Payment Statement
+      name: Payment statement
+      contentType: application/json
+      payload:
+        $ref: '#/components/schemas/BodyDelinkedStatement'
     Crm:
       title: Crm Message
       name: Crm Message
@@ -216,7 +224,7 @@ components:
           $ref: '#/components/schemas/DocumentReference'
         remainingAmount:
           $ref: '#/components/schemas/RemainingAmount'
-    DelinkedPaymentStatement:
+    DelinkedStatement:
       type: object
       properties:
         businessName:
@@ -465,6 +473,20 @@ components:
           $ref: '#/components/schemas/Source'
         type:
           $ref: '#/components/schemas/TypeStatement'
+    BodyDelinkedStatement:
+      additionalProperties: false
+      type: object
+      required:
+        - body
+        - source
+        - type
+      properties:
+        body:
+          $ref: '#/components/schemas/DocumentDelinked'
+        source:
+          $ref: '#/components/schemas/Source'
+        type:
+          $ref: '#/components/schemas/TypeStatement'
     DocumentSchedule:
       additionalProperties: false
       type: object
@@ -529,6 +551,44 @@ components:
           $ref: '#/components/schemas/SBI'
         scheme:
           $ref: '#/components/schemas/Scheme'
+    DocumentDelinked:
+      additionalProperties: false
+      type: object
+      required:
+        - address
+        - businessName
+        - documentReference
+        - filename
+        - frn
+        - sbi
+        - scheme
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        businessName:
+          $ref: '#/components/schemas/BusinessName'
+        documentReference:
+          $ref: '#/components/schemas/DocumentReference'
+        remainingAmount:
+          $ref: '#/components/schemas/RemainingAmount'
+        email:
+          $ref: '#/components/schemas/Email'
+        filename:
+          $ref: '#/components/schemas/FilenameStatement'
+        frn:
+          $ref: '#/components/schemas/FRN'
+        paymentBand1:
+          $ref: '#/components/schemas/PaymentBand1'
+        paymentBand2:
+          $ref: '#/components/schemas/PaymentBand2'
+        paymentBand3:
+          $ref: '#/components/schemas/PaymentBand3'
+        paymentBand4:
+          $ref: '#/components/schemas/PaymentBand4'
+        sbi:
+          $ref: '#/components/schemas/SBI'
+        scheme:
+          $ref: '#/components/schemas/SchemeDelinked'
     Funding:
       additionalProperties: false
       type: object
@@ -820,6 +880,16 @@ components:
         characters, Scheme Year using 4 digits, FRN using 10 digits, date and
         time using 16 digits and then .pdf. All separated by underscore
       example: FFC_PaymentStatement_SFI_2022_1234567890_2023051810181212.pdf
+      pattern: >-
+        ^[A-Z]{3,6}\_[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*\_[A-Z]{3,6}_\d{4}_\d{10}_\d{16}\.pdf$
+    FilenameDelinkedStatement:
+      type: string
+      description: >-
+        PDF filename, formatted as product code using 3 to 6 uppercase
+        characters, descriptor in PascalCase, Scheme ID using 3 to 6 uppercase
+        characters, Scheme Year using 4 digits, FRN using 10 digits, date and
+        time using 16 digits and then .pdf. All separated by underscore
+      example: FFC_PaymentDelinkedStatement_DP_2024_1100016529_2024102408191499.pdf
       pattern: >-
         ^[A-Z]{3,6}\_[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*\_[A-Z]{3,6}_\d{4}_\d{10}_\d{16}\.pdf$
     FundingName:
