@@ -13,8 +13,8 @@ jest.mock('moment', () => {
 
 describe('getPeriodStartDateFromPeriod', () => {
   test('should correctly parse the start date from a period string', () => {
-    const period = '1 January to 31 December 2024'
-    const expectedStartDate = new Date('2024-01-01T00:00:00.000Z')
+    const period = '1 January to 31 December 2025'
+    const expectedStartDate = new Date('2025-01-01T00:00:00.000Z')
 
     const startDate = getPeriodStartDateFromPeriod(period)
 
