@@ -12,7 +12,7 @@ if (config.useConnectionStr) {
   const uri = `https://${config.storageAccount}.blob.core.windows.net`
 
   console.log(`ManagedIdentityClientId: ${config.managedIdentityClientId}`)
-  
+
   blobServiceClient = new BlobServiceClient(uri, new DefaultAzureCredential({ managedIdentityClientId: config.managedIdentityClientId }))
 }
 

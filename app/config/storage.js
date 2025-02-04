@@ -7,7 +7,8 @@ const schema = Joi.object({
   container: Joi.string().default('statements'),
   folder: Joi.string().default('outbound'),
   useConnectionStr: Joi.boolean().default(false),
-  createContainers: Joi.boolean().default(true)
+  createContainers: Joi.boolean().default(true),
+  managedIdentityClientId: Joi.string().optional()
 })
 
 // Build config
