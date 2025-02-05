@@ -90,4 +90,20 @@ describe('storage', () => {
     expect(result.url).toBe('test-url')
     expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/test-file.txt')
   })
+
+  test('logs message and creates container when createContainers is true', async () => {
+    mockStorageConfig.createContainers = true
+    await storage.initialiseContainers()
+
+    expect(console.log).toHaveBeenCalledWith('Making sure blob containers exist')
+    expect(mockContainer.createIfNotExists).toHaveBeenCalled()
+  })
+
+  test('does not create container when createContainers is false', async () => {
+    mockStorageConfig.createContainers = false
+    await storage.initialiseContainers()
+
+    expect(console.log).not.toHaveBeenCalledWith('Making sure blob containers exist')
+    expect(mockContainer.createIfNotExists).not.toHaveBeenCalled()
+  })
 })
