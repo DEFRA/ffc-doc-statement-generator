@@ -106,4 +106,74 @@ describe('storage', () => {
     expect(console.log).not.toHaveBeenCalledWith('Making sure blob containers exist')
     expect(mockContainer.createIfNotExists).not.toHaveBeenCalled()
   })
+
+  describe('when using managed identity', () => {
+    test('creates blob service client with DefaultAzureCredential', () => {
+      jest.resetModules()
+      mockStorageConfig.useConnectionStr = false
+
+      jest.mock('../../app/config', () => ({
+        storageConfig: mockStorageConfig
+      }))
+
+      require('../../app/storage')
+
+      expect(require('@azure/storage-blob').BlobServiceClient)
+        .toHaveBeenCalledWith(
+          `https://${mockStorageConfig.storageAccount}.blob.core.windows.net`,
+          expect.any(Object)
+        )
+    })
+  })
+
+  describe('container initialization', () => {
+    beforeEach(() => {
+      jest.resetModules()
+      jest.clearAllMocks()
+
+      require('@azure/storage-blob').BlobServiceClient.fromConnectionString = jest
+        .fn()
+        .mockReturnValue(mockBlobServiceClient)
+
+      require('@azure/storage-blob').BlobServiceClient.mockImplementation(() => mockBlobServiceClient)
+
+      jest.mock('../../app/config', () => ({
+        storageConfig: mockStorageConfig
+      }))
+
+      storage = require('../../app/storage')
+    })
+
+    test('initializes folders on first call', async () => {
+      await storage.getOutboundBlobClient('test.txt')
+
+      expect(mockContainer.getBlockBlobClient).toHaveBeenNthCalledWith(1, 'test-folder/default.txt')
+      expect(mockContainer.getBlockBlobClient).toHaveBeenNthCalledWith(2, 'test-folder/test.txt')
+      expect(mockstorage.upload).toHaveBeenCalledWith('Placeholder', 'Placeholder'.length)
+    })
+
+    test('skips folder initialization on subsequent calls', async () => {
+      await storage.initialiseContainers()
+      await storage.getOutboundBlobClient('test.txt')
+
+      expect(mockContainer.getBlockBlobClient).toHaveBeenCalledTimes(2)
+      expect(mockstorage.upload).toHaveBeenCalledTimes(1)
+    })
+
+    test('initializes containers when createContainers is true', async () => {
+      mockStorageConfig.createContainers = true
+      await storage.initialiseContainers()
+
+      expect(mockContainer.createIfNotExists).toHaveBeenCalled()
+      expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/default.txt')
+    })
+
+    test('skips container creation when createContainers is false', async () => {
+      mockStorageConfig.createContainers = false
+      await storage.initialiseContainers()
+
+      expect(mockContainer.createIfNotExists).not.toHaveBeenCalled()
+      expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/default.txt')
+    })
+  })
 })
