@@ -175,5 +175,30 @@ describe('storage', () => {
       expect(mockContainer.createIfNotExists).not.toHaveBeenCalled()
       expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/default.txt')
     })
+
+    test('should initialize folders only once', async () => {
+      await storage.initialiseContainers()
+      expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/default.txt')
+      expect(mockstorage.upload).toHaveBeenCalledTimes(1)
+
+      jest.clearAllMocks()
+
+      await storage.initialiseContainers()
+      expect(mockContainer.getBlockBlobClient).not.toHaveBeenCalled()
+      expect(mockstorage.upload).not.toHaveBeenCalled()
+    })
+
+    test('initializes folders if containersInitialised is false', async () => {
+      await storage.initialiseContainers()
+      expect(mockContainer.getBlockBlobClient).toHaveBeenCalledWith('test-folder/default.txt')
+      expect(mockstorage.upload).toHaveBeenCalledTimes(1)
+    })
+
+    test('does not initialize folders if containersInitialised is true', async () => {
+      await storage.initialiseContainers()
+      await storage.initialiseContainers()
+      expect(mockContainer.getBlockBlobClient).toHaveBeenCalledTimes(1)
+      expect(mockstorage.upload).toHaveBeenCalledTimes(1)
+    })
   })
 })
