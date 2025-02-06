@@ -1,4 +1,3 @@
-
 const getTotalPaymentTable = (totalpayment) => {
   const totalPaymentTable = {
     layout: {

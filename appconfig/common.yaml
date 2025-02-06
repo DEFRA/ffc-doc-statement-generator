@@ -1,0 +1,3 @@
+container.statementTopicAddress: queue:ffc-doc-statements
+container.publishTopicAddress: queue:ffc-doc-statement-publish
+container.crmTopicAddress: queue:ffc-doc-statement-crm

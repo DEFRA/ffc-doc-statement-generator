@@ -1,4 +1,3 @@
-
 const { generateContent } = require('../../../../app/generator/content')
 const { STATEMENT, SFI23ADVANCEDSTATEMENT, SFI23QUARTERLYSTATEMENT, SCHEDULE } = require('../../../../app/constants/document-types')
 const { createContent: createStatementContent } = require('../../../../app/generator/content/statement/SFI')

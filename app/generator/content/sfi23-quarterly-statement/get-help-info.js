@@ -1,4 +1,3 @@
-
 const config = require('../../../config')
 const getPaymentPeriodsTable = require('./part3/get-payment-periods-table')
 const getPeriodStartDateFromPeriod = require('./get-period-start-date-from-period')
