@@ -20,9 +20,9 @@ const initialiseContainers = async () => {
     console.log('Making sure blob containers exist')
     await container.createIfNotExists()
   }
-  if (!containersInitialised) {
-    await initialiseFolders()
-  }
+
+  await initialiseFolders()
+
   containersInitialised = true
 }
 
