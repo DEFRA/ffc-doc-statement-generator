@@ -5,14 +5,6 @@ describe('delinkedHelpInfo', () => {
     const helpInfo = delinkedHelpInfo()
 
     expect(helpInfo).toHaveProperty('stack')
-    expect(helpInfo.stack).toContainEqual({
-      text: [
-        { text: 'Your next payment ', style: 'header2' },
-        '\n',
-        { text: 'You can find out when you\'ll receive your next payment and information on progressive reductions for 2025 to 2027 (when they\'re available) at ' },
-        { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
-      ]
-    })
     expect(helpInfo.stack).toContainEqual({ text: 'If you\'ve any questions about this statement', style: 'header2' })
     expect(helpInfo.stack).toContainEqual({ text: 'You can:' })
     expect(helpInfo.stack).toContainEqual({

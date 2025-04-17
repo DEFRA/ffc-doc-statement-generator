@@ -8,32 +8,32 @@ channels:
     address: ffc-doc-statements/ffc-doc-statement-generator
     messages:
       subscribe.message.0:
-        $ref: '#/components/messages/PaymentSchedule'
+        $ref: "#/components/messages/PaymentSchedule"
       subscribe.message.1:
-        $ref: '#/components/messages/PaymentStatement'
+        $ref: "#/components/messages/PaymentStatement"
       subscribe.message.2:
-        $ref: '#/components/messages/Sfi23QuarterlyStatement'
+        $ref: "#/components/messages/Sfi23QuarterlyStatement"
       subscribe.message.3:
-        $ref: '#/components/messages/DelinkedStatement'
+        $ref: "#/components/messages/DelinkedStatement"
   ffc-doc-statement-publish:
     address: ffc-doc-statement-publish
     messages:
       publish.message.0:
-        $ref: '#/components/messages/DocumentSchedule'
+        $ref: "#/components/messages/DocumentSchedule"
       publish.message.1:
-        $ref: '#/components/messages/DocumentStatement'
+        $ref: "#/components/messages/DocumentStatement"
       publish.message.2:
-        $ref: '#/components/messages/DelinkedStatement'
+        $ref: "#/components/messages/DelinkedStatement"
   ffc-doc-statement-crm:
     address: ffc-doc-statement-crm
     messages:
       publish.message.0:
-        $ref: '#/components/messages/Crm'
+        $ref: "#/components/messages/Crm"
 operations:
   ffc-doc-statements/ffc-doc-statement-generator.subscribe:
     action: send
     channel:
-      $ref: '#/channels/ffc-doc-statements~1ffc-doc-statement-generator'
+      $ref: "#/channels/ffc-doc-statements~1ffc-doc-statement-generator"
     messages:
       - $ref: >-
           #/channels/ffc-doc-statements~1ffc-doc-statement-generator/messages/subscribe.message.0
@@ -46,16 +46,16 @@ operations:
   ffc-doc-statement-publish.publish:
     action: receive
     channel:
-      $ref: '#/channels/ffc-doc-statement-publish'
+      $ref: "#/channels/ffc-doc-statement-publish"
     messages:
-      - $ref: '#/channels/ffc-doc-statement-publish/messages/publish.message.0'
-      - $ref: '#/channels/ffc-doc-statement-publish/messages/publish.message.1'
+      - $ref: "#/channels/ffc-doc-statement-publish/messages/publish.message.0"
+      - $ref: "#/channels/ffc-doc-statement-publish/messages/publish.message.1"
   ffc-doc-statement-crm.publish:
     action: receive
     channel:
-      $ref: '#/channels/ffc-doc-statement-crm'
+      $ref: "#/channels/ffc-doc-statement-crm"
     messages:
-      - $ref: '#/channels/ffc-doc-statement-crm/messages/publish.message.0'
+      - $ref: "#/channels/ffc-doc-statement-crm/messages/publish.message.0"
 components:
   messages:
     PaymentSchedule:
@@ -63,43 +63,43 @@ components:
       name: Payment schedule
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/PaymentSchedule'
+        $ref: "#/components/schemas/PaymentSchedule"
     PaymentStatement:
       title: Payment statement
       name: Payment statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/PaymentStatement'
+        $ref: "#/components/schemas/PaymentStatement"
     Sfi23QuarterlyStatement:
       title: Sfi23 Quarterly Statement
       name: Sfi23 Quarterly Statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/SFI23QuarterlyPaymentStatement'
+        $ref: "#/components/schemas/SFI23QuarterlyPaymentStatement"
     DelinkedStatement:
       title: Delinked Statement
       name: Delinked Statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/DelinkedStatement'
+        $ref: "#/components/schemas/DelinkedStatement"
     DocumentSchedule:
       title: Payment schedule
       name: Payment schedule
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/BodySchedule'
+        $ref: "#/components/schemas/BodySchedule"
     DocumentStatement:
       title: Payment Statement
       name: Payment statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/BodyStatement'
+        $ref: "#/components/schemas/BodyStatement"
     DocumentDelinked:
       title: Payment Statement
       name: Payment statement
       contentType: application/json
       payload:
-        $ref: '#/components/schemas/BodyDelinkedStatement'
+        $ref: "#/components/schemas/BodyDelinkedStatement"
     Crm:
       title: Crm Message
       name: Crm Message
@@ -163,28 +163,28 @@ components:
         - remainingAmount
       properties:
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         email:
-          $ref: '#/components/schemas/Email'
+          $ref: "#/components/schemas/Email"
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         scheme:
-          $ref: '#/components/schemas/Scheme'
+          $ref: "#/components/schemas/Scheme"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
         remainingAmount:
-          $ref: '#/components/schemas/RemainingAmount'
+          $ref: "#/components/schemas/RemainingAmount"
         schedule:
           type: array
           items:
-            - $ref: '#/components/schemas/Schedule'
-            - $ref: '#/components/schemas/ScheduleAdjustment'
+            - $ref: "#/components/schemas/Schedule"
+            - $ref: "#/components/schemas/ScheduleAdjustment"
         adjustment:
-          $ref: '#/components/schemas/Adjustment'
+          $ref: "#/components/schemas/Adjustment"
     PaymentStatement:
       additionalProperties: false
       type: object
@@ -200,182 +200,180 @@ components:
         - remainingAmount
       properties:
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         email:
-          $ref: '#/components/schemas/Email'
+          $ref: "#/components/schemas/Email"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         funding:
           type: array
           items:
-            - $ref: '#/components/schemas/Funding'
-            - $ref: '#/components/schemas/FundingTotal'
+            - $ref: "#/components/schemas/Funding"
+            - $ref: "#/components/schemas/FundingTotal"
         payments:
           type: array
           items:
-            $ref: '#/components/schemas/Payment'
+            $ref: "#/components/schemas/Payment"
         scheme:
-          $ref: '#/components/schemas/Scheme'
+          $ref: "#/components/schemas/Scheme"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
         remainingAmount:
-          $ref: '#/components/schemas/RemainingAmount'
+          $ref: "#/components/schemas/RemainingAmount"
     DelinkedStatement:
       type: object
       properties:
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         email:
-          $ref: '#/components/schemas/EmailAddress'
+          $ref: "#/components/schemas/EmailAddress"
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         calculationId:
-          $ref: '#/components/schemas/CalculationId'
+          $ref: "#/components/schemas/CalculationId"
         applicationId:
-          $ref: '#/components/schemas/ApplicationId'
+          $ref: "#/components/schemas/ApplicationId"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         paymentBand1:
-          $ref: '#/components/schemas/PaymentBand1'
+          $ref: "#/components/schemas/PaymentBand1"
         paymentBand2:
-          $ref: '#/components/schemas/PaymentBand2'
+          $ref: "#/components/schemas/PaymentBand2"
         paymentBand3:
-          $ref: '#/components/schemas/PaymentBand3'
-        paymentBand4:
-          $ref: '#/components/schemas/PaymentBand4'
+          $ref: "#/components/schemas/PaymentBand3"
         percentageReduction1:
-          $ref: '#/components/schemas/PercentageReduction1'
+          $ref: "#/components/schemas/PercentageReduction1"
         percentageReduction2:
-          $ref: '#/components/schemas/PercentageReduction2'
+          $ref: "#/components/schemas/PercentageReduction2"
         percentageReduction3:
-          $ref: '#/components/schemas/PercentageReduction3'
+          $ref: "#/components/schemas/PercentageReduction3"
         percentageReduction4:
-          $ref: '#/components/schemas/PercentageReduction4'
+          $ref: "#/components/schemas/PercentageReduction4"
         progressiveReductions1:
-          $ref: '#/components/schemas/ProgressiveReductions1'
+          $ref: "#/components/schemas/ProgressiveReductions1"
         progressiveReductions2:
-          $ref: '#/components/schemas/ProgressiveReductions2'
+          $ref: "#/components/schemas/ProgressiveReductions2"
         progressiveReductions3:
-          $ref: '#/components/schemas/ProgressiveReductions3'
+          $ref: "#/components/schemas/ProgressiveReductions3"
         progressiveReductions4:
-          $ref: '#/components/schemas/ProgressiveReductions4'
+          $ref: "#/components/schemas/ProgressiveReductions4"
         referenceAmount:
-          $ref: '#/components/schemas/ReferenceAmount'
+          $ref: "#/components/schemas/ReferenceAmount"
         totalProgressiveReduction:
-          $ref: '#/components/schemas/TotalProgressiveReduction'
+          $ref: "#/components/schemas/TotalProgressiveReduction"
         totalDelinkedPayment:
-          $ref: '#/components/schemas/TotalDelinkedPayment'
+          $ref: "#/components/schemas/TotalDelinkedPayment"
         paymentAmountCalculated:
-          $ref: '#/components/schemas/PaymentAmountCalculated'
+          $ref: "#/components/schemas/PaymentAmountCalculated"
         transactionDate:
-          $ref: '#/components/schemas/TransactionDate'
+          $ref: "#/components/schemas/TransactionDate"
         paymentReference:
-          $ref: '#/components/schemas/PaymentReference'
+          $ref: "#/components/schemas/PaymentReference"
         scheme:
-          $ref: '#/components/schemas/SchemeDelinked'
+          $ref: "#/components/schemas/SchemeDelinked"
         previousPaymentCount:
-          $ref: '#/components/schemas/PreviousPaymentCount'
+          $ref: "#/components/schemas/PreviousPaymentCount"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
     SFI23QuarterlyPaymentStatement:
       type: object
       properties:
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         email:
-          $ref: '#/components/schemas/EmailAddress'
+          $ref: "#/components/schemas/EmailAddress"
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         scheme:
-          $ref: '#/components/schemas/Scheme'
+          $ref: "#/components/schemas/Scheme"
         calculationReference:
-          $ref: '#/components/schemas/CalculationId'
+          $ref: "#/components/schemas/CalculationId"
         agreementNumber:
-          $ref: '#/components/schemas/AgreementNumber'
+          $ref: "#/components/schemas/AgreementNumber"
         agreementEnd:
-          $ref: '#/components/schemas/AgreementEnd'
+          $ref: "#/components/schemas/AgreementEnd"
         agreementStart:
-          $ref: '#/components/schemas/AgreementStart'
+          $ref: "#/components/schemas/AgreementStart"
         claimReference:
-          $ref: '#/components/schemas/ClaimId'
+          $ref: "#/components/schemas/ClaimId"
         calculationDate:
-          $ref: '#/components/schemas/CalculationDate'
+          $ref: "#/components/schemas/CalculationDate"
         invoiceNumber:
-          $ref: '#/components/schemas/InvoiceNumber'
+          $ref: "#/components/schemas/InvoiceNumber"
         schemeCode:
-          $ref: '#/components/schemas/SchemeCode'
+          $ref: "#/components/schemas/SchemeCode"
         totalActionPayments:
-          $ref: '#/components/schemas/TotalActionPayments'
+          $ref: "#/components/schemas/TotalActionPayments"
         totalAdditionalPayments:
-          $ref: '#/components/schemas/TotalAdditionalPayments'
+          $ref: "#/components/schemas/TotalAdditionalPayments"
         totalPayments:
-          $ref: '#/components/schemas/TotalPayments'
+          $ref: "#/components/schemas/TotalPayments"
         paymentReference:
-          $ref: '#/components/schemas/PaymentReference'
+          $ref: "#/components/schemas/PaymentReference"
         calculationId:
-          $ref: '#/components/schemas/CalculationId'
+          $ref: "#/components/schemas/CalculationId"
         paymentPeriod:
-          $ref: '#/components/schemas/PaymentPeriod'
+          $ref: "#/components/schemas/PaymentPeriod"
         paymentAmount:
-          $ref: '#/components/schemas/PaymentAmount'
+          $ref: "#/components/schemas/PaymentAmount"
         transactionDate:
-          $ref: '#/components/schemas/TransactionDate'
+          $ref: "#/components/schemas/TransactionDate"
         actionGroups:
           type: array
           items:
-            $ref: '#/components/schemas/ActionGroup'
+            $ref: "#/components/schemas/ActionGroup"
         previousPaymentCount:
-          $ref: '#/components/schemas/PreviousPaymentCount'
+          $ref: "#/components/schemas/PreviousPaymentCount"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
     ActionGroup:
       type: object
       properties:
         groupName:
-          $ref: '#/components/schemas/GroupName'
+          $ref: "#/components/schemas/GroupName"
         actions:
           type: array
           items:
-            $ref: '#/components/schemas/Action'
+            $ref: "#/components/schemas/Action"
     Action:
       type: object
       properties:
         actionReference:
-          $ref: '#/components/schemas/ActionId'
+          $ref: "#/components/schemas/ActionId"
         calculationReference:
-          $ref: '#/components/schemas/CalculationId'
+          $ref: "#/components/schemas/CalculationId"
         actionCode:
-          $ref: '#/components/schemas/ActionCode'
+          $ref: "#/components/schemas/ActionCode"
         actionName:
-          $ref: '#/components/schemas/ActionName'
+          $ref: "#/components/schemas/ActionName"
         annualValue:
-          $ref: '#/components/schemas/AnnualValue'
+          $ref: "#/components/schemas/AnnualValue"
         fundingCode:
-          $ref: '#/components/schemas/FundingCode'
+          $ref: "#/components/schemas/FundingCode"
         groupName:
-          $ref: '#/components/schemas/GroupName'
+          $ref: "#/components/schemas/GroupName"
         landArea:
-          $ref: '#/components/schemas/AreaClaimed'
+          $ref: "#/components/schemas/AreaClaimed"
         overDeclarationPenalty:
-          $ref: '#/components/schemas/OverDeclarationPenalty'
+          $ref: "#/components/schemas/OverDeclarationPenalty"
         quarterlyPaymentAmount:
-          $ref: '#/components/schemas/QuarterlyPaymentAmount'
+          $ref: "#/components/schemas/QuarterlyPaymentAmount"
         quarterlyValue:
-          $ref: '#/components/schemas/QuarterlyValue'
+          $ref: "#/components/schemas/QuarterlyValue"
         rate:
-          $ref: '#/components/schemas/Rate'
+          $ref: "#/components/schemas/Rate"
         uom:
-          $ref: '#/components/schemas/UnitOfMeasure'
+          $ref: "#/components/schemas/UnitOfMeasure"
     ActionCode:
       type: string
       description: Identifier for action code within scheme
@@ -396,12 +394,12 @@ components:
       type: string
       format: date-time
       description: The date the Agreement End
-      example: '2022-08-22T16:45:20.891Z'
+      example: "2022-08-22T16:45:20.891Z"
     AgreementStart:
       type: string
       format: date-time
       description: The date the Agreement Start
-      example: '2022-08-22T16:45:20.891Z'
+      example: "2022-08-22T16:45:20.891Z"
     Address:
       additionalProperties: false
       required:
@@ -411,17 +409,17 @@ components:
       type: object
       properties:
         line1:
-          $ref: '#/components/schemas/Street'
+          $ref: "#/components/schemas/Street"
         line2:
-          $ref: '#/components/schemas/Area'
+          $ref: "#/components/schemas/Area"
         line3:
-          $ref: '#/components/schemas/Town'
+          $ref: "#/components/schemas/Town"
         line4:
-          $ref: '#/components/schemas/Region'
+          $ref: "#/components/schemas/Region"
         line5:
-          $ref: '#/components/schemas/County'
+          $ref: "#/components/schemas/County"
         postcode:
-          $ref: '#/components/schemas/Postcode'
+          $ref: "#/components/schemas/Postcode"
     Adjustment:
       type: object
       description: Overview of the total adjustment
@@ -431,11 +429,11 @@ components:
         - adjustmentValue
       properties:
         currentValue:
-          $ref: '#/components/schemas/AdjustmentCurrentValue'
+          $ref: "#/components/schemas/AdjustmentCurrentValue"
         newValue:
-          $ref: '#/components/schemas/AdjustmentNewValue'
+          $ref: "#/components/schemas/AdjustmentNewValue"
         adjustmentValue:
-          $ref: '#/components/schemas/AdjustmentValue'
+          $ref: "#/components/schemas/AdjustmentValue"
     AnnualValue:
       type: string
       description: The annual value of the action
@@ -454,11 +452,11 @@ components:
         - type
       properties:
         body:
-          $ref: '#/components/schemas/DocumentSchedule'
+          $ref: "#/components/schemas/DocumentSchedule"
         source:
-          $ref: '#/components/schemas/Source'
+          $ref: "#/components/schemas/Source"
         type:
-          $ref: '#/components/schemas/TypeSchedule'
+          $ref: "#/components/schemas/TypeSchedule"
     BodyStatement:
       additionalProperties: false
       type: object
@@ -468,11 +466,11 @@ components:
         - type
       properties:
         body:
-          $ref: '#/components/schemas/DocumentStatement'
+          $ref: "#/components/schemas/DocumentStatement"
         source:
-          $ref: '#/components/schemas/Source'
+          $ref: "#/components/schemas/Source"
         type:
-          $ref: '#/components/schemas/TypeStatement'
+          $ref: "#/components/schemas/TypeStatement"
     BodyDelinkedStatement:
       additionalProperties: false
       type: object
@@ -482,11 +480,11 @@ components:
         - type
       properties:
         body:
-          $ref: '#/components/schemas/DocumentDelinked'
+          $ref: "#/components/schemas/DocumentDelinked"
         source:
-          $ref: '#/components/schemas/Source'
+          $ref: "#/components/schemas/Source"
         type:
-          $ref: '#/components/schemas/TypeStatement'
+          $ref: "#/components/schemas/TypeStatement"
     DocumentSchedule:
       additionalProperties: false
       type: object
@@ -501,23 +499,23 @@ components:
         - scheme
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
         remainingAmount:
-          $ref: '#/components/schemas/RemainingAmount'
+          $ref: "#/components/schemas/RemainingAmount"
         email:
-          $ref: '#/components/schemas/Email'
+          $ref: "#/components/schemas/Email"
         filename:
-          $ref: '#/components/schemas/FilenameSchedule'
+          $ref: "#/components/schemas/FilenameSchedule"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         scheme:
-          $ref: '#/components/schemas/Scheme'
+          $ref: "#/components/schemas/Scheme"
     DocumentStatement:
       additionalProperties: false
       type: object
@@ -532,25 +530,25 @@ components:
         - scheme
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
         remainingAmount:
-          $ref: '#/components/schemas/RemainingAmount'
+          $ref: "#/components/schemas/RemainingAmount"
         email:
-          $ref: '#/components/schemas/Email'
+          $ref: "#/components/schemas/Email"
         filename:
-          $ref: '#/components/schemas/FilenameStatement'
+          $ref: "#/components/schemas/FilenameStatement"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         paymentPeriod:
-          $ref: '#/components/schemas/PaymentPeriod'
+          $ref: "#/components/schemas/PaymentPeriod"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         scheme:
-          $ref: '#/components/schemas/Scheme'
+          $ref: "#/components/schemas/Scheme"
     DocumentDelinked:
       additionalProperties: false
       type: object
@@ -564,31 +562,29 @@ components:
         - scheme
       properties:
         address:
-          $ref: '#/components/schemas/Address'
+          $ref: "#/components/schemas/Address"
         businessName:
-          $ref: '#/components/schemas/BusinessName'
+          $ref: "#/components/schemas/BusinessName"
         documentReference:
-          $ref: '#/components/schemas/DocumentReference'
+          $ref: "#/components/schemas/DocumentReference"
         remainingAmount:
-          $ref: '#/components/schemas/RemainingAmount'
+          $ref: "#/components/schemas/RemainingAmount"
         email:
-          $ref: '#/components/schemas/Email'
+          $ref: "#/components/schemas/Email"
         filename:
-          $ref: '#/components/schemas/FilenameStatement'
+          $ref: "#/components/schemas/FilenameStatement"
         frn:
-          $ref: '#/components/schemas/FRN'
+          $ref: "#/components/schemas/FRN"
         paymentBand1:
-          $ref: '#/components/schemas/PaymentBand1'
+          $ref: "#/components/schemas/PaymentBand1"
         paymentBand2:
-          $ref: '#/components/schemas/PaymentBand2'
+          $ref: "#/components/schemas/PaymentBand2"
         paymentBand3:
-          $ref: '#/components/schemas/PaymentBand3'
-        paymentBand4:
-          $ref: '#/components/schemas/PaymentBand4'
+          $ref: "#/components/schemas/PaymentBand3"
         sbi:
-          $ref: '#/components/schemas/SBI'
+          $ref: "#/components/schemas/SBI"
         scheme:
-          $ref: '#/components/schemas/SchemeDelinked'
+          $ref: "#/components/schemas/SchemeDelinked"
     Funding:
       additionalProperties: false
       type: object
@@ -600,25 +596,25 @@ components:
         - quarterlyPayment
       properties:
         name:
-          $ref: '#/components/schemas/FundingName'
+          $ref: "#/components/schemas/FundingName"
         level:
-          $ref: '#/components/schemas/FundingLevel'
+          $ref: "#/components/schemas/FundingLevel"
         area:
-          $ref: '#/components/schemas/FundingArea'
+          $ref: "#/components/schemas/FundingArea"
         rate:
-          $ref: '#/components/schemas/FundingRate'
+          $ref: "#/components/schemas/FundingRate"
         annualValue:
-          $ref: '#/components/schemas/FundingAnnualValue'
+          $ref: "#/components/schemas/FundingAnnualValue"
         quarterlyValue:
-          $ref: '#/components/schemas/FundingQuarterlyValue'
+          $ref: "#/components/schemas/FundingQuarterlyValue"
         quarterlyReduction:
-          $ref: '#/components/schemas/FundingQuarterlyReduction'
+          $ref: "#/components/schemas/FundingQuarterlyReduction"
         quarterlyPayment:
-          $ref: '#/components/schemas/FundingQuarterlyPayment'
+          $ref: "#/components/schemas/FundingQuarterlyPayment"
         reductions:
           type: array
           items:
-            $ref: '#/components/schemas/Reduction'
+            $ref: "#/components/schemas/Reduction"
     FundingCode:
       type: string
       description: Identifier for funding code within scheme
@@ -634,21 +630,21 @@ components:
         - quarterlyPayment
       properties:
         name:
-          $ref: '#/components/schemas/FundingTotalName'
+          $ref: "#/components/schemas/FundingTotalName"
         level:
-          $ref: '#/components/schemas/FundingTotalLevel'
+          $ref: "#/components/schemas/FundingTotalLevel"
         area:
-          $ref: '#/components/schemas/FundingArea'
+          $ref: "#/components/schemas/FundingArea"
         rate:
-          $ref: '#/components/schemas/FundingTotalRate'
+          $ref: "#/components/schemas/FundingTotalRate"
         annualValue:
-          $ref: '#/components/schemas/FundingAnnualValue'
+          $ref: "#/components/schemas/FundingAnnualValue"
         quarterlyValue:
-          $ref: '#/components/schemas/FundingQuarterlyValue'
+          $ref: "#/components/schemas/FundingQuarterlyValue"
         quarterlyReduction:
-          $ref: '#/components/schemas/FundingQuarterlyReduction'
+          $ref: "#/components/schemas/FundingQuarterlyReduction"
         quarterlyPayment:
-          $ref: '#/components/schemas/FundingQuarterlyPayment'
+          $ref: "#/components/schemas/FundingQuarterlyPayment"
     GroupName:
       type: string
       description: The group name of the action
@@ -665,19 +661,19 @@ components:
         - period
       properties:
         invoiceNumber:
-          $ref: '#/components/schemas/InvoiceNumber'
+          $ref: "#/components/schemas/InvoiceNumber"
         reference:
-          $ref: '#/components/schemas/Reference'
+          $ref: "#/components/schemas/Reference"
         dueDate:
-          $ref: '#/components/schemas/DueDate'
+          $ref: "#/components/schemas/DueDate"
         settled:
-          $ref: '#/components/schemas/Settled'
+          $ref: "#/components/schemas/Settled"
         calculated:
-          $ref: '#/components/schemas/Calculated'
+          $ref: "#/components/schemas/Calculated"
         value:
-          $ref: '#/components/schemas/Value'
+          $ref: "#/components/schemas/Value"
         period:
-          $ref: '#/components/schemas/Period'
+          $ref: "#/components/schemas/Period"
     Schedule:
       additionalProperties: false
       type: object
@@ -689,15 +685,15 @@ components:
         - value
       properties:
         order:
-          $ref: '#/components/schemas/Order'
+          $ref: "#/components/schemas/Order"
         dueDate:
-          $ref: '#/components/schemas/DueDate'
+          $ref: "#/components/schemas/DueDate"
         paymentType:
-          $ref: '#/components/schemas/PaymentType'
+          $ref: "#/components/schemas/PaymentType"
         period:
-          $ref: '#/components/schemas/Period'
+          $ref: "#/components/schemas/Period"
         value:
-          $ref: '#/components/schemas/Value'
+          $ref: "#/components/schemas/Value"
     ScheduleAdjustment:
       additionalProperties: false
       type: object
@@ -709,27 +705,27 @@ components:
         - value
       properties:
         order:
-          $ref: '#/components/schemas/OrderAdjustment'
+          $ref: "#/components/schemas/OrderAdjustment"
         dueDate:
-          $ref: '#/components/schemas/DueDateAdjustment'
+          $ref: "#/components/schemas/DueDateAdjustment"
         paymentType:
-          $ref: '#/components/schemas/PaymentTypeAdjustment'
+          $ref: "#/components/schemas/PaymentTypeAdjustment"
         period:
-          $ref: '#/components/schemas/PeriodAdjustment'
+          $ref: "#/components/schemas/PeriodAdjustment"
         value:
-          $ref: '#/components/schemas/Value'
+          $ref: "#/components/schemas/Value"
     AdjustmentCurrentValue:
       type: string
       description: Current settled payment value
-      example: '1000.00'
+      example: "1000.00"
     AdjustmentNewValue:
       type: string
       description: New to-be settled payment value
-      example: '1500.00'
+      example: "1500.00"
     AdjustmentValue:
       type: string
       description: Delta between the new value and current value
-      example: '500.00'
+      example: "500.00"
     Area:
       type: string
       description: The second line of the address
@@ -746,7 +742,7 @@ components:
       type: string
       format: date-time
       description: The date the calculation was performed
-      example: '2022-08-22T16:45:20.891Z'
+      example: "2022-08-22T16:45:20.891Z"
     CalculationId:
       type: number
       description: Key field for calculation Data
@@ -778,7 +774,7 @@ components:
     DueDateAdjustment:
       type: string
       description: The due date of the adjustment payment
-      example: ''
+      example: ""
     Email:
       type: string
       description: The business email address
@@ -800,15 +796,11 @@ components:
     PaymentBand2:
       type: string
       description: second payment band bracket amount
-      example: '£30,000.01 to £50,000'
+      example: "£30,000.01 to £50,000"
     PaymentBand3:
       type: string
       description: third payment band bracket amount
-      example: '£50,000.01 to £150,000'
-    PaymentBand4:
-      type: string
-      description: fourth payment band bracket amount
-      example: 'Above £150,000'
+      example: "£50,000.01 to £150,000"
     PaymentAmount:
       type: number
       format: decimal
@@ -907,35 +899,35 @@ components:
     FundingTotalLevel:
       type: string
       description: The funding total level
-      example: ''
+      example: ""
     FundingArea:
       type: string
       description: The funding option area in hectares
-      example: '45.4545'
+      example: "45.4545"
     FundingRate:
       type: string
       description: The funding option rate in pounds per hectare
-      example: '22.00'
+      example: "22.00"
     FundingTotalRate:
       type: string
       description: The funding total rate in pounds per hectare
-      example: ''
+      example: ""
     FundingAnnualValue:
       type: string
       description: The funding option annual value in pounds
-      example: '1000.00'
+      example: "1000.00"
     FundingQuarterlyValue:
       type: string
       description: The funding option quarterly value in pounds
-      example: '250.00'
+      example: "250.00"
     FundingQuarterlyReduction:
       type: string
       description: The funding option quarterly reduction in pounds
-      example: '0.00'
+      example: "0.00"
     FundingQuarterlyPayment:
       type: string
       description: The funding option quarterly payment in pounds
-      example: '250.00'
+      example: "250.00"
     InvoiceNumber:
       type: string
       description: Invoice number of payment request
@@ -984,7 +976,7 @@ components:
     PeriodAdjustment:
       type: string
       description: The period of the payment adjustment
-      example: ''
+      example: ""
     Postcode:
       type: string
       description: The postcode
@@ -1020,11 +1012,11 @@ components:
         value:
           type: string
           description: The reduction value
-          example: '75.00'
+          example: "75.00"
     Reference:
       type: string
       description: Settlement reference of payment request
-      example: '10027651'
+      example: "10027651"
     Region:
       type: string
       description: The fourth line of the address
@@ -1052,15 +1044,15 @@ components:
         - 80001 (Arable and horticultural soils Introductory)
       properties:
         name:
-          $ref: '#/components/schemas/SchemeName'
+          $ref: "#/components/schemas/SchemeName"
         shortName:
-          $ref: '#/components/schemas/SchemeShortName'
+          $ref: "#/components/schemas/SchemeShortName"
         year:
-          $ref: '#/components/schemas/SchemeYear'
+          $ref: "#/components/schemas/SchemeYear"
         frequency:
-          $ref: '#/components/schemas/SchemeFrequency'
+          $ref: "#/components/schemas/SchemeFrequency"
         agreementNumber:
-          $ref: '#/components/schemas/SchemeAgreementNumber'
+          $ref: "#/components/schemas/SchemeAgreementNumber"
     SchemeDelinked:
       additionalProperties: false
       type: object
@@ -1079,7 +1071,7 @@ components:
     SchemeYear:
       type: string
       description: The marketing year
-      example: '2022'
+      example: "2022"
     SchemeFrequency:
       type: string
       description: The frequency of payments
@@ -1123,13 +1115,13 @@ components:
       type: string
       format: date-time
       description: The date the transaction was made
-      example: '2022-08-22T16:45:20.891Z'
+      example: "2022-08-22T16:45:20.891Z"
     Type:
       type: string
       description: The type of message being sent
       oneOf:
-        - $ref: '#/components/schemas/TypeSchedule'
-        - $ref: '#/components/schemas/TypeStatement'
+        - $ref: "#/components/schemas/TypeSchedule"
+        - $ref: "#/components/schemas/TypeStatement"
     TypeSchedule:
       type: string
       description: The schedule type of message being sent
@@ -1145,4 +1137,4 @@ components:
     Value:
       type: string
       description: The value of the payment
-      example: '250.00'
+      example: "250.00"
