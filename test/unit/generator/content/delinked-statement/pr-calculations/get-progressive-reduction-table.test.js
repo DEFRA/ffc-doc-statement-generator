@@ -54,11 +54,6 @@ describe('getProgressiveReductionTable', () => {
             { text: '£22,500.00' }
           ],
           [
-            { text: 'Above £150,000' },
-            { text: '70%' },
-            { text: '£40,000.00' }
-          ],
-          [
             { text: '' },
             { text: 'Total progressive reduction', bold: true },
             { text: '£69,000.00', bold: true }
@@ -164,11 +159,6 @@ describe('getProgressiveReductionTable', () => {
             { text: '£50,000.01 to £150,000' },
             { text: '65%' },
             { text: '£22,500.00' }
-          ],
-          [
-            { text: 'Above £150,000' },
-            { text: '70%' },
-            { text: '£40,000.00' }
           ],
           [
             { text: '' },

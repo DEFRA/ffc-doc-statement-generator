@@ -6,14 +6,6 @@ const bottomMargin = 20
 const delinkedHelpInfo = (_delinkedStatement) => {
   return {
     stack: [
-      {
-        text: [
-          { text: 'Your next payment ', style: 'header2' },
-          '\n',
-          { text: 'You can find out when you\'ll receive your next payment and information on progressive reductions for 2025 to 2027 (when they\'re available) at ' },
-          { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
-        ]
-      },
       { text: 'If you\'ve any questions about this statement', style: 'header2' },
       { text: 'You can:' },
       {
