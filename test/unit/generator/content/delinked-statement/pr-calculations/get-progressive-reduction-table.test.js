@@ -210,4 +210,63 @@ describe('getProgressiveReductionTable', () => {
     const result = getProgressiveReductionTable(delinkedStatement)
     expect(result).toEqual(expectedTable)
   })
+  test('should hide total row when totalProgressiveReduction is zero', () => {
+    const delinkedStatement = {
+      paymentBand1: 30000,
+      percentageReduction1: 5,
+      progressiveReductions1: 1500,
+      paymentBand2: 50000,
+      percentageReduction2: 10,
+      progressiveReductions2: 2000,
+      paymentBand3: 150000,
+      percentageReduction3: -20,
+      progressiveReductions3: -3500,
+      totalProgressiveReduction: 0 // Zero total reduction
+    }
+
+    const expectedTable = {
+      layout: {
+        hLineStyle: expect.any(Function),
+        vLineStyle: expect.any(Function)
+      },
+      style: 'table',
+      table: {
+        headerRows: 2,
+        widths: ['*', '*', '*'],
+        body: [
+          [
+            { colSpan: 3, text: 'Progressive reduction calculator', style: 'tableHeader', bold: true },
+            { text: '' },
+            { text: '' }
+          ],
+          [
+            { text: 'Payment band', style: 'tableHeader' },
+            { text: 'Percentage reduction', style: 'tableHeader' },
+            { text: 'Progressive reduction', style: 'tableHeader' }
+          ],
+          [
+            { text: 'Up to £30,000' },
+            { text: '5%' },
+            { text: '£1,500.00' }
+          ],
+          [
+            { text: '£30,000.01 to £50,000' },
+            { text: '10%' },
+            { text: '£2,000.00' }
+          ],
+          [
+            { text: '£50,000.01 to £150,000' },
+            { text: '-20%' },
+            { text: '£-3,500.00' }
+          ]
+          // Note: No total row should be present
+        ]
+      }
+    }
+
+    const result = getProgressiveReductionTable(delinkedStatement)
+    expect(result).toEqual(expectedTable)
+
+    expect(result.table.body.length).toBe(5) // 2 header rows + 3 data rows, no total row
+  })
 })
