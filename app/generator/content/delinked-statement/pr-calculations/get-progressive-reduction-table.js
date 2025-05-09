@@ -31,7 +31,7 @@ const formatProgressiveReduction = (value) => {
 
 const generateTableBody = (delinkedStatement) => {
   const columnSpan3 = 3
-  return [
+  const tableBody = [
     [
       { colSpan: columnSpan3, text: 'Progressive reduction calculator', style: 'tableHeader', bold: true },
       { text: '' },
@@ -41,28 +41,44 @@ const generateTableBody = (delinkedStatement) => {
       { text: 'Payment band', style: 'tableHeader' },
       { text: 'Percentage reduction', style: 'tableHeader' },
       { text: 'Progressive reduction', style: 'tableHeader' }
-    ],
-    [
+    ]
+  ]
+
+  // Only add band 1 if it has a reduction
+  if (parseFloat(delinkedStatement.progressiveReductions1) !== 0) {
+    tableBody.push([
       { text: formatPaymentBand(delinkedStatement.paymentBand1, 'BAND_UP_TO_30000') },
       { text: formatPercentage(delinkedStatement.percentageReduction1) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions1) }
-    ],
-    [
+    ])
+  }
+
+  // Only add band 2 if it has a reduction
+  if (parseFloat(delinkedStatement.progressiveReductions2) !== 0) {
+    tableBody.push([
       { text: formatPaymentBand(delinkedStatement.paymentBand2, 'BAND_30000_TO_50000') },
       { text: formatPercentage(delinkedStatement.percentageReduction2) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions2) }
-    ],
-    [
+    ])
+  }
+
+  // Only add band 3 if it has a reduction
+  if (parseFloat(delinkedStatement.progressiveReductions3) !== 0) {
+    tableBody.push([
       { text: formatPaymentBand(delinkedStatement.paymentBand3, 'BAND_50000_TO_150000') },
       { text: formatPercentage(delinkedStatement.percentageReduction3) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions3) }
-    ],
-    [
-      { text: '' },
-      { text: 'Total progressive reduction', bold: true },
-      { text: formatProgressiveReduction(delinkedStatement.totalProgressiveReduction), bold: true }
-    ]
-  ]
+    ])
+  }
+
+  // Always add the total row
+  tableBody.push([
+    { text: '' },
+    { text: 'Total progressive reduction', bold: true },
+    { text: formatProgressiveReduction(delinkedStatement.totalProgressiveReduction), bold: true }
+  ])
+
+  return tableBody
 }
 
 const getProgressiveReductionTable = (delinkedStatement) => {
