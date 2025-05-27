@@ -76,7 +76,7 @@ module.exports = Joi.object({
   scheme: Joi.object({
     name: createStringSchema('schemeName'),
     shortName: createShortNameSchema('schemeShortName'),
-    year: createStringSchema('schemeYear')
+    year: numberSchema('schemeYear')
   }),
   previousPaymentCount: numberSchema('previousPaymentCount'),
   documentReference: numberSchema('documentReference')

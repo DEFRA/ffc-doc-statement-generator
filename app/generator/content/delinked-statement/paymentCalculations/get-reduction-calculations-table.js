@@ -26,12 +26,12 @@ const getReductionsCalculationsTable = (delinkedStatement) => {
     ]
   ]
 
-  if (delinkedStatement.scheme.year === 2024) {
+  if (delinkedStatement.scheme.year === 2024 || delinkedStatement.paymentPeriod === 2024) {
     tableBody.push([
       { text: 'Total annual delinked payment' },
       { text: formatCalculationAmount(delinkedStatement.totalDelinkedPayment) }
     ])
-    
+
     tableBody.push([
       { text: 'Payment amount', bold: true },
       { text: formatCalculationAmount(delinkedStatement.paymentAmountCalculated), bold: true }
