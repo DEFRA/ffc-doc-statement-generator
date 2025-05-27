@@ -6,6 +6,8 @@ const formatCalculationAmount = (value) => {
   return `£${formattedValue}`
 }
 
+const delinked2024 = 2024
+
 const getReductionsCalculationsTable = (delinkedStatement) => {
   const tableBody = [
     [
@@ -26,7 +28,7 @@ const getReductionsCalculationsTable = (delinkedStatement) => {
     ]
   ]
 
-  if (delinkedStatement.scheme.year === 2024 || delinkedStatement.paymentPeriod === 2024) {
+  if (delinkedStatement.scheme.year === delinked2024 || delinkedStatement.paymentPeriod === delinked2024) {
     tableBody.push([
       { text: 'Total annual delinked payment' },
       { text: formatCalculationAmount(delinkedStatement.totalDelinkedPayment) }
