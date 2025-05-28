@@ -9,7 +9,7 @@ const filename = require('../schemas/filename')
 const scheme = require('../schemas/delinked-scheme')
   .keys({
     year: Joi.number().integer().required()
-      .custom((value, helpers) => {
+      .custom((value, _helpers) => {
         return value.toString()
       })
   })
