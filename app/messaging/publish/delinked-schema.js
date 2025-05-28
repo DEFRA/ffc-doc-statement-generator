@@ -7,6 +7,12 @@ const address = require('../schemas/address')
 const email = require('../schemas/email')
 const filename = require('../schemas/filename')
 const scheme = require('../schemas/delinked-scheme')
+  .keys({
+    year: Joi.number().integer().required()
+      .custom((value, _helpers) => {
+        return value.toString()
+      })
+  })
 const documentReference = require('../schemas/document-reference')
 const paymentPeriod = require('../schemas/payment-period')
 const type = require('../schemas/type')

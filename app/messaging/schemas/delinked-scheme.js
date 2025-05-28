@@ -9,9 +9,9 @@ module.exports = Joi.object({
     'any.required': 'shortName is missing but it is required.',
     'string.base': 'The short name must be a string.'
   }),
-  year: Joi.string().required().messages({
+  year: Joi.number().integer().required().messages({
     'any.required': 'year is missing but it is required.',
-    'string.base': 'The year must be a string.'
+    'number.base': 'The year must be a string.'
   })
 }).required().messages({
   'any.required': 'scheme object is missing but it is required.'
