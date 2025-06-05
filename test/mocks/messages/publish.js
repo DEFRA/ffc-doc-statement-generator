@@ -72,6 +72,7 @@ const DELINKEDSTATEMENT_MESSAGE = {
     referenceAmount: DELINKEDSTATEMENT.referenceAmount,
     totalProgressiveReduction: DELINKEDSTATEMENT.totalProgressiveReduction,
     totalDelinkedPayment: DELINKEDSTATEMENT.totalDelinkedPayment,
+    transactionDate: DELINKEDSTATEMENT.transactionDate,
     paymentAmountCalculated: DELINKEDSTATEMENT.paymentAmountCalculated
   },
   type: `uk.gov.doc.${DELINKED_TYPE.id}.publish`
