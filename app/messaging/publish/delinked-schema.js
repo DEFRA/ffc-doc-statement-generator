@@ -33,6 +33,7 @@ const referenceAmount = Joi.number().required()
 const totalProgressiveReduction = Joi.number().required()
 const totalDelinkedPayment = Joi.number().required()
 const paymentAmountCalculated = Joi.number().required()
+const transactionDate = Joi.date().iso().required()
 
 module.exports = Joi.object({
   body: Joi.object({
@@ -60,7 +61,8 @@ module.exports = Joi.object({
     referenceAmount,
     totalProgressiveReduction,
     totalDelinkedPayment,
-    paymentAmountCalculated
+    paymentAmountCalculated,
+    transactionDate
   }).required(),
   type,
   source

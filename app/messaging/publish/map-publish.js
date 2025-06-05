@@ -33,6 +33,7 @@ const mapPublish = (document, filename, type) => {
     body.totalProgressiveReduction = document.totalProgressiveReduction
     body.totalDelinkedPayment = document.totalDelinkedPayment
     body.paymentAmountCalculated = document.paymentAmountCalculated
+    body.transactionDate = document.transactionDate
   }
 
   const result = {
