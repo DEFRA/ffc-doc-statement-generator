@@ -21,7 +21,7 @@ const delinkedHelpInfo = (_delinkedStatement) => {
             text: [
               { text: 'log in to the Rural Payments service at ' },
               '\n',
-              { text: 'www.ruralpayments.service.gov.uk/customer-account/login.', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline', unbreakable: true },
+              { text: 'www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline', unbreakable: true },
               { text: ' to send a query - this is the quickest way to get a reply' }
             ]
           },
@@ -29,7 +29,7 @@ const delinkedHelpInfo = (_delinkedStatement) => {
             text: [
               { text: 'email ', unbreakable: true },
               { text: 'ruralpayments@defra.gov.uk', link: 'mailto:ruralpayments@defra.gov.uk', decoration: 'underline' },
-              { text: ' - use Delinked payments statement query\' as the subject of your email' }
+              { text: ' - use \'Delinked payments statement query\' as the subject of your email' }
             ]
           },
           {
@@ -46,7 +46,7 @@ const delinkedHelpInfo = (_delinkedStatement) => {
           { text: 'If you think your payment is wrong', style: 'header2' },
           '\n\n',
           { text: 'Read how to submit an appeal and the deadlines that apply at ' },
-          { text: 'www.gov.uk/government/organisations/rural-payments-agency/about/complaints-procedure', link: 'https://www.gov.uk/government/organisations/rural-payments-agency/about/complaints-procedure', decoration: 'underline' }
+          { text: 'www.gov.uk/government/organisations/rural-payments-agency/about/complaints-procedure.', link: 'https://www.gov.uk/government/organisations/rural-payments-agency/about/complaints-procedure', decoration: 'underline' }
         ]
       }
     ],
