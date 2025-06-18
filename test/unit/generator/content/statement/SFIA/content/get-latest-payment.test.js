@@ -1,7 +1,7 @@
 const getLatestPayment = require('../../../../../../../app/generator/content/statement/SFIA/content/get-latest-payment')
 
-describe('get latest payment', () => {
-  test('gets latest payment when only one payment', () => {
+describe('get most recent payment', () => {
+  test('gets most recent payment when only one payment', () => {
     const payments = [{
       settled: '1 July 2022'
     }]
@@ -9,7 +9,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[0])
   })
 
-  test('gets latest payment by month when two payments in order', () => {
+  test('gets most recent payment by month when two payments in order', () => {
     const payments = [{
       settled: '1 July 2022'
     }, {
@@ -19,7 +19,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[1])
   })
 
-  test('gets latest payment by month when two payments out of order', () => {
+  test('gets most recent payment by month when two payments out of order', () => {
     const payments = [{
       settled: '1 August 2022'
     }, {
@@ -29,7 +29,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[0])
   })
 
-  test('gets latest payment by month when three payments in order', () => {
+  test('gets most recent payment by month when three payments in order', () => {
     const payments = [{
       settled: '1 July 2022'
     }, {
@@ -41,7 +41,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[2])
   })
 
-  test('gets latest payment by month when three payments in reverse order', () => {
+  test('gets most recent payment by month when three payments in reverse order', () => {
     const payments = [{
       settled: '1 September 2022'
     }, {
@@ -53,7 +53,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[0])
   })
 
-  test('gets latest payment by month when three payments out of order', () => {
+  test('gets most recent payment by month when three payments out of order', () => {
     const payments = [{
       settled: '1 August 2022'
     }, {
@@ -77,7 +77,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[1])
   })
 
-  test('gets latest payment by month when spans years and same month in order', () => {
+  test('gets most recent payment by month when spans years and same month in order', () => {
     const payments = [{
       settled: '1 July 2022'
     }, {
@@ -87,7 +87,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[1])
   })
 
-  test('gets latest payment by month when spans years and same month out of order', () => {
+  test('gets most recent payment by month when spans years and same month out of order', () => {
     const payments = [{
       settled: '1 July 2023'
     }, {
@@ -97,7 +97,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[0])
   })
 
-  test('gets latest payment by month when spans years in order', () => {
+  test('gets most recent payment by month when spans years in order', () => {
     const payments = [{
       settled: '1 September 2022'
     }, {
@@ -107,7 +107,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[1])
   })
 
-  test('gets latest payment by month when spans years out of order', () => {
+  test('gets most recent payment by month when spans years out of order', () => {
     const payments = [{
       settled: '1 July 2023'
     }, {
@@ -117,7 +117,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[0])
   })
 
-  test('gets latest payment by month when leap year earliest', () => {
+  test('gets most recent payment by month when leap year earliest', () => {
     const payments = [{
       settled: '29 February 2024'
     }, {
@@ -127,7 +127,7 @@ describe('get latest payment', () => {
     expect(result).toStrictEqual(payments[1])
   })
 
-  test('gets latest payment by month when leap year latest', () => {
+  test('gets most recent payment by month when leap year latest', () => {
     const payments = [{
       settled: '29 February 2024'
     }, {

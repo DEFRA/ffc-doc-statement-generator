@@ -26,7 +26,7 @@ describe('delinkedIntroduction', () => {
     expect(delinkedIntroductionResult.stack).toContainEqual({ text: `Delinked payments ${mockDelinkedStatement.scheme.year}: payment statement `, style: 'header2' })
     expect(delinkedIntroductionResult.stack).toContainEqual({ text: 'Delinked payments have replaced Basic Payment Scheme (BPS) payments in England.' })
     expect(delinkedIntroductionResult.stack).toContainEqual('\n')
-    expect(delinkedIntroductionResult.stack).toContainEqual({ text: 'This statement explains the latest payment of your annual delinked payment, including your reference amount and progressive reduction.' })
+    expect(delinkedIntroductionResult.stack).toContainEqual({ text: 'This statement explains the most recent payment of your annual delinked payment, including your reference amount and progressive reduction.' })
     expect(delinkedIntroductionResult).toHaveProperty('unbreakable', true)
   })
 })
