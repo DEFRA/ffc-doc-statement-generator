@@ -23,7 +23,7 @@ describe('part2', () => {
     const mockPaymentSummary = [
       { text: 'What you\'ve been paid', style: 'tableHeader2' },
       { text: [{ text: 'Period: ', bold: true, lineBreak: false }, '2024 Q1'] },
-      { text: [{ text: 'Payment: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
+      { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
       { text: 'This is usually paid into your account within 2 working days of March 31, 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'SFI23-123456789'] }
     ]
@@ -51,7 +51,7 @@ describe('part2', () => {
 
     const mockPaymentSummary = [
       { text: 'What you\'ve been paid', style: 'tableHeader2' },
-      { text: [{ text: 'Payment: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
+      { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
       { text: 'This is usually paid into your account within 2 working days of March 31, 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'SFI23-123456789'] }
     ]
@@ -90,7 +90,7 @@ describe('getPaymentSummary', () => {
 
     expect(result).toEqual([
       { text: 'What you\'ve been paid', style: 'tableHeader2' },
-      { text: [{ text: 'Payment: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
+      { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
       { text: 'This is usually paid into your account within 2 working days of March 31, 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'SFI23-123456789'] }
     ])
@@ -105,7 +105,7 @@ describe('getPaymentSummary', () => {
 
     expect(result).toEqual([
       { text: 'What you\'ve been paid', style: 'tableHeader2' },
-      { text: [{ text: 'Payment: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
+      { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
       { text: 'This is usually paid into your account within 2 working days of March 31, 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'SFI23-123456789'] }
     ])
