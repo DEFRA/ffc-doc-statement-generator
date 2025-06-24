@@ -73,6 +73,12 @@ describe('getProgressiveReductionTable', () => {
     expect(result.layout.vLineStyle()).toBe('solid')
   })
 
+  test('should format payment band with default case', () => {
+    const formatPaymentBand = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table').formatPaymentBand
+    const result = formatPaymentBand(1000, 'UNKNOWN_BAND')
+    expect(result).toBe('£1,000')
+  })
+
   test('should throw an error for invalid payment band value', () => {
     const delinkedStatement = {
       paymentBand1: -30000,

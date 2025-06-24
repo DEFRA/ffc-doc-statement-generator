@@ -107,3 +107,6 @@ const getProgressiveReductionTable = (delinkedStatement) => {
 }
 
 module.exports = getProgressiveReductionTable
+module.exports.formatPaymentBand = formatPaymentBand
+module.exports.formatPercentage = formatPercentage
+module.exports.formatProgressiveReduction = formatProgressiveReduction
