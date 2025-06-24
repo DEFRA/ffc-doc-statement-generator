@@ -1,5 +1,5 @@
 const prCalculations = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/index')
-const getProgressiveReductionTable = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
+const { getProgressiveReductionTable } = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
 const { DELINKED } = require('../../../../../../app/constants/document-types')
 
 jest.mock('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')

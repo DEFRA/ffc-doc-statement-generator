@@ -1,4 +1,4 @@
-const getProgressiveReductionTable = require('./get-progressive-reduction-table')
+const { getProgressiveReductionTable } = require('./get-progressive-reduction-table')
 const { DELINKED } = require('../../../../constants/document-types')
 const marginLeft = 15
 const marginRight = 2

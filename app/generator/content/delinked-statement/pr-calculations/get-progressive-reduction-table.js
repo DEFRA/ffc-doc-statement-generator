@@ -106,7 +106,9 @@ const getProgressiveReductionTable = (delinkedStatement) => {
   return progressiveReductionTable
 }
 
-module.exports = getProgressiveReductionTable
-module.exports.formatPaymentBand = formatPaymentBand
-module.exports.formatPercentage = formatPercentage
-module.exports.formatProgressiveReduction = formatProgressiveReduction
+module.exports = {
+  getProgressiveReductionTable,
+  formatPaymentBand,
+  formatPercentage,
+  formatProgressiveReduction
+}

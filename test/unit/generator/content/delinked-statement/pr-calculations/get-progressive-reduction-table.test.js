@@ -1,4 +1,4 @@
-const getProgressiveReductionTable = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
+const { getProgressiveReductionTable, formatPaymentBand, formatProgressiveReduction } = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
 
 describe('getProgressiveReductionTable', () => {
   test('should return a correctly formatted table object', () => {
@@ -73,8 +73,22 @@ describe('getProgressiveReductionTable', () => {
     expect(result.layout.vLineStyle()).toBe('solid')
   })
 
+  test('should format payment band 3 correctly', () => {
+    const result = formatPaymentBand(150000, 'BAND_50000_TO_150000')
+    expect(result).toBe('£50,000.01 to £150,000')
+  })
+
+  test('should format payment band 4 correctly', () => {
+    const result = formatPaymentBand(200000, 'BAND_ABOVE_150000')
+    expect(result).toBe('Above £150,000')
+  })
+
+  test('should format progressive reduction correctly', () => {
+    const result = formatProgressiveReduction('1234.56')
+    expect(result).toBe('£1,234.56')
+  })
+
   test('should format payment band with default case', () => {
-    const formatPaymentBand = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table').formatPaymentBand
     const result = formatPaymentBand(1000, 'UNKNOWN_BAND')
     expect(result).toBe('£1,000')
   })
@@ -243,6 +257,7 @@ describe('getProgressiveReductionTable', () => {
     const result = getProgressiveReductionTable(delinkedStatement)
     expect(result).toEqual(expectedTable)
   })
+
   test('should hide total row when totalProgressiveReduction is zero', () => {
     const delinkedStatement = {
       paymentBand1: 30000,
