@@ -54,6 +54,11 @@ describe('getProgressiveReductionTable', () => {
             { text: '£22,500.00' }
           ],
           [
+            { text: 'Above £150,000' },
+            { text: '70%' },
+            { text: '£40,000.00' }
+          ],
+          [
             { text: '' },
             { text: 'Total progressive reduction', bold: true },
             { text: '£69,000.00', bold: true }
@@ -79,6 +84,9 @@ describe('getProgressiveReductionTable', () => {
       paymentBand3: 150000,
       percentageReduction3: 65,
       progressiveReductions3: 22500,
+      paymentBand4: 200000,
+      percentageReduction4: 70,
+      progressiveReductions4: 40000,
       totalProgressiveReduction: 69000
     }
 
@@ -96,6 +104,9 @@ describe('getProgressiveReductionTable', () => {
       paymentBand3: 150000,
       percentageReduction3: 65,
       progressiveReductions3: 22500,
+      paymentBand4: 200000,
+      percentageReduction4: 70,
+      progressiveReductions4: 40000,
       totalProgressiveReduction: 69000
     }
 
@@ -113,6 +124,9 @@ describe('getProgressiveReductionTable', () => {
       paymentBand3: 150000,
       percentageReduction3: 65,
       progressiveReductions3: 22500,
+      paymentBand4: 200000,
+      percentageReduction4: 70,
+      progressiveReductions4: 40000,
       totalProgressiveReduction: 17500
     }
 
@@ -147,6 +161,11 @@ describe('getProgressiveReductionTable', () => {
             { text: '£22,500.00' }
           ],
           [
+            { text: 'Above £150,000' },
+            { text: '70%' },
+            { text: '£40,000.00' }
+          ],
+          [
             { text: '' },
             { text: 'Total progressive reduction', bold: true },
             { text: '£17,500.00', bold: true }
@@ -170,6 +189,9 @@ describe('getProgressiveReductionTable', () => {
       paymentBand3: 150000,
       percentageReduction3: 65,
       progressiveReductions3: 22500,
+      paymentBand4: 200000,
+      percentageReduction4: 70,
+      progressiveReductions4: 40000,
       totalProgressiveReduction: 22500
     }
 
@@ -199,6 +221,11 @@ describe('getProgressiveReductionTable', () => {
             { text: '£22,500.00' }
           ],
           [
+            { text: 'Above £150,000' },
+            { text: '70%' },
+            { text: '£40,000.00' }
+          ],
+          [
             { text: '' },
             { text: 'Total progressive reduction', bold: true },
             { text: '£22,500.00', bold: true }
@@ -221,6 +248,9 @@ describe('getProgressiveReductionTable', () => {
       paymentBand3: 150000,
       percentageReduction3: -20,
       progressiveReductions3: -3500,
+      paymentBand4: 200000,
+      percentageReduction4: 70,
+      progressiveReductions4: 40000,
       totalProgressiveReduction: 0 // Zero total reduction
     }
 
@@ -258,6 +288,11 @@ describe('getProgressiveReductionTable', () => {
             { text: '£50,000.01 to £150,000' },
             { text: '-20%' },
             { text: '£-3,500.00' }
+          ],
+          [
+            { text: 'Above £150,000' },
+            { text: '70%' },
+            { text: '£40,000.00' }
           ]
           // Note: No total row should be present
         ]
@@ -267,6 +302,6 @@ describe('getProgressiveReductionTable', () => {
     const result = getProgressiveReductionTable(delinkedStatement)
     expect(result).toEqual(expectedTable)
 
-    expect(result.table.body.length).toBe(5) // 2 header rows + 3 data rows, no total row
+    expect(result.table.body.length).toBe(6) // 2 header rows + 4 data rows, no total row
   })
 })
