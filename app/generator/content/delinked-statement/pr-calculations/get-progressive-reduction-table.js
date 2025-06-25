@@ -10,6 +10,8 @@ const formatPaymentBand = (value, index) => {
       return `£30,000.01 to £${formattedValue}`
     case 'BAND_50000_TO_150000': // paymentBand3
       return `£50,000.01 to £${formattedValue}`
+    case 'BAND_ABOVE_150000': // paymentBand4
+      return 'Above £150,000'
     default:
       return `£${formattedValue}`
   }
@@ -68,6 +70,14 @@ const generateTableBody = (delinkedStatement) => {
     ])
   }
 
+  if (parseFloat(delinkedStatement.progressiveReductions4) !== 0) {
+    tableBody.push([
+      { text: formatPaymentBand(delinkedStatement.paymentBand4, 'BAND_ABOVE_150000') },
+      { text: formatPercentage(delinkedStatement.percentageReduction4) },
+      { text: formatProgressiveReduction(delinkedStatement.progressiveReductions4) }
+    ])
+  }
+
   if (parseFloat(delinkedStatement.totalProgressiveReduction) !== 0) {
     tableBody.push([
       { text: '' },
@@ -96,4 +106,9 @@ const getProgressiveReductionTable = (delinkedStatement) => {
   return progressiveReductionTable
 }
 
-module.exports = getProgressiveReductionTable
+module.exports = {
+  getProgressiveReductionTable,
+  formatPaymentBand,
+  formatPercentage,
+  formatProgressiveReduction
+}
