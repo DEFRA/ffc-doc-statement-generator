@@ -325,4 +325,80 @@ describe('getProgressiveReductionTable', () => {
 
     expect(result.table.body.length).toBe(6) // 2 header rows + 4 data rows, no total row
   })
+  test('should specifically test formatPercentage function', () => {
+    const { formatPercentage } = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
+    expect(formatPercentage(25)).toBe('25%')
+    expect(formatPercentage(0)).toBe('0%')
+    expect(formatPercentage(-50)).toBe('-50%')
+
+    expect(() => formatPercentage(101)).toThrow('Invalid percentage value: 101')
+    expect(() => formatPercentage(-101)).toThrow('Invalid percentage value: -101')
+    expect(() => formatPercentage('not-a-number')).toThrow('Invalid percentage value: not-a-number')
+  })
+
+  test('should test all payment band cases individually', () => {
+    const delinkedStatement = {
+      paymentBand1: 30000,
+      percentageReduction1: 5,
+      progressiveReductions1: 1500,
+      paymentBand2: 50000,
+      percentageReduction2: 10,
+      progressiveReductions2: 2000,
+      paymentBand3: 150000,
+      percentageReduction3: 15,
+      progressiveReductions3: 15000,
+      paymentBand4: 200000,
+      percentageReduction4: 20,
+      progressiveReductions4: 10000,
+      totalProgressiveReduction: 28500
+    }
+
+    const onlyBand4Statement = {
+      ...delinkedStatement,
+      progressiveReductions1: 0,
+      progressiveReductions2: 0,
+      progressiveReductions3: 0
+    }
+
+    const result = getProgressiveReductionTable(onlyBand4Statement)
+
+    // Should only have headers (2) + band 4 (1) + total (1) = 4 rows
+    expect(result.table.body.length).toBe(4)
+    expect(result.table.body[2][0].text).toBe('Above £150,000')
+    expect(result.table.body[2][1].text).toBe('20%')
+    expect(result.table.body[2][2].text).toBe('£10,000.00')
+  })
+
+  test('should test edge case with only band 3 showing', () => {
+    const delinkedStatement = {
+      paymentBand1: 30000,
+      percentageReduction1: 5,
+      progressiveReductions1: 0,
+      paymentBand2: 50000,
+      percentageReduction2: 10,
+      progressiveReductions2: 0,
+      paymentBand3: 150000,
+      percentageReduction3: 15,
+      progressiveReductions3: 15000,
+      paymentBand4: 200000,
+      percentageReduction4: 20,
+      progressiveReductions4: 0,
+      totalProgressiveReduction: 15000
+    }
+
+    const result = getProgressiveReductionTable(delinkedStatement)
+
+    expect(result.table.body.length).toBe(4)
+    expect(result.table.body[2][0].text).toBe('£50,000.01 to £150,000')
+  })
+
+  test('should handle NaN values properly', () => {
+    const { formatPaymentBand, formatPercentage, formatProgressiveReduction } = require('../../../../../../app/generator/content/delinked-statement/pr-calculations/get-progressive-reduction-table')
+
+    expect(() => formatPaymentBand(NaN, 'BAND_UP_TO_30000')).toThrow('Invalid payment band value: NaN')
+    expect(() => formatPercentage(NaN)).toThrow('Invalid percentage value: NaN')
+
+    const result = formatProgressiveReduction('abc')
+    expect(result).toBe('£NaN')
+  })
 })
