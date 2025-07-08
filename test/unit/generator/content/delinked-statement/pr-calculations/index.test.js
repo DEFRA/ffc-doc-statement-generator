@@ -43,7 +43,7 @@ describe('prCalculations', () => {
             {
               text: [
                 { text: 'Your current reference amount is £100,000.00. You can view your current reference amount and any data transfers in the Rural Payments service at ' },
-                { text: 'www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' },
+                { text: 'www.ruralpayments.service.gov.uk/customer-account/login.', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' },
                 '\n\n',
                 { text: 'Find out about data transfers at ' },
                 { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline' },
