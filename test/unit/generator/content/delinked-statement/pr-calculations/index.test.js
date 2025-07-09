@@ -30,7 +30,7 @@ describe('prCalculations', () => {
           stack: [
             { text: 'How your reference amount was calculated', style: 'header2' },
             { text: 'Your \'reference data\' is your BPS payment amounts for the 2020, 2021 and 2022 scheme years (before some reductions and penalties). The \'reference amount\' is the sum of the reference data divided by 3. You were sent information about this in the delinked payments information statement.' },
-            '\n',
+            '\n\n\n',
             { text: 'This amount will have changed if reference data has either: ' },
             {
               ul: [
@@ -43,8 +43,8 @@ describe('prCalculations', () => {
             {
               text: [
                 { text: 'Your current reference amount is £100,000.00. You can view your current reference amount and any data transfers in the Rural Payments service at ' },
-                { text: 'www.ruralpayments.service.gov.uk/customer-account/login', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' },
-                '\n',
+                { text: 'www.ruralpayments.service.gov.uk/customer-account/login.', link: 'https://www.ruralpayments.service.gov.uk/customer-account/login', decoration: 'underline' },
+                '\n\n',
                 { text: 'Find out about data transfers at ' },
                 { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline' },
                 '\n\n'

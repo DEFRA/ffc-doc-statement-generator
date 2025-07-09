@@ -13,7 +13,7 @@ describe('delinkedHelpInfo', () => {
           text: [
             { text: 'find more information about delinked payments at ' },
             '\n',
-            { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme.', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
+            { text: 'www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', link: 'https://www.gov.uk/guidance/delinked-payments-replacing-the-basic-payment-scheme', decoration: 'underline', unbreakable: true }
           ]
         },
         {

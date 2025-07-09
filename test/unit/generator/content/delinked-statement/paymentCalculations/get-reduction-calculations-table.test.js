@@ -6,7 +6,7 @@ describe('getReductionsCalculationsTable', () => {
       referenceAmount: '-100000',
       totalProgressiveReduction: '0',
       totalDelinkedPayment: '-80000',
-      paymentAmountCalculated: '80000',
+      paymentAmount: '80000',
       scheme: {
         year: 2024
       }
@@ -62,7 +62,7 @@ describe('getReductionsCalculationsTable', () => {
       referenceAmount: '-100000',
       totalProgressiveReduction: '0',
       totalDelinkedPayment: '-80000',
-      paymentAmountCalculated: '80000',
+      paymentAmount: '80000',
       scheme: {
         year: 2023
       }

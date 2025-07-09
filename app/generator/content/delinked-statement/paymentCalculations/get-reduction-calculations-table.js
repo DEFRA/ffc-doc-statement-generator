@@ -36,7 +36,7 @@ const getReductionsCalculationsTable = (delinkedStatement) => {
 
     tableBody.push([
       { text: 'Payment amount', bold: true },
-      { text: formatCalculationAmount(delinkedStatement.paymentAmountCalculated), bold: true }
+      { text: formatCalculationAmount(delinkedStatement.paymentAmount), bold: true }
     ])
   } else {
     tableBody.push([

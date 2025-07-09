@@ -29,10 +29,10 @@ describe('getPaymentSummary', () => {
     expect(moment.locale).toHaveBeenCalledWith('en-gb')
     expect(toCurrencyString).toHaveBeenCalledWith(mockDelinkedStatement.paymentAmount)
     expect(paymentSummaryResult).toEqual([
-      { text: 'What you\'ve been paid \n', style: 'tableHeader2' },
-      { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,000.00'] },
-      { text: 'This is usually paid into your account within 2 working days of January 1, 2024.' },
-      { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'ABC123'] }
+      { text: 'What you\'ve been paid', style: 'tableHeader2', margin: [0, 5, 0, 0] },
+      { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,000.00'], margin: [0, 15, 0, 5] },
+      { text: 'This is usually paid into your account within 2 working days of January 1, 2024.', margin: [0, 5, 0, 5] },
+      { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'ABC123'], margin: [0, 5, 0, 5] }
     ])
   })
 })
