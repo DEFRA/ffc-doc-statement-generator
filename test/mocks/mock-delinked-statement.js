@@ -40,5 +40,6 @@ module.exports = {
   },
   previousPaymentCount: '0',
   documentReference: '100020',
-  type: 'uk.gov.doc.delinked-statement.publish'
+  type: 'uk.gov.doc.delinked-statement.publish',
+  excludedFromNotify: false
 }

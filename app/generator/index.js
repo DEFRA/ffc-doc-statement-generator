@@ -58,12 +58,8 @@ async function shouldSendNotification (request, type) {
   return publishEnabled || notifyAllowed
 }
 
-function isSFI23Exclusion (request, type) {
-  return type.type === SFI23QUARTERLYSTATEMENT.type && request.excludedFromNotify
-}
-
 async function handleNotification (request, filename, type) {
-  if (await shouldSendNotification(request, type) && !isSFI23Exclusion(request, type)) {
+  if (await shouldSendNotification(request, type) && !request.excludedFromNotify) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
   }

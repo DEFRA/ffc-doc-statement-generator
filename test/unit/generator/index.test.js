@@ -796,6 +796,12 @@ describe('Generate document', () => {
         expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
       })
 
+      test('delinked should not call sendPublishMessage if excludedFromNotify is true', async () => {
+        request.excludedFromNotify = true
+        await generateDocument(request, type)
+        expect(sendPublishMessage).not.toHaveBeenCalled()
+      })
+
       test('should call sendCrmMessage', async () => {
         await generateDocument(request, type)
         expect(sendCrmMessage).toHaveBeenCalled()
