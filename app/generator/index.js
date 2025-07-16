@@ -46,7 +46,7 @@ const isPublishEnabledForType = (type) => {
 
 const isNotifyAllowed = async (request, type) => {
   if (type.type === DELINKED.type) {
-    return request.scheme.year !== delinked2024 || config.sendDelinked2024Statements
+    return true
   }
   const noNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
   return type.type !== SFI23QUARTERLYSTATEMENT.type &&
@@ -60,8 +60,12 @@ async function shouldSendNotification (request, type) {
   return publishEnabled || notifyAllowed
 }
 
+const delinked2024Disabled = (request, type) => {
+  return type.type === DELINKED.type && request.scheme.year === delinked2024 && !config.sendDelinked2024Statements
+}
+
 async function handleNotification (request, filename, type) {
-  if (await shouldSendNotification(request, type) && !request.excludedFromNotify) {
+  if (await shouldSendNotification(request, type) && !request.excludedFromNotify && !delinked2024Disabled(request, type)) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
   }
