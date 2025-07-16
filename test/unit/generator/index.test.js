@@ -50,6 +50,7 @@ describe('Generate document', () => {
     config.sfi23QuarterlyStatementEnabled = true
     config.sendCrmMessageEnabled = true
     config.saveLogEnabled = true
+    config.sendDelinked2024Statements = false
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
 
     getGenerations.mockResolvedValue(null)
@@ -64,6 +65,7 @@ describe('Generate document', () => {
     delete config.sfi23QuarterlyStatementEnabled
     delete config.sendCrmMessageEnabled
     delete config.saveLogEnabled
+    delete config.sendDelinked2024Statements
     jest.clearAllMocks()
   })
 
@@ -794,6 +796,13 @@ describe('Generate document', () => {
       test('should call publish with mockPdfPrinter.createPdfKitDocument, request, TIMESTAMP_SYSTEM_TIME and type', async () => {
         await generateDocument(request, type)
         expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
+      })
+
+      test('should call sendPublishMessage if scheme year is 2024, and sendDelinked2024Statements is true', async () => {
+        config.sendDelinked2024Statements = true
+        request.scheme.year = 2024
+        await generateDocument(request, type)
+        expect(sendPublishMessage).toHaveBeenCalled()
       })
 
       test('delinked should not call sendPublishMessage if excludedFromNotify is true', async () => {
