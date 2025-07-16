@@ -44,6 +44,9 @@ const isPublishEnabledForType = (type) => {
 
 const isNotifyAllowed = async (request, type) => {
   if (type.type === DELINKED.type) {
+    if (request.scheme.year === 2024 && !config.sendDelinked2024Statements) {
+      return false
+    }
     return true
   }
   const noNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
