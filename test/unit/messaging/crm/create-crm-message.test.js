@@ -1,8 +1,8 @@
 jest.mock('../../../../app/messaging/crm/crm-schema')
-const schema = require('../../../../app/messaging/crm/crm-schema')
+const schema = require('../../../../app/publishing/crm/crm-schema')
 
 const { statementReceiverApiVersion, statementReceiverEndpoint } = require('../../../../app/config')
-const createCrmMessage = require('../../../../app/messaging/crm/create-crm-message')
+const createCrmMessage = require('../../../../app/publishing/crm/create-crm-message')
 const mockStatement = require('../../../mocks/mock-statement')
 const { STATEMENT, SCHEDULE } = require('../../../../app/constants/document-types')
 const FILENAME = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301212.pdf'

@@ -31,13 +31,13 @@ jest.mock('../../../app/messaging/publish/send-publish-message')
 const sendPublishMessage = require('../../../app/messaging/publish/send-publish-message')
 
 jest.mock('../../../app/messaging/crm/send-crm-message')
-const sendCrmMessage = require('../../../app/messaging/crm/send-crm-message')
+const sendCrmMessage = require('../../../app/publishing/crm/send-crm-message')
 
 jest.mock('../../../app/generator/save-log')
-const saveLog = require('../../../app/generator/save-log')
+const saveLog = require('../../../app/publishing/save-log')
 
 jest.mock('../../../app/generator/get-no-notify-by-agreement-number')
-const getNoNotifyByAgreementNumber = require('../../../app/generator/get-no-notify-by-agreement-number')
+const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 
 const { generateDocument } = require('../../../app/generator')
 
@@ -50,6 +50,7 @@ describe('Generate document', () => {
     config.sfi23QuarterlyStatementEnabled = true
     config.sendCrmMessageEnabled = true
     config.saveLogEnabled = true
+    config.sendDelinked2024Statements = false
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
 
     getGenerations.mockResolvedValue(null)
@@ -64,6 +65,7 @@ describe('Generate document', () => {
     delete config.sfi23QuarterlyStatementEnabled
     delete config.sendCrmMessageEnabled
     delete config.saveLogEnabled
+    delete config.sendDelinked2024Statements
     jest.clearAllMocks()
   })
 
@@ -794,6 +796,19 @@ describe('Generate document', () => {
       test('should call publish with mockPdfPrinter.createPdfKitDocument, request, TIMESTAMP_SYSTEM_TIME and type', async () => {
         await generateDocument(request, type)
         expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
+      })
+
+      test('should call sendPublishMessage if scheme year is 2024, and sendDelinked2024Statements is true', async () => {
+        config.sendDelinked2024Statements = true
+        request.scheme.year = 2024
+        await generateDocument(request, type)
+        expect(sendPublishMessage).toHaveBeenCalled()
+      })
+
+      test('delinked should not call sendPublishMessage if excludedFromNotify is true', async () => {
+        request.excludedFromNotify = true
+        await generateDocument(request, type)
+        expect(sendPublishMessage).not.toHaveBeenCalled()
       })
 
       test('should call sendCrmMessage', async () => {

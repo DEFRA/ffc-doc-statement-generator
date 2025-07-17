@@ -51,6 +51,8 @@ container:
   scheduleEnabled: false
   sendCrmMessageEnabled: false
   saveLogEnabled: false
+  sendDelinked2024Statements: false
+  publishingFrequency: 1000
 
 ingress:
   server: example.com
