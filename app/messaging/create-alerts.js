@@ -1,6 +1,6 @@
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
-const { ETL_PROCESS_ERROR } = require('../constants/alerts')
+const { PUBLISH_ERROR } = require('../constants/alerts')
 const messageConfig = require('../config/message')
 
 const createAlerts = async (errors) => {
@@ -14,7 +14,7 @@ const createAlerts = async (errors) => {
 const createAlert = (error) => {
   return {
     source: SOURCE,
-    type: ETL_PROCESS_ERROR,
+    type: PUBLISH_ERROR,
     data: {
       ...error
     }
