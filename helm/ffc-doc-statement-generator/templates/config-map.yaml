@@ -40,4 +40,5 @@ data:
   SEND_CRM_MESSAGE_ENABLED: {{ quote .Values.container.sendCrmMessageEnabled }}
   SCHEDULE_ENABLED: {{ quote .Values.container.scheduleEnabled }}
   SAVE_LOG_ENABLED: {{ quote .Values.container.saveLogEnabled }}
+  ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}
 {{- end -}}

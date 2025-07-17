@@ -51,6 +51,8 @@ container:
   scheduleEnabled: false
   sendCrmMessageEnabled: false
   saveLogEnabled: false
+  alertTopicAddress: ffc-doc-alerting
+
 
 ingress:
   server: example.com

@@ -34,6 +34,7 @@ services:
       SEND_CRM_MESSAGE_ENABLED: ${SEND_CRM_MESSAGE_ENABLED:-false}
       SAVE_LOG_ENABLED: ${SAVE_LOG_ENABLED:-false}
       SHOW_SFI_23_PAYMENT_PERIOD: "false"
+      ALERT_TOPIC_ADDRESS: ${ALERT_TOPIC_ADDRESS:-ffc-doc-alerting}${MESSAGE_QUEUE_SUFFIX}
 
   ffc-doc-statement-generator-postgres:
     image: postgres:11.4-alpine

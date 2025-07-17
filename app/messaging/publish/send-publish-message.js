@@ -1,6 +1,7 @@
 const config = require('../../config')
 const { MessageSender } = require('ffc-messaging')
 const createMessage = require('./create-message')
+const { createAlerts } = require('../create-alerts')
 
 const sendPublishMessage = async (statement, filename, typeId) => {
   let sender
@@ -10,6 +11,7 @@ const sendPublishMessage = async (statement, filename, typeId) => {
     await sender.sendMessage(message)
   } catch (error) {
     console.error('Error sending publish message:', error)
+    await createAlerts([{ file: filename, message: error.message }])
     throw error
   } finally {
     if (sender) {
