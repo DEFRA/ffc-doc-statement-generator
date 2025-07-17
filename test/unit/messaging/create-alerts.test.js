@@ -1,4 +1,4 @@
-const { ETL_PROCESS_ERROR } = require('../../../app/constants/alerts')
+const { PUBLISH_ERROR } = require('../../../app/constants/alerts')
 const { SOURCE } = require('../../../app/constants/source')
 
 describe('createAlerts', () => {
@@ -23,8 +23,8 @@ describe('createAlerts', () => {
     await createAlerts(errors)
     expect(EventPublisherMock).toHaveBeenCalledWith('mock-topic')
     expect(publishEventsMock).toHaveBeenCalledWith([
-      { source: SOURCE, type: ETL_PROCESS_ERROR, data: errors[0] },
-      { source: SOURCE, type: ETL_PROCESS_ERROR, data: errors[1] }
+      { source: SOURCE, type: PUBLISH_ERROR, data: errors[0] },
+      { source: SOURCE, type: PUBLISH_ERROR, data: errors[1] }
     ])
   })
 
