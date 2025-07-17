@@ -31,13 +31,13 @@ jest.mock('../../../app/messaging/publish/send-publish-message')
 const sendPublishMessage = require('../../../app/messaging/publish/send-publish-message')
 
 jest.mock('../../../app/messaging/crm/send-crm-message')
-const sendCrmMessage = require('../../../app/messaging/crm/send-crm-message')
+const sendCrmMessage = require('../../../app/publishing/crm/send-crm-message')
 
 jest.mock('../../../app/generator/save-log')
-const saveLog = require('../../../app/generator/save-log')
+const saveLog = require('../../../app/publishing/save-log')
 
 jest.mock('../../../app/generator/get-no-notify-by-agreement-number')
-const getNoNotifyByAgreementNumber = require('../../../app/generator/get-no-notify-by-agreement-number')
+const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 
 const { generateDocument } = require('../../../app/generator')
 

@@ -35,6 +35,7 @@ services:
       SAVE_LOG_ENABLED: ${SAVE_LOG_ENABLED:-false}
       SHOW_SFI_23_PAYMENT_PERIOD: "false"
       SEND_DELINKED_2024_STATEMENTS: ${SEND_DELINKED_2024_STATEMENTS:-false}
+      PUBLISHING_FREQUENCY: ${PUBLISHING_FREQUENCY:-1000}
 
   ffc-doc-statement-generator-postgres:
     image: postgres:11.4-alpine
