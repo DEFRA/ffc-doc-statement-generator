@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "2.5.44",
+  "version": "2.5.45",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -32,6 +32,7 @@
     "@hapi/hapi": "20.2.2",
     "applicationinsights": "2.9.6",
     "ffc-messaging": "2.10.1",
+    "ffc-pay-event-publisher": "1.2.0",
     "joi": "17.6.0",
     "log-timestamp": "0.3.0",
     "moment": "2.29.4",
