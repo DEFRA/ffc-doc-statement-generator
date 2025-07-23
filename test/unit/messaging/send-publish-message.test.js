@@ -2,6 +2,8 @@ const { mockMessageSender } = require('../../mocks/modules/ffc-messaging')
 
 jest.mock('../../../app/messaging/publish/create-message')
 const createMessage = require('../../../app/messaging/publish/create-message')
+jest.mock('../../../app/messaging/create-alerts')
+const { createAlerts } = require('../../../app/messaging/create-alerts')
 
 const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE } = require('../../../app/constants/document-types')
 
@@ -208,5 +210,21 @@ describe('send publish message', () => {
       await sendPublishMessage(document, filename, type)
       expect(mockMessageSender().closeConnection).toHaveBeenCalledTimes(1)
     })
+  })
+})
+
+describe('error handling', () => {
+  const error = new Error('Test error')
+  beforeEach(() => {
+    createMessage.mockImplementation(() => { throw error })
+  })
+
+  test('should call createAlerts with error details', async () => {
+    await expect(sendPublishMessage(document, filename, type)).rejects.toThrow('Test error')
+    expect(createAlerts).toHaveBeenCalledWith([{ file: filename, message: error.message }])
+  })
+
+  test('should rethrow the error', async () => {
+    await expect(sendPublishMessage(document, filename, type)).rejects.toThrow('Test error')
   })
 })
