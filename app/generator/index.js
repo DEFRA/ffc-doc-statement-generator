@@ -15,6 +15,8 @@ const getNoNotifyByAgreementNumber = require('./get-no-notify-by-agreement-numbe
 const fonts = require('./fonts')
 const printer = new PdfPrinter(fonts)
 
+const delinked2024 = 2024
+
 const generateDocument = async (request, type) => {
   const existingDocument = await getGenerations(request.documentReference)
   if (existingDocument) {
@@ -58,12 +60,12 @@ async function shouldSendNotification (request, type) {
   return publishEnabled || notifyAllowed
 }
 
-function isSFI23Exclusion (request, type) {
-  return type.type === SFI23QUARTERLYSTATEMENT.type && request.excludedFromNotify
+const delinked2024Disabled = (request, type) => {
+  return type.type === DELINKED.type && request.scheme.year === delinked2024 && !config.sendDelinked2024Statements
 }
 
 async function handleNotification (request, filename, type) {
-  if (await shouldSendNotification(request, type) && !isSFI23Exclusion(request, type)) {
+  if (await shouldSendNotification(request, type) && !request.excludedFromNotify && !delinked2024Disabled(request, type)) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
   }

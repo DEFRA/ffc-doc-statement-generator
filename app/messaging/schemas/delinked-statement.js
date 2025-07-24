@@ -79,5 +79,9 @@ module.exports = Joi.object({
     year: numberSchema('schemeYear')
   }),
   previousPaymentCount: numberSchema('previousPaymentCount'),
-  documentReference: numberSchema('documentReference')
+  documentReference: numberSchema('documentReference'),
+  excludedFromNotify: Joi.boolean().required().messages({
+    'boolean.base': 'Excluded from notify must be a boolean',
+    'any.required': 'Excluded from notify is required'
+  })
 })
