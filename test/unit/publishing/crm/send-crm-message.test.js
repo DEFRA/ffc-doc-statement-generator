@@ -11,7 +11,7 @@ jest.mock('ffc-messaging', () => {
   }
 })
 
-jest.mock('../../../../app/messaging/crm/create-crm-message')
+jest.mock('../../../../app/publishing/crm/create-crm-message')
 const createCrmMessage = require('../../../../app/publishing/crm/create-crm-message')
 
 const sendCrmMessage = require('../../../../app/publishing/crm/send-crm-message')

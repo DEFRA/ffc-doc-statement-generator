@@ -1,4 +1,4 @@
-jest.mock('../../../../app/messaging/crm/crm-schema')
+jest.mock('../../../../app/publishing/crm/crm-schema')
 const schema = require('../../../../app/publishing/crm/crm-schema')
 
 const { statementReceiverApiVersion, statementReceiverEndpoint } = require('../../../../app/config')
