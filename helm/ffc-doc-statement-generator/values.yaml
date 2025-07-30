@@ -53,6 +53,7 @@ container:
   saveLogEnabled: false
   sendDelinked2024Statements: false
   publishingFrequency: 1000
+  alertTopicAddress: ffc-doc-alerting
 
 ingress:
   server: example.com
