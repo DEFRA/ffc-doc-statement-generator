@@ -660,19 +660,6 @@ describe('Generate document', () => {
         expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
       })
 
-      test('should call sendPublishMessage if scheme year is 2024, and sendDelinked2024Statements is true', async () => {
-        config.sendDelinked2024Statements = true
-        request.scheme.year = 2024
-        await generateDocument(request, type)
-        expect(sendPublishMessage).toHaveBeenCalled()
-      })
-
-      test('delinked should not call sendPublishMessage if excludedFromNotify is true', async () => {
-        request.excludedFromNotify = true
-        await generateDocument(request, type)
-        expect(sendPublishMessage).not.toHaveBeenCalled()
-      })
-
       test('should call saveOutboundStatement', async () => {
         await generateDocument(request, type)
         expect(saveOutboundStatement).toHaveBeenCalled()

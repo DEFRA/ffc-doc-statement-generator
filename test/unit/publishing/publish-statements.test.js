@@ -56,7 +56,7 @@ describe('publishStatements', () => {
   })
 
   test('should not send publish message if notifications are not allowed', async () => {
-    const mockStatements = [{ publishedStatementId: 1, statement: { scheme: { agreementNumber: '12345' } }, type: { id: 'type-id', type: SCHEDULE }, filename: 'file1.pdf' }]
+    const mockStatements = [{ publishedStatementId: 1, statement: { scheme: { agreementNumber: '12345' } }, type: SCHEDULE, filename: 'file1.pdf' }]
     getPendingStatements.mockResolvedValue(mockStatements)
     getNoNotifyByAgreementNumber.mockResolvedValue(false)
     config.sfi23QuarterlyStatementEnabled = false
@@ -68,7 +68,7 @@ describe('publishStatements', () => {
   })
 
   test('should handle statements with delinked2024 disabled', async () => {
-    const mockStatements = [{ publishedStatementId: 1, statement: { scheme: { agreementNumber: '12345', year: 2024 } }, type: { id: 'type-id', type: DELINKED }, filename: 'file1.pdf' }]
+    const mockStatements = [{ publishedStatementId: 1, statement: { scheme: { agreementNumber: '12345', year: 2024 } }, type: DELINKED, filename: 'file1.pdf' }]
     getPendingStatements.mockResolvedValue(mockStatements)
     config.sendDelinked2024Statements = false
 

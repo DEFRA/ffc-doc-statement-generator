@@ -37,7 +37,7 @@ const delinked2024Disabled = (request, type) => {
   return type.type === DELINKED.type && request.scheme.year === delinked2024 && !config.sendDelinked2024Statements
 }
 
-async function handleNotification(request, filename, type) {
+async function handleNotification (request, filename, type) {
   if (await shouldSendNotification(request, type) && !request.excludedFromNotify && !delinked2024Disabled(request, type)) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
@@ -46,7 +46,7 @@ async function handleNotification(request, filename, type) {
   return false
 }
 
-async function handleAdditionalOperations(request, filename, type) {
+async function handleAdditionalOperations (request, filename, type) {
   if (config.sendCrmMessageEnabled) {
     await sendCrmMessage(request, filename, type)
   }
@@ -55,7 +55,6 @@ async function handleAdditionalOperations(request, filename, type) {
     console.info(`Log saved for document ${filename}`)
   }
 }
-
 
 const publishStatements = async () => {
   const pendingStatements = await getPendingStatements()

@@ -20,7 +20,7 @@ const generateDocument = async (request, type) => {
   await saveOutboundStatement(request, filename, type)
 }
 
-async function createAndPublishDocument(request, type) {
+async function createAndPublishDocument (request, type) {
   const docDefinition = getDocumentDefinition(request, type)
   const timestamp = new Date()
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
