@@ -1,6 +1,7 @@
 require('./insights').setup()
 require('log-timestamp')
 const messaging = require('./messaging')
+const publishing = require('./publishing')
 const { initialiseContainers } = require('./storage')
 
 process.on('SIGTERM', async () => {
@@ -16,4 +17,5 @@ process.on('SIGINT', async () => {
 module.exports = (async () => {
   await initialiseContainers()
   await messaging.start()
+  await publishing.start()
 })()

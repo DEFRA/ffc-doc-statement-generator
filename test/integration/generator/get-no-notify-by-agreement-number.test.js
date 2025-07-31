@@ -1,7 +1,7 @@
 const db = require('../../../app/data')
 let noNotify
 
-const getNoNotifyByAgreementNumber = require('../../../app/generator/get-no-notify-by-agreement-number')
+const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 
 describe('process get no-notify by agreementNumber object', () => {
   beforeAll(async () => {
