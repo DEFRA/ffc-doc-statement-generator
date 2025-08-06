@@ -28,7 +28,7 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "4.4.1",
-    "@azure/storage-blob": "^12.15.0",
+    "@azure/storage-blob": "12.15.0",
     "@hapi/hapi": "20.2.2",
     "applicationinsights": "2.9.6",
     "ffc-messaging": "2.10.1",
