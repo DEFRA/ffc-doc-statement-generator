@@ -34,7 +34,7 @@ async function createAndPublishDocument (request, type) {
   const timestamp = new Date()
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
   const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
-  console.info(`Document published: ${filename}`)
+  console.info(`Document published to blob storage: ${filename}`)
   return filename
 }
 
@@ -68,12 +68,17 @@ async function handleNotification (request, filename, type) {
   if (await shouldSendNotification(request, type) && !request.excludedFromNotify && !delinked2024Disabled(request, type)) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
+  } else {
+    console.info(`Publish message not sent for document ${filename} - either not enabled or excluded from notify`)
   }
 }
 
 async function handleAdditionalOperations (request, filename, type) {
   if (config.sendCrmMessageEnabled) {
     await sendCrmMessage(request, filename, type)
+    console.info(`CRM message sent for document ${filename}`)
+  } else {
+    console.info(`CRM message not sent for document ${filename} - CRM messaging is disabled`)
   }
   if (config.saveLogEnabled) {
     await saveLog(request, filename, new Date())
