@@ -1,6 +1,6 @@
 const db = require('../data')
 
-const setPublished = async (publishedStatementId, sentToNotify, transaction) => {
+const setPublished = async (publishedStatementId, sentToNotify) => {
   await db.publishedStatement.update({
     published: new Date(),
     sentToNotify
@@ -8,9 +8,6 @@ const setPublished = async (publishedStatementId, sentToNotify, transaction) => 
     where: {
       publishedStatementId
     }
-  },
-  {
-    transaction
   })
 }
 

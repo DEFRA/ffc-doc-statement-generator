@@ -5,20 +5,30 @@ const secondsInMinute = 60
 const millisecondsInSecond = 1000
 const publishingLimit = 500
 
-const getPendingStatements = async (transaction) => {
+const getPendingStatements = async () => {
   const fiveMinutesAgo = new Date(Date.now() - minutesToGoBack * secondsInMinute * millisecondsInSecond)
-  return db.publishedStatement.findAll({
-    where: {
-      published: null,
-      [db.sequelize.Op.or]: [
-        { startProcessing: null },
-        { startProcessing: { [db.sequelize.Op.lt]: fiveMinutesAgo } }
-      ]
-    },
-    limit: publishingLimit,
-    lock: transaction ? transaction.LOCK.UPDATE : undefined,
-    transaction
-  })
+  const transaction = await db.sequelize.transaction()
+  try {
+    const pendingStatements = db.publishedStatement.findAll({
+      where: {
+        published: null,
+        [db.sequelize.Op.or]: [
+          { startProcessing: null },
+          { startProcessing: { [db.sequelize.Op.lt]: fiveMinutesAgo } }
+        ]
+      },
+      limit: publishingLimit,
+      lock: transaction.LOCK.UPDATE,
+      transaction
+    })
+
+    await transaction.commit()
+
+    return pendingStatements
+  } catch (error) {
+    await transaction.rollback()
+    throw error
+  }
 }
 
 module.exports = {
