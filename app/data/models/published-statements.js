@@ -4,8 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     statement: DataTypes.JSONB,
     filename: DataTypes.STRING,
     type: DataTypes.JSONB,
-    processed: DataTypes.DATE,
-    published: DataTypes.BOOLEAN
+    startProcessing: DataTypes.DATE,
+    published: DataTypes.DATE,
+    sentToNotify: DataTypes.BOOLEAN
   },
   {
     tableName: 'publishedStatements',

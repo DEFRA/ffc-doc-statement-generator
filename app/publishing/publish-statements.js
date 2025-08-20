@@ -8,6 +8,8 @@ const getNoNotifyByAgreementNumber = require('./get-no-notify-by-agreement-numbe
 const sendCrmMessage = require('./crm/send-crm-message')
 const saveLog = require('./save-log')
 const { setPublished } = require('./set-published')
+const db = require('../data')
+const { setStartProcessing } = require('./set-start-processing')
 
 const delinked2024 = 2024
 
@@ -57,14 +59,23 @@ async function handleAdditionalOperations (request, filename, type) {
 }
 
 const publishStatements = async () => {
-  const pendingStatements = await getPendingStatements()
-  for (const pendingStatement of pendingStatements) {
-    const { publishedStatementId, statement, type, filename } = pendingStatement
-    console.log('Identified statement for publishing:', util.inspect(statement, false, null, true))
-    const published = await handleNotification(statement, filename, type)
-    await handleAdditionalOperations(statement, filename, type)
-    await setPublished(publishedStatementId, published)
-    console.log('Statement finished publishing')
+  const transaction = await db.sequelize.transaction()
+  try {
+    const pendingStatements = await getPendingStatements(transaction)
+    for (const pendingStatement of pendingStatements) {
+      const { publishedStatementId, statement, type, filename } = pendingStatement
+      console.log('Identified statement for publishing:', util.inspect(statement, false, null, true))
+      await setStartProcessing(publishedStatementId, transaction)
+      const sentToNotify = await handleNotification(statement, filename, type)
+      await handleAdditionalOperations(statement, filename, type)
+      await setPublished(publishedStatementId, sentToNotify, transaction)
+      console.log('Statement finished publishing')
+    }
+    await transaction.commit()
+  } catch (error) {
+    console.error('Error during publishing statements:', error)
+    await transaction.rollback()
+    throw error
   }
 }
 

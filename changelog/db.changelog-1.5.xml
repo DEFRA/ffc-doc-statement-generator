@@ -17,10 +17,13 @@
       <column name="type" type="JSON" >
         <constraints nullable="false" />
       </column>
-      <column name="processed" type="TIMESTAMP" >
+      <column name="startProcessing" type="TIMESTAMP" >
         <constraints nullable="true" />
       </column>
-      <column name="published" type="BOOLEAN" >
+      <column name="published" type="TIMESTAMP" >
+        <constraints nullable="true" />
+      </column>
+      <column name="sentToNotify" type="BOOLEAN" >
         <constraints nullable="true" />
       </column>
     </createTable>
