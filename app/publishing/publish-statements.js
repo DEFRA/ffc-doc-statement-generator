@@ -8,7 +8,6 @@ const getNoNotifyByAgreementNumber = require('./get-no-notify-by-agreement-numbe
 const sendCrmMessage = require('./crm/send-crm-message')
 const saveLog = require('./save-log')
 const { setPublished } = require('./set-published')
-const { setStartProcessing } = require('./set-start-processing')
 
 const delinked2024 = 2024
 
@@ -62,7 +61,6 @@ const publishStatements = async () => {
   for (const pendingStatement of pendingStatements) {
     const { publishedStatementId, statement, type, filename } = pendingStatement
     console.log('Identified statement for publishing:', util.inspect(statement, false, null, true))
-    await setStartProcessing(publishedStatementId)
     const sentToNotify = await handleNotification(statement, filename, type)
     await handleAdditionalOperations(statement, filename, type)
     await setPublished(publishedStatementId, sentToNotify)

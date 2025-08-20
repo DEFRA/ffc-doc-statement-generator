@@ -1,4 +1,5 @@
 const db = require('../data')
+const { setStartProcessing } = require('./set-start-processing')
 
 const minutesToGoBack = 5
 const secondsInMinute = 60
@@ -9,7 +10,7 @@ const getPendingStatements = async () => {
   const fiveMinutesAgo = new Date(Date.now() - minutesToGoBack * secondsInMinute * millisecondsInSecond)
   const transaction = await db.sequelize.transaction()
   try {
-    const pendingStatements = db.publishedStatement.findAll({
+    const pendingStatements = await db.publishedStatement.findAll({
       where: {
         published: null,
         [db.sequelize.Op.or]: [
@@ -21,6 +22,8 @@ const getPendingStatements = async () => {
       lock: transaction.LOCK.UPDATE,
       transaction
     })
+
+    await setStartProcessing(pendingStatements, transaction)
 
     await transaction.commit()
 
