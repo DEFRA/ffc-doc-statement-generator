@@ -7,10 +7,11 @@ const setStartProcessing = async (pendingStatements, transaction) => {
   }, {
     where: {
       publishedStatementId: {
-        [db.sequelize.Op.in]: pendingStatementIds
+        [db.Sequelize.Op.in]: pendingStatementIds
       }
-    }
-  }, transaction)
+    },
+    transaction
+  })
 }
 
 module.exports = {

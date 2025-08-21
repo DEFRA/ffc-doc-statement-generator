@@ -1,3 +1,4 @@
+const { Transaction } = require('sequelize')
 const db = require('../data')
 const { setStartProcessing } = require('./set-start-processing')
 
@@ -8,18 +9,20 @@ const publishingLimit = 500
 
 const getPendingStatements = async () => {
   const fiveMinutesAgo = new Date(Date.now() - minutesToGoBack * secondsInMinute * millisecondsInSecond)
-  const transaction = await db.sequelize.transaction()
+  const transaction = await db.sequelize.transaction({
+    isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE
+  })
   try {
     const pendingStatements = await db.publishedStatement.findAll({
       where: {
         published: null,
-        [db.sequelize.Op.or]: [
+        [db.Sequelize.Op.or]: [
           { startProcessing: null },
-          { startProcessing: { [db.sequelize.Op.lt]: fiveMinutesAgo } }
+          { startProcessing: { [db.Sequelize.Op.lt]: fiveMinutesAgo } }
         ]
       },
       limit: publishingLimit,
-      lock: transaction.LOCK.UPDATE,
+      lock: true,
       transaction
     })
 
