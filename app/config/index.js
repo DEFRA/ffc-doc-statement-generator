@@ -16,7 +16,7 @@ const schema = Joi.object({
   sendCrmMessageEnabled: Joi.boolean().optional().default(false),
   saveLogEnabled: Joi.boolean().optional().default(false),
   delinkedGenerateStatementEnabled: Joi.boolean().optional().default(true),
-  sendDelinked2024Statements: Joi.boolean().optional().default(false),
+  sendDelinked2024Statements: Joi.boolean().optional().default(true),
   publishingFrequency: Joi.number().default(1000)
 })
 

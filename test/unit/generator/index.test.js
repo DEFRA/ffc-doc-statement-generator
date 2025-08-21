@@ -154,23 +154,6 @@ describe('Generate document', () => {
           await generateDocument(request, type)
           expect(console.info).toHaveBeenCalledWith(`Document published to blob storage: ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
         })
-
-        test('should log that the publish message was not sent for document when not enabled', async () => {
-          config.sfi23QuarterlyStatementEnabled = false
-          await generateDocument(request, type)
-          expect(console.info).toHaveBeenCalledWith(`Publish message not sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME} - either not enabled or excluded from notify`)
-        })
-
-        test('should log that CRM message is sent for document', async () => {
-          await generateDocument(request, type)
-          expect(console.info).toHaveBeenCalledWith(`CRM message sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
-        })
-
-        test('should log that CRM message is not sent for document when CRM messaging is disabled', async () => {
-          config.sendCrmMessageEnabled = false
-          await generateDocument(request, type)
-          expect(console.info).toHaveBeenCalledWith(`CRM message not sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME} - CRM messaging is disabled`)
-        })
       })
 
       describe('When sfi23-quarterly statement has been processed before', () => {

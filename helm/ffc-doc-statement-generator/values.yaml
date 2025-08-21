@@ -51,7 +51,7 @@ container:
   scheduleEnabled: false
   sendCrmMessageEnabled: false
   saveLogEnabled: false
-  sendDelinked2024Statements: false
+  sendDelinked2024Statements: true
   publishingFrequency: 1000
   alertTopicAddress: ffc-doc-alerting
 
