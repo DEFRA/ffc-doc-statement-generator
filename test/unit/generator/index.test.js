@@ -43,6 +43,7 @@ const { generateDocument } = require('../../../app/generator')
 
 let request
 let type
+let consoleInfoSpy
 
 describe('Generate document', () => {
   beforeEach(() => {
@@ -53,6 +54,7 @@ describe('Generate document', () => {
     config.sendDelinked2024Statements = false
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
 
+    consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => { })
     getGenerations.mockResolvedValue(null)
     getDocumentDefinition.mockReturnValue('docDef')
     sendPublishMessage.mockResolvedValue(undefined)
@@ -66,6 +68,7 @@ describe('Generate document', () => {
     delete config.sendCrmMessageEnabled
     delete config.saveLogEnabled
     delete config.sendDelinked2024Statements
+    consoleInfoSpy.mockRestore()
     jest.clearAllMocks()
   })
 
@@ -197,6 +200,28 @@ describe('Generate document', () => {
         test('sfi23-quarterly should call saveLog with request, publish() and SYSTEM_TIME', async () => {
           await generateDocument(request, type)
           expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
+        })
+
+        test('should log that the document was published to blob storage', async () => {
+          await generateDocument(request, type)
+          expect(console.info).toHaveBeenCalledWith(`Document published to blob storage: ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
+        })
+
+        test('should log that the publish message was not sent for document when not enabled', async () => {
+          config.sfi23QuarterlyStatementEnabled = false
+          await generateDocument(request, type)
+          expect(console.info).toHaveBeenCalledWith(`Publish message not sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME} - either not enabled or excluded from notify`)
+        })
+
+        test('should log that CRM message is sent for document', async () => {
+          await generateDocument(request, type)
+          expect(console.info).toHaveBeenCalledWith(`CRM message sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
+        })
+
+        test('should log that CRM message is not sent for document when CRM messaging is disabled', async () => {
+          config.sendCrmMessageEnabled = false
+          await generateDocument(request, type)
+          expect(console.info).toHaveBeenCalledWith(`CRM message not sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME} - CRM messaging is disabled`)
         })
       })
 
