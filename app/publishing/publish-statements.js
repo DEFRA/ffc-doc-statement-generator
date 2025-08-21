@@ -43,12 +43,16 @@ async function handleNotification (request, filename, type) {
     console.info(`Publish message sent for document ${filename}`)
     return true
   }
+  console.info(`Publish message not sent for document ${filename} - either not enabled or excluded from notify`)
   return false
 }
 
 async function handleAdditionalOperations (request, filename, type) {
   if (config.sendCrmMessageEnabled) {
     await sendCrmMessage(request, filename, type)
+    console.info(`CRM message sent for document ${filename}`)
+  } else {
+    console.info(`CRM message not sent for document ${filename} - CRM messaging is disabled`)
   }
   if (config.saveLogEnabled) {
     await saveLog(request, filename, new Date())
