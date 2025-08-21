@@ -61,9 +61,9 @@ const publishStatements = async () => {
   for (const pendingStatement of pendingStatements) {
     const { publishedStatementId, statement, type, filename } = pendingStatement
     console.log('Identified statement for publishing:', util.inspect(statement, false, null, true))
-    const sentToNotify = await handleNotification(statement, filename, type)
+    const sentToPublisher = await handleNotification(statement, filename, type)
     await handleAdditionalOperations(statement, filename, type)
-    await setPublished(publishedStatementId, sentToNotify)
+    await setPublished(publishedStatementId, sentToPublisher)
     console.log('Statement finished publishing')
   }
 }

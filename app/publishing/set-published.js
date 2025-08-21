@@ -1,9 +1,9 @@
 const db = require('../data')
 
-const setPublished = async (publishedStatementId, sentToNotify) => {
+const setPublished = async (publishedStatementId, sentToPublisher) => {
   await db.publishedStatement.update({
     published: new Date(),
-    sentToNotify
+    sentToPublisher
   }, {
     where: {
       publishedStatementId

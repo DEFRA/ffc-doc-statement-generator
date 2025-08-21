@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.JSONB,
     startProcessing: DataTypes.DATE,
     published: DataTypes.DATE,
-    sentToNotify: DataTypes.BOOLEAN
+    sentToPublisher: DataTypes.BOOLEAN
   },
   {
     tableName: 'publishedStatements',

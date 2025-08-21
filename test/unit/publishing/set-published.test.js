@@ -13,15 +13,15 @@ describe('set published timestamp post publishing', () => {
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
     const publishedStatementId = 123
-    const sentToNotify = true
+    const sentToPublisher = true
 
-    await setPublished(publishedStatementId, sentToNotify)
+    await setPublished(publishedStatementId, sentToPublisher)
 
     expect(db.publishedStatement.update).toHaveBeenCalledTimes(1)
     expect(db.publishedStatement.update).toHaveBeenCalledWith(
       {
         published: now,
-        sentToNotify
+        sentToPublisher
       },
       {
         where: { publishedStatementId }
@@ -31,19 +31,19 @@ describe('set published timestamp post publishing', () => {
     global.Date.mockRestore()
   })
 
-  test('should call update with sentToNotify = false correctly', async () => {
+  test('should call update with sentToPublisher = false correctly', async () => {
     const now = new Date()
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
     const publishedStatementId = 456
-    const sentToNotify = false
+    const sentToPublisher = false
 
-    await setPublished(publishedStatementId, sentToNotify)
+    await setPublished(publishedStatementId, sentToPublisher)
 
     expect(db.publishedStatement.update).toHaveBeenCalledWith(
       {
         published: now,
-        sentToNotify
+        sentToPublisher
       },
       {
         where: { publishedStatementId }

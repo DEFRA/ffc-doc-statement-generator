@@ -23,7 +23,7 @@
       <column name="published" type="TIMESTAMP" >
         <constraints nullable="true" />
       </column>
-      <column name="sentToNotify" type="BOOLEAN" >
+      <column name="sentToPublisher" type="BOOLEAN" >
         <constraints nullable="true" />
       </column>
     </createTable>
