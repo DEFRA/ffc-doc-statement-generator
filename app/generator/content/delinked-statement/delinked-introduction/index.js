@@ -7,7 +7,7 @@ const delinkedIntroduction = (delinkedStatement) => {
       { text: `Delinked payments ${delinkedStatement.scheme.year}: payment statement `, style: 'header2' },
       { text: 'Delinked payments have replaced Basic Payment Scheme (BPS) payments in England.' },
       '\n',
-      { text: 'This statement explains the most recent payment of your annual delinked payment, including your reference amount and progressive reduction.' }
+      { text: 'This statement explains your most recent annual delinked payment, including your reference amount and progressive reduction.' }
     ],
     unbreakable: true
   }
