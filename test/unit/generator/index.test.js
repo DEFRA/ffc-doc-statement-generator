@@ -27,17 +27,8 @@ const getDocumentDefinition = require('../../../app/generator/get-document-defin
 jest.mock('../../../app/generator/publish')
 const publish = require('../../../app/generator/publish')
 
-jest.mock('../../../app/messaging/publish/send-publish-message')
-const sendPublishMessage = require('../../../app/messaging/publish/send-publish-message')
-
-jest.mock('../../../app/messaging/crm/send-crm-message')
-const sendCrmMessage = require('../../../app/messaging/crm/send-crm-message')
-
-jest.mock('../../../app/generator/save-log')
-const saveLog = require('../../../app/generator/save-log')
-
-jest.mock('../../../app/generator/get-no-notify-by-agreement-number')
-const getNoNotifyByAgreementNumber = require('../../../app/generator/get-no-notify-by-agreement-number')
+jest.mock('../../../app/generator/save-outbound-statement')
+const { saveOutboundStatement } = require('../../../app/generator/save-outbound-statement')
 
 const { generateDocument } = require('../../../app/generator')
 
@@ -47,23 +38,16 @@ let consoleInfoSpy
 
 describe('Generate document', () => {
   beforeEach(() => {
-    // Set environment variables to true
     config.sfi23QuarterlyStatementEnabled = true
-    config.sendCrmMessageEnabled = true
-    config.saveLogEnabled = true
     config.sendDelinked2024Statements = false
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
 
     consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => { })
     getGenerations.mockResolvedValue(null)
     getDocumentDefinition.mockReturnValue('docDef')
-    sendPublishMessage.mockResolvedValue(undefined)
-    sendCrmMessage.mockResolvedValue(undefined)
-    saveLog.mockResolvedValue(undefined)
   })
 
   afterEach(() => {
-    // Reset environment variables after each test
     delete config.sfi23QuarterlyStatementEnabled
     delete config.sendCrmMessageEnabled
     delete config.saveLogEnabled
@@ -88,7 +72,6 @@ describe('Generate document', () => {
       describe('When sfi23-quarterly statement has not been processed before', () => {
         beforeEach(() => {
           getGenerations.mockResolvedValue(null)
-          getNoNotifyByAgreementNumber.mockResolvedValue(false)
         })
 
         test('sfi23-quarterly should call getGenerations', async () => {
@@ -151,83 +134,31 @@ describe('Generate document', () => {
           expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
         })
 
-        test('sfi23-quarterly should not call sendPublishMessage if excludedFromNotify is true', async () => {
-          request.excludedFromNotify = true
+        test('sfi23-quarterly should call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendPublishMessage).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).toHaveBeenCalled()
         })
 
-        test('sfi23-quarterly should call sendPublishMessage', async () => {
+        test('sfi23-quarterly should call saveOutboundStatement once', async () => {
           await generateDocument(request, type)
-          expect(sendPublishMessage).toHaveBeenCalled()
+          expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
         })
 
-        test('sfi23-quarterly should call sendPublishMessage once', async () => {
+        test('sfi23-quarterly should call saveOutboundStatement with correct parameters', async () => {
+          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
           await generateDocument(request, type)
-          expect(sendPublishMessage).toHaveBeenCalledTimes(1)
-        })
-
-        test('sfi23-quarterly should call sendPublishMessage with request, publish() and type.id', async () => {
-          await generateDocument(request, type)
-          expect(sendPublishMessage).toHaveBeenCalledWith(request, (await publish()), type.id)
-        })
-
-        test('sfi23-quarterly should call sendCrmMessage', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalled()
-        })
-
-        test('sfi23-quarterly should call sendCrmMessage once', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledTimes(1)
-        })
-
-        test('sfi23-quarterly should call sendCrmMessage with request, publish() and type', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledWith(request, (await publish()), type)
-        })
-
-        test('sfi23-quarterly should call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalled()
-        })
-
-        test('sfi23-quarterly should call saveLog once', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledTimes(1)
-        })
-
-        test('sfi23-quarterly should call saveLog with request, publish() and SYSTEM_TIME', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
+          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
         })
 
         test('should log that the document was published to blob storage', async () => {
           await generateDocument(request, type)
           expect(console.info).toHaveBeenCalledWith(`Document published to blob storage: ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
         })
-
-        test('should log that the publish message was not sent for document when not enabled', async () => {
-          config.sfi23QuarterlyStatementEnabled = false
-          await generateDocument(request, type)
-          expect(console.info).toHaveBeenCalledWith(`Publish message not sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME} - either not enabled or excluded from notify`)
-        })
-
-        test('should log that CRM message is sent for document', async () => {
-          await generateDocument(request, type)
-          expect(console.info).toHaveBeenCalledWith(`CRM message sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
-        })
-
-        test('should log that CRM message is not sent for document when CRM messaging is disabled', async () => {
-          config.sendCrmMessageEnabled = false
-          await generateDocument(request, type)
-          expect(console.info).toHaveBeenCalledWith(`CRM message not sent for document ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME} - CRM messaging is disabled`)
-        })
       })
 
       describe('When sfi23-quarterly statement has been processed before', () => {
         beforeEach(() => {
-          getGenerations.mockResolvedValue(true) // come back to
+          getGenerations.mockResolvedValue(true)
         })
 
         test('sfi23-quarterly should call getGenerations', async () => {
@@ -260,19 +191,9 @@ describe('Generate document', () => {
           expect(publish).not.toHaveBeenCalled()
         })
 
-        test('sfi23-quarterly should not call sendPublishMessage', async () => {
+        test('sfi23-quarterly should not call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendPublishMessage).not.toHaveBeenCalled()
-        })
-
-        test('sfi23-quarterly should not call sendCrmMessage', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).not.toHaveBeenCalled()
-        })
-
-        test('sfi23-quarterly should not call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).not.toHaveBeenCalled()
         })
       })
     })
@@ -350,40 +271,26 @@ describe('Generate document', () => {
           expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
         })
 
-        test('should call sendCrmMessage', async () => {
+        test('should call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalled()
+          expect(saveOutboundStatement).toHaveBeenCalled()
         })
 
-        test('should call sendCrmMessage once', async () => {
+        test('should call saveOutboundStatement once', async () => {
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledTimes(1)
+          expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
         })
 
-        test('should call sendCrmMessage with request, publish() and type', async () => {
+        test('should call saveOutboundStatement with correct parameters', async () => {
+          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledWith(request, (await publish()), type)
-        })
-
-        test('should call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalled()
-        })
-
-        test('should call saveLog once', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledTimes(1)
-        })
-
-        test('should call saveLog with request, publish() and SYSTEM_TIME', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
+          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
         })
       })
 
       describe('When statement has been processed before', () => {
         beforeEach(() => {
-          getGenerations.mockResolvedValue(true) // come back to
+          getGenerations.mockResolvedValue(true)
         })
 
         test('should call getGenerations', async () => {
@@ -416,19 +323,9 @@ describe('Generate document', () => {
           expect(publish).not.toHaveBeenCalled()
         })
 
-        test('should not call sendPublishMessage', async () => {
+        test('should not call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendPublishMessage).not.toHaveBeenCalled()
-        })
-
-        test('should not call sendCrmMessage', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).not.toHaveBeenCalled()
-        })
-
-        test('should not call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).not.toHaveBeenCalled()
         })
       })
     })
@@ -506,45 +403,26 @@ describe('Generate document', () => {
           expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
         })
 
-        test('should call sendCrmMessage', async () => {
+        test('should call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalled()
+          expect(saveOutboundStatement).toHaveBeenCalled()
         })
 
-        test('should call sendCrmMessage once', async () => {
+        test('should call saveOutboundStatement once', async () => {
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledTimes(1)
+          expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
         })
 
-        test('should call sendCrmMessage with request, publish() and type', async () => {
+        test('should call saveOutboundStatement with correct parameters', async () => {
+          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledWith(request, (await publish()), type)
-        })
-
-        test('should call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalled()
-        })
-
-        test('should call saveLog once', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledTimes(1)
-        })
-
-        test('should call saveLog with request, publish() and SYSTEM_TIME', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
-        })
-
-        test('should not call sendPublishMessage', async () => {
-          await generateDocument(request, type)
-          expect(sendPublishMessage).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
         })
       })
 
       describe('When schedule has been processed before', () => {
         beforeEach(() => {
-          getGenerations.mockResolvedValue(true) // come back to
+          getGenerations.mockResolvedValue(true)
         })
 
         test('should call getGenerations', async () => {
@@ -577,19 +455,9 @@ describe('Generate document', () => {
           expect(publish).not.toHaveBeenCalled()
         })
 
-        test('should not call sendPublishMessage', async () => {
+        test('should not call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendPublishMessage).not.toHaveBeenCalled()
-        })
-
-        test('should not call sendCrmMessage', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).not.toHaveBeenCalled()
-        })
-
-        test('should not call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).not.toHaveBeenCalled()
         })
       })
     })
@@ -667,40 +535,26 @@ describe('Generate document', () => {
           expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
         })
 
-        test('should call sendCrmMessage', async () => {
+        test('should call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalled()
+          expect(saveOutboundStatement).toHaveBeenCalled()
         })
 
-        test('should call sendCrmMessage once', async () => {
+        test('should call saveOutboundStatement once', async () => {
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledTimes(1)
+          expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
         })
 
-        test('should call sendCrmMessage with request, publish() and type', async () => {
+        test('should call saveOutboundStatement with correct parameters', async () => {
+          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
           await generateDocument(request, type)
-          expect(sendCrmMessage).toHaveBeenCalledWith(request, (await publish()), type)
-        })
-
-        test('should call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalled()
-        })
-
-        test('should call saveLog once', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledTimes(1)
-        })
-
-        test('should call saveLog with request, publish() and SYSTEM_TIME', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
+          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
         })
       })
 
       describe('When statement has been processed before', () => {
         beforeEach(() => {
-          getGenerations.mockResolvedValue(true) // come back to
+          getGenerations.mockResolvedValue(true)
         })
 
         test('should call getGenerations', async () => {
@@ -733,23 +587,14 @@ describe('Generate document', () => {
           expect(publish).not.toHaveBeenCalled()
         })
 
-        test('should not call sendPublishMessage', async () => {
+        test('should not call saveOutboundStatement', async () => {
           await generateDocument(request, type)
-          expect(sendPublishMessage).not.toHaveBeenCalled()
-        })
-
-        test('should not call sendCrmMessage', async () => {
-          await generateDocument(request, type)
-          expect(sendCrmMessage).not.toHaveBeenCalled()
-        })
-
-        test('should not call saveLog', async () => {
-          await generateDocument(request, type)
-          expect(saveLog).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).not.toHaveBeenCalled()
         })
       })
     })
   })
+
   describe('When document is a delinked statement', () => {
     beforeEach(() => {
       publish.mockResolvedValue(MOCK_DELINKED_FILENAME)
@@ -823,47 +668,20 @@ describe('Generate document', () => {
         expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
       })
 
-      test('should call sendPublishMessage if scheme year is 2024, and sendDelinked2024Statements is true', async () => {
-        config.sendDelinked2024Statements = true
-        request.scheme.year = 2024
+      test('should call saveOutboundStatement', async () => {
         await generateDocument(request, type)
-        expect(sendPublishMessage).toHaveBeenCalled()
+        expect(saveOutboundStatement).toHaveBeenCalled()
       })
 
-      test('delinked should not call sendPublishMessage if excludedFromNotify is true', async () => {
-        request.excludedFromNotify = true
+      test('should call saveOutboundStatement once', async () => {
         await generateDocument(request, type)
-        expect(sendPublishMessage).not.toHaveBeenCalled()
+        expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
       })
 
-      test('should call sendCrmMessage', async () => {
+      test('should call saveOutboundStatement with correct parameters', async () => {
+        const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
         await generateDocument(request, type)
-        expect(sendCrmMessage).toHaveBeenCalled()
-      })
-
-      test('should call sendCrmMessage once', async () => {
-        await generateDocument(request, type)
-        expect(sendCrmMessage).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call sendCrmMessage with request, publish() and type', async () => {
-        await generateDocument(request, type)
-        expect(sendCrmMessage).toHaveBeenCalledWith(request, (await publish()), type)
-      })
-
-      test('should call saveLog', async () => {
-        await generateDocument(request, type)
-        expect(saveLog).toHaveBeenCalled()
-      })
-
-      test('should call saveLog once', async () => {
-        await generateDocument(request, type)
-        expect(saveLog).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call saveLog with request, publish() and SYSTEM_TIME', async () => {
-        await generateDocument(request, type)
-        expect(saveLog).toHaveBeenCalledWith(request, (await publish()), SYSTEM_TIME)
+        expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
       })
     })
 
@@ -902,19 +720,9 @@ describe('Generate document', () => {
         expect(publish).not.toHaveBeenCalled()
       })
 
-      test('should not call sendPublishMessage', async () => {
+      test('should not call saveOutboundStatement', async () => {
         await generateDocument(request, type)
-        expect(sendPublishMessage).not.toHaveBeenCalled()
-      })
-
-      test('should not call sendCrmMessage', async () => {
-        await generateDocument(request, type)
-        expect(sendCrmMessage).not.toHaveBeenCalled()
-      })
-
-      test('should not call saveLog', async () => {
-        await generateDocument(request, type)
-        expect(saveLog).not.toHaveBeenCalled()
+        expect(saveOutboundStatement).not.toHaveBeenCalled()
       })
     })
   })

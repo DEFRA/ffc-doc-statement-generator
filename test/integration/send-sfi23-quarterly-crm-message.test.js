@@ -11,7 +11,7 @@ jest.mock('ffc-messaging', () => {
   }
 })
 jest.mock('../../app/config')
-const sendCrmMessage = require('../../app/messaging/crm/send-crm-message')
+const sendCrmMessage = require('../../app/publishing/crm/send-crm-message')
 const mockStatement = require('../mocks/mock-statement-sfi23-quarterly')
 const { statementReceiverApiVersion, statementReceiverEndpoint } = require('../../app/config')
 const { SFI23QUARTERLYSTATEMENT } = require('../../app/constants/document-types')

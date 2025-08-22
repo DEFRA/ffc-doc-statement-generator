@@ -1,22 +1,23 @@
 const moment = require('moment')
 const { BlobServiceClient } = require('@azure/storage-blob')
 
-const config = require('../../../app/config')
-const db = require('../../../app/data')
+const config = require('../../app/config')
+const db = require('../../app/data')
 
-const { STATEMENT, SCHEDULE } = require('../../../app/constants/document-types')
+const { STATEMENT, SCHEDULE } = require('../../app/constants/document-types')
 
-const { DATE } = require('../../mocks/components/system-time')
+const { DATE } = require('../mocks/components/system-time')
 const {
   STATEMENT: STATEMENT_FILENAME,
   STATEMENT_EARLIER: STATEMENT_EARLIER_FILENAME,
   SCHEDULE: SCHEDULE_FILENAME,
   SCHEDULE_EARLIER: SCHEDULE_EARLIER_FILENAME
-} = require('../../mocks/components/filename')
+} = require('../mocks/components/filename')
 
-const { mockMessageSender } = require('../../mocks/modules/ffc-messaging')
+const { mockMessageSender } = require('../mocks/modules/ffc-messaging')
 
-const processMessage = require('../../../app/messaging/process-message')
+const processMessage = require('../../app/messaging/process-message')
+const { publishStatements } = require('../../app/publishing/publish-statements')
 
 let blobServiceClient
 let container
@@ -67,8 +68,8 @@ describe('process message', () => {
 
     describe('when message is a statement', () => {
       beforeEach(async () => {
-        statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
-        schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
+        statement = JSON.parse(JSON.stringify(require('../mocks/mock-statement')))
+        schedule = JSON.parse(JSON.stringify(require('../mocks/mock-schedule').topUpSchedule))
         message = {
           body: statement,
           applicationProperties: {
@@ -80,6 +81,7 @@ describe('process message', () => {
       describe('When statement has not been processed before', () => {
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -90,6 +92,7 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log).not.toBeNull()
@@ -97,7 +100,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
-
+          await publishStatements()
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           delete statement.documentReference
           expect(log.statementData).toStrictEqual(statement)
@@ -105,6 +108,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -113,6 +117,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -120,6 +125,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -127,21 +133,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -160,6 +170,7 @@ describe('process message', () => {
 
         test('should not publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -172,6 +183,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -180,11 +192,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -210,6 +224,7 @@ describe('process message', () => {
 
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -222,6 +237,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -230,6 +246,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           delete statement.documentReference
@@ -238,6 +255,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -246,6 +264,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -253,6 +272,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -260,21 +280,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -300,6 +324,7 @@ describe('process message', () => {
 
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -312,6 +337,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -320,6 +346,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           delete statement.documentReference
@@ -328,6 +355,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -336,6 +364,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -343,6 +372,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -350,21 +380,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -372,7 +406,9 @@ describe('process message', () => {
       describe('When 2 statements are sent', () => {
         test('should publish 1 file to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -383,7 +419,9 @@ describe('process message', () => {
 
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -394,7 +432,9 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findAll({ where: { documentReference: message.body.documentReference } })
           expect(log).toHaveLength(1)
@@ -402,7 +442,9 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           delete statement.documentReference
@@ -411,7 +453,9 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -420,7 +464,9 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -428,7 +474,9 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -436,28 +484,36 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete both messages', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(receiver.completeMessage).toHaveBeenCalledTimes(2)
         })
@@ -477,6 +533,7 @@ describe('process message', () => {
 
         test('should not publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -489,6 +546,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: SCHEDULE_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -497,11 +555,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -509,8 +569,8 @@ describe('process message', () => {
 
     describe('when message is a schedule', () => {
       beforeEach(async () => {
-        schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
-        statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
+        schedule = JSON.parse(JSON.stringify(require('../mocks/mock-schedule').topUpSchedule))
+        statement = JSON.parse(JSON.stringify(require('../mocks/mock-statement')))
         message = {
           body: schedule,
           applicationProperties: {
@@ -522,6 +582,7 @@ describe('process message', () => {
       describe('When schedule has not been processed before', () => {
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -532,6 +593,7 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log).not.toBeNull()
@@ -539,6 +601,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           delete schedule.documentReference
@@ -547,6 +610,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -555,6 +619,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -562,6 +627,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -569,16 +635,19 @@ describe('process message', () => {
 
         test('should send 1 message for crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -597,6 +666,7 @@ describe('process message', () => {
 
         test('should not publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -609,6 +679,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -617,11 +688,13 @@ describe('process message', () => {
 
         test('should not send message for crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -647,6 +720,7 @@ describe('process message', () => {
 
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -659,6 +733,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -667,6 +742,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           delete schedule.documentReference
@@ -675,6 +751,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -683,6 +760,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -690,6 +768,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -697,16 +776,19 @@ describe('process message', () => {
 
         test('should send 1 message for crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -732,6 +814,7 @@ describe('process message', () => {
 
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -744,6 +827,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -752,6 +836,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           delete schedule.documentReference
@@ -760,6 +845,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -768,6 +854,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -775,6 +862,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -782,16 +870,19 @@ describe('process message', () => {
 
         test('should send 1 message for crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -799,7 +890,9 @@ describe('process message', () => {
       describe('When 2 schedules are sent', () => {
         test('should publish 1 file to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -810,7 +903,9 @@ describe('process message', () => {
 
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -821,7 +916,9 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findAll({ where: { documentReference: message.body.documentReference } })
           expect(log).toHaveLength(1)
@@ -829,7 +926,9 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           delete schedule.documentReference
@@ -838,7 +937,9 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -847,7 +948,9 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -855,7 +958,9 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -863,21 +968,27 @@ describe('process message', () => {
 
         test('should send 1 message for crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete both messages', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(receiver.completeMessage).toHaveBeenCalledTimes(2)
         })
@@ -897,6 +1008,7 @@ describe('process message', () => {
 
         test('should not publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -909,6 +1021,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -917,11 +1030,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -935,8 +1050,8 @@ describe('process message', () => {
 
     describe('when message is a statement', () => {
       beforeEach(async () => {
-        statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
-        schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
+        statement = JSON.parse(JSON.stringify(require('../mocks/mock-statement')))
+        schedule = JSON.parse(JSON.stringify(require('../mocks/mock-schedule').topUpSchedule))
         message = {
           body: statement,
           applicationProperties: {
@@ -948,6 +1063,7 @@ describe('process message', () => {
       describe('When statement has not been processed before', () => {
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -958,6 +1074,7 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log).not.toBeNull()
@@ -965,6 +1082,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           delete statement.documentReference
@@ -973,6 +1091,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -981,6 +1100,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -988,6 +1108,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -995,21 +1116,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1028,6 +1153,7 @@ describe('process message', () => {
 
         test('should not publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1040,6 +1166,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1048,11 +1175,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1078,6 +1207,7 @@ describe('process message', () => {
 
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1090,6 +1220,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1098,6 +1229,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           delete statement.documentReference
@@ -1106,6 +1238,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1114,6 +1247,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1121,6 +1255,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1128,21 +1263,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1168,6 +1307,7 @@ describe('process message', () => {
 
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1180,6 +1320,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1188,6 +1329,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           delete statement.documentReference
@@ -1196,6 +1338,7 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1204,6 +1347,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1211,6 +1355,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1218,21 +1363,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1240,7 +1389,9 @@ describe('process message', () => {
       describe('When 2 statements are sent', () => {
         test('should publish 1 file to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1251,7 +1402,9 @@ describe('process message', () => {
 
         test('should publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1262,7 +1415,9 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findAll({ where: { documentReference: message.body.documentReference } })
           expect(log).toHaveLength(1)
@@ -1270,7 +1425,9 @@ describe('process message', () => {
 
         test('should save log entry with statement data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           delete statement.documentReference
@@ -1279,7 +1436,9 @@ describe('process message', () => {
 
         test('should save log entry with statement data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1288,7 +1447,9 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1296,7 +1457,9 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1304,28 +1467,36 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with statement STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(STATEMENT_FILENAME)
         })
 
         test('should send crm message with statement api link that contains STATEMENT_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(STATEMENT_FILENAME)
         })
 
         test('should complete both messages', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(receiver.completeMessage).toHaveBeenCalledTimes(2)
         })
@@ -1345,6 +1516,7 @@ describe('process message', () => {
 
         test('should not publish file with name STATEMENT_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1357,6 +1529,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: SCHEDULE_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: STATEMENT_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1365,11 +1538,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1378,8 +1553,8 @@ describe('process message', () => {
     describe('when message is a schedule', () => {
       beforeEach(async () => {
         config.scheduleEnabled = true
-        schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
-        statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
+        schedule = JSON.parse(JSON.stringify(require('../mocks/mock-schedule').topUpSchedule))
+        statement = JSON.parse(JSON.stringify(require('../mocks/mock-statement')))
         message = {
           body: schedule,
           applicationProperties: {
@@ -1391,6 +1566,7 @@ describe('process message', () => {
       describe('When schedule has not been processed before', () => {
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1401,6 +1577,7 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log).not.toBeNull()
@@ -1408,6 +1585,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           delete schedule.documentReference
@@ -1416,6 +1594,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1424,6 +1603,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1431,6 +1611,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1438,21 +1619,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with schedule SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(SCHEDULE_FILENAME)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1471,6 +1656,7 @@ describe('process message', () => {
 
         test('should not publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1483,6 +1669,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1491,11 +1678,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1521,6 +1710,7 @@ describe('process message', () => {
 
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1533,6 +1723,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1541,6 +1732,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           delete schedule.documentReference
@@ -1549,6 +1741,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1557,6 +1750,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1564,6 +1758,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1571,21 +1766,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with schedule file SCHEDULE_FILENAME name', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(SCHEDULE_FILENAME)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1612,6 +1811,7 @@ describe('process message', () => {
 
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1624,6 +1824,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1632,6 +1833,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           delete schedule.documentReference
@@ -1640,6 +1842,7 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1648,6 +1851,7 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1655,6 +1859,7 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1662,21 +1867,25 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with schedule SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(SCHEDULE_FILENAME)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
@@ -1684,7 +1893,9 @@ describe('process message', () => {
       describe('When 2 schedules are sent', () => {
         test('should publish 1 file to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1695,7 +1906,9 @@ describe('process message', () => {
 
         test('should publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1706,7 +1919,9 @@ describe('process message', () => {
 
         test('should save 1 log entry', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findAll({ where: { documentReference: message.body.documentReference } })
           expect(log).toHaveLength(1)
@@ -1714,7 +1929,9 @@ describe('process message', () => {
 
         test('should save log entry with schedule data', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           delete schedule.documentReference
@@ -1723,7 +1940,9 @@ describe('process message', () => {
 
         test('should save log entry with schedule data with no document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(Object.keys(message.body)).toContain('documentReference')
@@ -1732,7 +1951,9 @@ describe('process message', () => {
 
         test('should save log entry with document reference', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.documentReference).toStrictEqual(message.body.documentReference)
@@ -1740,7 +1961,9 @@ describe('process message', () => {
 
         test('should save log entry with generation date', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           const log = await db.generation.findOne({ where: { documentReference: message.body.documentReference } })
           expect(log.dateGenerated).toStrictEqual(new Date())
@@ -1748,28 +1971,36 @@ describe('process message', () => {
 
         test('should send 2 messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(2)
         })
 
         test('should send publish message with schedule SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(SCHEDULE_FILENAME)
         })
 
         test('should send crm message with schedule api link that contains SCHEDULE_FILENAME', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
           console.log(message)
           expect(mockMessageSender().sendMessage.mock.calls[1][0].body.apiLink).toContain(SCHEDULE_FILENAME)
         })
 
         test('should complete both messages', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           await processMessage(message, receiver)
+          await publishStatements()
 
           expect(receiver.completeMessage).toHaveBeenCalledTimes(2)
         })
@@ -1789,6 +2020,7 @@ describe('process message', () => {
 
         test('should not publish file with name SCHEDULE_FILENAME to archive blob storage location', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
 
           const fileList = []
           for await (const item of container.listBlobsFlat({ prefix: config.storageConfig.archiveFolder })) {
@@ -1801,6 +2033,7 @@ describe('process message', () => {
           const logBefore = await db.generation.findOne({ where: { filename: STATEMENT_EARLIER_FILENAME } })
 
           await processMessage(message, receiver)
+          await publishStatements()
 
           const logAfter = await db.generation.findOne({ where: { filename: SCHEDULE_FILENAME } })
           expect(logBefore).not.toBeNull()
@@ -1809,11 +2042,13 @@ describe('process message', () => {
 
         test('should not send messages for publish and crm', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(mockMessageSender().sendMessage).not.toHaveBeenCalled()
         })
 
         test('should complete message', async () => {
           await processMessage(message, receiver)
+          await publishStatements()
           expect(receiver.completeMessage).toHaveBeenCalled()
         })
       })
