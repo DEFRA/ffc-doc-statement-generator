@@ -21,7 +21,7 @@ describe('getPendingStatements', () => {
 
     db.sequelize.transaction.mockResolvedValue(transactionMock)
 
-    db.publishedStatement.findAll.mockResolvedValue([])
+    db.outbox.findAll.mockResolvedValue([])
   })
 
   test('should start a transaction with SERIALIZABLE isolation level', async () => {
@@ -35,15 +35,15 @@ describe('getPendingStatements', () => {
   test('should call findAll with correct parameters including transaction and lock', async () => {
     await getPendingStatements()
 
-    expect(db.publishedStatement.findAll).toHaveBeenCalledWith(expect.objectContaining({
+    expect(db.outbox.findAll).toHaveBeenCalledWith(expect.objectContaining({
       lock: true,
       transaction: transactionMock
     }))
   })
 
   test('should call setStartProcessing with pending statements and transaction', async () => {
-    const mockStatements = [{ publishedStatementId: 1 }, { publishedStatementId: 2 }]
-    db.publishedStatement.findAll.mockResolvedValue(mockStatements)
+    const mockStatements = [{ outboxId: 1 }, { outboxId: 2 }]
+    db.outbox.findAll.mockResolvedValue(mockStatements)
 
     await getPendingStatements()
 
@@ -51,8 +51,8 @@ describe('getPendingStatements', () => {
   })
 
   test('should commit transaction on success and return pending statements', async () => {
-    const mockStatements = [{ publishedStatementId: 1 }]
-    db.publishedStatement.findAll.mockResolvedValue(mockStatements)
+    const mockStatements = [{ outboxId: 1 }]
+    db.outbox.findAll.mockResolvedValue(mockStatements)
 
     const result = await getPendingStatements()
 
@@ -63,7 +63,7 @@ describe('getPendingStatements', () => {
 
   test('should rollback transaction if error occurs and rethrow', async () => {
     const mockError = new Error('DB error')
-    db.publishedStatement.findAll.mockRejectedValue(mockError)
+    db.outbox.findAll.mockRejectedValue(mockError)
 
     await expect(getPendingStatements()).rejects.toThrow('DB error')
 

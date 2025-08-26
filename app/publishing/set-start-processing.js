@@ -1,13 +1,13 @@
 const db = require('../data')
 
 const setStartProcessing = async (pendingStatements, transaction) => {
-  const pendingStatementIds = pendingStatements.map(statement => statement.publishedStatementId)
-  await db.publishedStatement.update({
+  const outboxIds = pendingStatements.map(statement => statement.outboxId)
+  await db.outbox.update({
     startProcessing: new Date()
   }, {
     where: {
-      publishedStatementId: {
-        [db.Sequelize.Op.in]: pendingStatementIds
+      outboxId: {
+        [db.Sequelize.Op.in]: outboxIds
       }
     },
     transaction

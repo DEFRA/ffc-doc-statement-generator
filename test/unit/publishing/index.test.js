@@ -11,7 +11,7 @@ describe('start function', () => {
   })
 
   test('should call publishStatements', async () => {
-    config.publishingFrequency = 1000
+    config.publishingFrequency = 60000
 
     await start()
 
@@ -20,7 +20,7 @@ describe('start function', () => {
 
   test('should catch and log errors from publishStatements', async () => {
     console.error = jest.fn()
-    config.publishingFrequency = 1000
+    config.publishingFrequency = 60000
 
     publishStatements.mockRejectedValue(new Error('Publish error'))
 

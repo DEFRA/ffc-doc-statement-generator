@@ -34,7 +34,6 @@ describe('process message', () => {
     // Set environment variables to true
     config.sfi23QuarterlyStatementEnabled = true
     config.sendCrmMessageEnabled = true
-    config.saveLogEnabled = true
     jest.useFakeTimers().setSystemTime(DATE)
 
     blobServiceClient = BlobServiceClient.fromConnectionString(config.storageConfig.connectionStr)
@@ -52,7 +51,6 @@ describe('process message', () => {
     // Reset environment variables after each test
     delete config.sfi23QuarterlyStatementEnabled
     delete config.sendCrmMessageEnabled
-    delete config.saveLogEnabled
     jest.clearAllMocks()
     await db.sequelize.truncate({ cascade: true })
   })

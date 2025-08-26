@@ -7,6 +7,7 @@ const publish = require('./publish')
 
 const fonts = require('./fonts')
 const { saveOutboundStatement } = require('./save-outbound-statement')
+const saveLog = require('../messaging/save-log')
 const printer = new PdfPrinter(fonts)
 
 const generateDocument = async (request, type) => {
@@ -17,10 +18,14 @@ const generateDocument = async (request, type) => {
   }
 
   const filename = await createAndPublishDocument(request, type)
-  await saveOutboundStatement(request, filename, type)
+
+  const { generationId } = await saveLog(request, filename, new Date())
+  console.info(`Log saved for document ${filename}`)
+
+  await saveOutboundStatement(generationId, type)
 }
 
-async function createAndPublishDocument (request, type) {
+async function createAndPublishDocument(request, type) {
   const docDefinition = getDocumentDefinition(request, type)
   const timestamp = new Date()
   const pdfDoc = printer.createPdfKitDocument(docDefinition)

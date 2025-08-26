@@ -50,9 +50,8 @@ container:
   delinkedPaymentStatementEnabled: false
   scheduleEnabled: false
   sendCrmMessageEnabled: false
-  saveLogEnabled: false
   sendDelinked2024Statements: true
-  publishingFrequency: 1000
+  publishingFrequency: 60000
   alertTopicAddress: ffc-doc-alerting
 
 ingress:
