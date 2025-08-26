@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const { mockGeneration } = require('../../mocks/modules/data')
-const saveLog = require('../../../app/messaging/save-log')
+const saveLog = require('../../../app/generator/save-log')
 
 let statement
 let timestamp
