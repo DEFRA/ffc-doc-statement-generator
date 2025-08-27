@@ -60,7 +60,8 @@ const publishStatements = async () => {
   const pendingStatements = await getPendingStatements()
   for (const pendingStatement of pendingStatements) {
     const { outboxId, generationId, type } = pendingStatement
-    const { statementData, filename } = await getGenerationById(generationId)
+    const { statementData, filename, documentReference } = await getGenerationById(generationId)
+    statementData.documentReference = documentReference
     console.log('Identified statement for publishing:', util.inspect(statementData, false, null, true))
     const sentToPublisher = await handleNotification(statementData, filename, type)
     await handleAdditionalOperations(statementData, filename, type)
