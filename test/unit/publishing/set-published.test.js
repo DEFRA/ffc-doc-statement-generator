@@ -8,23 +8,23 @@ describe('set published timestamp post publishing', () => {
     jest.clearAllMocks()
   })
 
-  test('should call db.publishedStatement.update with correct arguments', async () => {
+  test('should call db.outbox.update with correct arguments', async () => {
     const now = new Date()
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
-    const publishedStatementId = 123
+    const outboxId = 123
     const sentToPublisher = true
 
-    await setPublished(publishedStatementId, sentToPublisher)
+    await setPublished(outboxId, sentToPublisher)
 
-    expect(db.publishedStatement.update).toHaveBeenCalledTimes(1)
-    expect(db.publishedStatement.update).toHaveBeenCalledWith(
+    expect(db.outbox.update).toHaveBeenCalledTimes(1)
+    expect(db.outbox.update).toHaveBeenCalledWith(
       {
         published: now,
         sentToPublisher
       },
       {
-        where: { publishedStatementId }
+        where: { outboxId }
       }
     )
 
@@ -35,27 +35,27 @@ describe('set published timestamp post publishing', () => {
     const now = new Date()
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
-    const publishedStatementId = 456
+    const outboxId = 456
     const sentToPublisher = false
 
-    await setPublished(publishedStatementId, sentToPublisher)
+    await setPublished(outboxId, sentToPublisher)
 
-    expect(db.publishedStatement.update).toHaveBeenCalledWith(
+    expect(db.outbox.update).toHaveBeenCalledWith(
       {
         published: now,
         sentToPublisher
       },
       {
-        where: { publishedStatementId }
+        where: { outboxId }
       }
     )
 
     global.Date.mockRestore()
   })
 
-  test('should propagate errors from db.publishedStatement.update', async () => {
+  test('should propagate errors from db.outbox.update', async () => {
     const error = new Error('Update failed')
-    db.publishedStatement.update.mockRejectedValue(error)
+    db.outbox.update.mockRejectedValue(error)
 
     await expect(setPublished(789, true)).rejects.toThrow('Update failed')
   })

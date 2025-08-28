@@ -1,12 +1,12 @@
 const db = require('../data')
 
-const setPublished = async (publishedStatementId, sentToPublisher) => {
-  await db.publishedStatement.update({
+const setPublished = async (outboxId, sentToPublisher) => {
+  await db.outbox.update({
     published: new Date(),
     sentToPublisher
   }, {
     where: {
-      publishedStatementId
+      outboxId
     }
   })
 }

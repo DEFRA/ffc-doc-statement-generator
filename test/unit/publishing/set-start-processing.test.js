@@ -8,26 +8,26 @@ describe('set start processing date stamp', () => {
     jest.clearAllMocks()
   })
 
-  test('should call db.publishedStatement.update with correct arguments', async () => {
+  test('should call db.outbox.update with correct arguments', async () => {
     const now = new Date()
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
     const pendingStatements = [
-      { publishedStatementId: 1 },
-      { publishedStatementId: 2 },
-      { publishedStatementId: 3 }
+      { outboxId: 1 },
+      { outboxId: 2 },
+      { outboxId: 3 }
     ]
 
     const transactionMock = { id: 'transaction-object' }
 
     await setStartProcessing(pendingStatements, transactionMock)
 
-    expect(db.publishedStatement.update).toHaveBeenCalledTimes(1)
-    expect(db.publishedStatement.update).toHaveBeenCalledWith(
+    expect(db.outbox.update).toHaveBeenCalledTimes(1)
+    expect(db.outbox.update).toHaveBeenCalledWith(
       { startProcessing: now },
       {
         where: {
-          publishedStatementId: {
+          outboxId: {
             [db.Sequelize.Op.in]: [1, 2, 3]
           }
         },
@@ -43,11 +43,11 @@ describe('set start processing date stamp', () => {
 
     await setStartProcessing([], transactionMock)
 
-    expect(db.publishedStatement.update).toHaveBeenCalledWith(
+    expect(db.outbox.update).toHaveBeenCalledWith(
       expect.any(Object),
       expect.objectContaining({
         where: {
-          publishedStatementId: {
+          outboxId: {
             [db.Sequelize.Op.in]: []
           }
         },
@@ -56,11 +56,11 @@ describe('set start processing date stamp', () => {
     )
   })
 
-  test('should propagate errors from db.publishedStatement.update', async () => {
+  test('should propagate errors from db.outbox.update', async () => {
     const error = new Error('Update failed')
-    db.publishedStatement.update.mockRejectedValue(error)
+    db.outbox.update.mockRejectedValue(error)
 
-    const pendingStatements = [{ publishedStatementId: 1 }]
+    const pendingStatements = [{ outboxId: 1 }]
     const transactionMock = {}
 
     await expect(setStartProcessing(pendingStatements, transactionMock)).rejects.toThrow('Update failed')

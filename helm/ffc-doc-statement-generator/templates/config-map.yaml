@@ -39,7 +39,6 @@ data:
   DELINKEDPAYMENTSTATEMENT_ENABLED: {{ quote .Values.container.delinkedPaymentStatementEnabled }}
   SEND_CRM_MESSAGE_ENABLED: {{ quote .Values.container.sendCrmMessageEnabled }}
   SCHEDULE_ENABLED: {{ quote .Values.container.scheduleEnabled }}
-  SAVE_LOG_ENABLED: {{ quote .Values.container.saveLogEnabled }}
   SEND_DELINKED_2024_STATEMENTS: {{ quote .Values.container.sendDelinked2024Statements }}
   PUBLISHING_FREQUENCY: {{ quote .Values.container.publishingFrequency }}
   ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}

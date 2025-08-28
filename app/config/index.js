@@ -14,10 +14,9 @@ const schema = Joi.object({
   sfi23QuarterlyStatementEnabled: Joi.boolean().optional().default(false),
   scheduleEnabled: Joi.boolean().optional().default(false),
   sendCrmMessageEnabled: Joi.boolean().optional().default(false),
-  saveLogEnabled: Joi.boolean().optional().default(false),
   delinkedGenerateStatementEnabled: Joi.boolean().optional().default(true),
   sendDelinked2024Statements: Joi.boolean().optional().default(true),
-  publishingFrequency: Joi.number().default(1000)
+  publishingFrequency: Joi.number().default(60000)
 })
 
 const config = {
@@ -30,7 +29,6 @@ const config = {
   delinkedGenerateStatementEnabled: process.env.DELINKED_GENERATE_STATEMENT_ENABLED,
   scheduleEnabled: process.env.SCHEDULE_ENABLED,
   sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
-  saveLogEnabled: process.env.SAVE_LOG_ENABLED,
   sendDelinked2024Statements: process.env.SEND_DELINKED_2024_STATEMENTS,
   publishingFrequency: process.env.PUBLISHING_FREQUENCY
 }

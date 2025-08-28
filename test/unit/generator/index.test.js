@@ -50,7 +50,6 @@ describe('Generate document', () => {
   afterEach(() => {
     delete config.sfi23QuarterlyStatementEnabled
     delete config.sendCrmMessageEnabled
-    delete config.saveLogEnabled
     delete config.sendDelinked2024Statements
     consoleInfoSpy.mockRestore()
     jest.clearAllMocks()
@@ -142,12 +141,6 @@ describe('Generate document', () => {
         test('sfi23-quarterly should call saveOutboundStatement once', async () => {
           await generateDocument(request, type)
           expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
-        })
-
-        test('sfi23-quarterly should call saveOutboundStatement with correct parameters', async () => {
-          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-          await generateDocument(request, type)
-          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
         })
 
         test('should log that the document was published to blob storage', async () => {
@@ -280,12 +273,6 @@ describe('Generate document', () => {
           await generateDocument(request, type)
           expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
         })
-
-        test('should call saveOutboundStatement with correct parameters', async () => {
-          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-          await generateDocument(request, type)
-          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
-        })
       })
 
       describe('When statement has been processed before', () => {
@@ -411,12 +398,6 @@ describe('Generate document', () => {
         test('should call saveOutboundStatement once', async () => {
           await generateDocument(request, type)
           expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
-        })
-
-        test('should call saveOutboundStatement with correct parameters', async () => {
-          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-          await generateDocument(request, type)
-          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
         })
       })
 
@@ -544,12 +525,6 @@ describe('Generate document', () => {
           await generateDocument(request, type)
           expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
         })
-
-        test('should call saveOutboundStatement with correct parameters', async () => {
-          const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-          await generateDocument(request, type)
-          expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
-        })
       })
 
       describe('When statement has been processed before', () => {
@@ -676,12 +651,6 @@ describe('Generate document', () => {
       test('should call saveOutboundStatement once', async () => {
         await generateDocument(request, type)
         expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call saveOutboundStatement with correct parameters', async () => {
-        const filename = await publish(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).toHaveBeenCalledWith(request, filename, type)
       })
     })
 

@@ -5,16 +5,16 @@ const sendCrmMessage = require('../../../app/publishing/crm/send-crm-message')
 const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 const { getPendingStatements } = require('../../../app/publishing/get-pending-statements')
 const { publishStatements } = require('../../../app/publishing/publish-statements')
-const saveLog = require('../../../app/publishing/save-log')
 const { setPublished } = require('../../../app/publishing/set-published')
+const getGenerationById = require('../../../app/publishing/get-generation-by-id')
 
 jest.mock('../../../app/publishing/get-pending-statements')
 jest.mock('../../../app/messaging/publish/send-publish-message')
 jest.mock('../../../app/publishing/get-no-notify-by-agreement-number')
 jest.mock('../../../app/publishing/crm/send-crm-message')
-jest.mock('../../../app/publishing/save-log')
 jest.mock('../../../app/publishing/set-published')
 jest.mock('../../../app/config')
+jest.mock('../../../app/publishing/get-generation-by-id')
 
 describe('publishStatements', () => {
   let consoleLogSpy
@@ -33,87 +33,88 @@ describe('publishStatements', () => {
 
   test('should publish statements and handle notifications, log correctly', async () => {
     const mockStatements = [{
-      publishedStatementId: 1,
-      statement: { scheme: { agreementNumber: '12345' } },
-      type: { id: 'type-id', type: SCHEDULE.type },
-      filename: 'file1.pdf'
+      outboxId: 1,
+      generationId: 1,
+      type: { id: 'type-id', type: SCHEDULE.type }
     }]
+    const mockGenerationData = {
+      statementData: { scheme: { agreementNumber: '12345' } },
+      filename: 'file1.pdf'
+    }
+
     getPendingStatements.mockResolvedValue(mockStatements)
+    getGenerationById.mockResolvedValue(mockGenerationData)
     config.sfi23QuarterlyStatementEnabled = true
     config.scheduleEnabled = true
     config.delinkedGenerateStatementEnabled = true
     config.sendCrmMessageEnabled = false
-    config.saveLogEnabled = false
 
     await publishStatements()
 
     expect(getPendingStatements).toHaveBeenCalled()
-    expect(sendPublishMessage).toHaveBeenCalledWith(mockStatements[0].statement, mockStatements[0].filename, mockStatements[0].type.id)
-    expect(setPublished).toHaveBeenCalledWith(mockStatements[0].publishedStatementId, true)
+    expect(getGenerationById).toHaveBeenCalledWith(mockStatements[0].generationId)
+    expect(sendPublishMessage).toHaveBeenCalledWith(mockGenerationData.statementData, mockGenerationData.filename, mockStatements[0].type.id)
+    expect(setPublished).toHaveBeenCalledWith(mockStatements[0].outboxId, true)
     expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'), expect.any(String))
-    expect(consoleInfoSpy).toHaveBeenCalledWith(`Publish message sent for document ${mockStatements[0].filename}`)
+    expect(consoleInfoSpy).toHaveBeenCalledWith(`Publish message sent for document ${mockGenerationData.filename}`)
     expect(consoleLogSpy).toHaveBeenCalledWith('Statement finished publishing')
   })
 
   test('should send CRM message and log when enabled', async () => {
     const mockStatements = [{
-      publishedStatementId: 1,
-      statement: { scheme: { agreementNumber: '12345' } },
-      type: { id: 'type-id', type: SCHEDULE.type },
-      filename: 'file1.pdf'
+      outboxId: 1,
+      generationId: 1,
+      type: { id: 'type-id', type: SCHEDULE.type }
     }]
+    const mockGenerationData = {
+      statementData: { scheme: { agreementNumber: '12345' } },
+      filename: 'file1.pdf'
+    }
+
     getPendingStatements.mockResolvedValue(mockStatements)
+    getGenerationById.mockResolvedValue(mockGenerationData)
     config.sendCrmMessageEnabled = true
-    config.saveLogEnabled = false
 
     await publishStatements()
 
-    expect(sendCrmMessage).toHaveBeenCalledWith(mockStatements[0].statement, mockStatements[0].filename, mockStatements[0].type)
-    expect(consoleInfoSpy).toHaveBeenCalledWith(`CRM message sent for document ${mockStatements[0].filename}`)
+    expect(sendCrmMessage).toHaveBeenCalledWith(mockGenerationData.statementData, mockGenerationData.filename, mockStatements[0].type)
+    expect(consoleInfoSpy).toHaveBeenCalledWith(`CRM message sent for document ${mockGenerationData.filename}`)
   })
 
   test('should not send CRM message and log when disabled', async () => {
     const mockStatements = [{
-      publishedStatementId: 1,
-      statement: { scheme: { agreementNumber: '12345' } },
-      type: { id: 'type-id', type: SCHEDULE.type },
-      filename: 'file1.pdf'
+      outboxId: 1,
+      generationId: 1,
+      type: { id: 'type-id', type: SCHEDULE.type }
     }]
+    const mockGenerationData = {
+      statementData: { scheme: { agreementNumber: '12345' } },
+      filename: 'file1.pdf'
+    }
+
     getPendingStatements.mockResolvedValue(mockStatements)
+    getGenerationById.mockResolvedValue(mockGenerationData)
     config.sendCrmMessageEnabled = false
-    config.saveLogEnabled = false
 
     await publishStatements()
 
     expect(sendCrmMessage).not.toHaveBeenCalled()
-    expect(consoleInfoSpy).toHaveBeenCalledWith(`CRM message not sent for document ${mockStatements[0].filename} - CRM messaging is disabled`)
-  })
-
-  test('should save log and log correctly when enabled', async () => {
-    const mockStatements = [{
-      publishedStatementId: 1,
-      statement: { scheme: { agreementNumber: '12345' } },
-      type: { id: 'type-id', type: SCHEDULE.type },
-      filename: 'file1.pdf'
-    }]
-    getPendingStatements.mockResolvedValue(mockStatements)
-    config.saveLogEnabled = true
-    config.sendCrmMessageEnabled = false
-
-    await publishStatements()
-
-    expect(saveLog).toHaveBeenCalledWith(mockStatements[0].statement, mockStatements[0].filename, expect.any(Date))
-    expect(consoleInfoSpy).toHaveBeenCalledWith(`Log saved for document ${mockStatements[0].filename}`)
+    expect(consoleInfoSpy).toHaveBeenCalledWith(`CRM message not sent for document ${mockGenerationData.filename} - CRM messaging is disabled`)
   })
 
   test('should not send publish message if notifications are not allowed and log info', async () => {
     const mockStatements = [{
-      publishedStatementId: 1,
-      statement: { scheme: { agreementNumber: '12345', excludedFromNotify: false } },
-      type: { id: 'type-id', type: SCHEDULE.type },
-      filename: 'file1.pdf'
+      outboxId: 1,
+      generationId: 1,
+      type: { id: 'type-id', type: SCHEDULE.type }
     }]
+    const mockGenerationData = {
+      statementData: { scheme: { agreementNumber: '12345' }, excludedFromNotify: false },
+      filename: 'file1.pdf'
+    }
+
     getPendingStatements.mockResolvedValue(mockStatements)
+    getGenerationById.mockResolvedValue(mockGenerationData)
     getNoNotifyByAgreementNumber.mockResolvedValue(true)
     config.sfi23QuarterlyStatementEnabled = false
     config.scheduleEnabled = false
@@ -127,12 +128,17 @@ describe('publishStatements', () => {
 
   test('should not send publish message if delinked2024 is disabled and log info', async () => {
     const mockStatements = [{
-      publishedStatementId: 1,
-      statement: { scheme: { agreementNumber: '12345', year: 2024 } },
-      type: { id: 'type-id', type: DELINKED.type },
-      filename: 'file1.pdf'
+      outboxId: 1,
+      generationId: 1,
+      type: { id: 'type-id', type: DELINKED.type }
     }]
+    const mockGenerationData = {
+      statementData: { scheme: { agreementNumber: '12345', year: 2024 } },
+      filename: 'file1.pdf'
+    }
+
     getPendingStatements.mockResolvedValue(mockStatements)
+    getGenerationById.mockResolvedValue(mockGenerationData)
     config.sendDelinked2024Statements = false
     config.delinkedGenerateStatementEnabled = true
 
@@ -145,33 +151,42 @@ describe('publishStatements', () => {
   test('should handle multiple statements and log all statements publishing', async () => {
     const mockStatements = [
       {
-        publishedStatementId: 1,
-        statement: { scheme: { agreementNumber: '12345' } },
-        type: { id: 'type1', type: SCHEDULE.type },
-        filename: 'file1.pdf'
+        outboxId: 1,
+        generationId: 1,
+        type: { id: 'type1', type: SCHEDULE.type }
       },
       {
-        publishedStatementId: 2,
-        statement: { scheme: { agreementNumber: '67890' } },
-        type: { id: 'type2', type: DELINKED.type },
-        filename: 'file2.pdf'
+        outboxId: 2,
+        generationId: 2,
+        type: { id: 'type2', type: DELINKED.type }
       }
     ]
+    const mockGenerationData1 = {
+      statementData: { scheme: { agreementNumber: '12345' } },
+      filename: 'file1.pdf'
+    }
+    const mockGenerationData2 = {
+      statementData: { scheme: { agreementNumber: '67890' } },
+      filename: 'file2.pdf'
+    }
+
     getPendingStatements.mockResolvedValue(mockStatements)
+    getGenerationById.mockImplementation((id) => {
+      if (id === 1) return Promise.resolve(mockGenerationData1)
+      if (id === 2) return Promise.resolve(mockGenerationData2)
+    })
     config.sfi23QuarterlyStatementEnabled = true
     config.scheduleEnabled = true
     config.delinkedGenerateStatementEnabled = true
     config.sendCrmMessageEnabled = true
-    config.saveLogEnabled = true
     getNoNotifyByAgreementNumber.mockResolvedValue(false)
 
     await publishStatements()
 
-    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'), expect.any(String))
     expect(sendPublishMessage).toHaveBeenCalledTimes(2)
     expect(sendCrmMessage).toHaveBeenCalledTimes(2)
-    expect(saveLog).toHaveBeenCalledTimes(2)
     expect(setPublished).toHaveBeenCalledTimes(2)
+    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'), expect.any(String))
     expect(consoleLogSpy).toHaveBeenCalledWith('Statement finished publishing')
   })
 })

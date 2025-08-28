@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('generation', {
+  const generation = sequelize.define('generation', {
     generationId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     statementData: DataTypes.JSON,
     dateGenerated: DataTypes.DATE,
@@ -11,4 +11,13 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     timestamps: false
   })
+
+  generation.associate = (models) => {
+    generation.hasMany(models.outbox, {
+      foreignKey: 'generationId',
+      as: 'outbox'
+    })
+  }
+
+  return generation
 }

@@ -6,8 +6,8 @@ const { getPendingStatements } = require('./get-pending-statements')
 const sendPublishMessage = require('../messaging/publish/send-publish-message')
 const getNoNotifyByAgreementNumber = require('./get-no-notify-by-agreement-number')
 const sendCrmMessage = require('./crm/send-crm-message')
-const saveLog = require('./save-log')
 const { setPublished } = require('./set-published')
+const getGenerationById = require('./get-generation-by-id')
 
 const delinked2024 = 2024
 
@@ -54,20 +54,18 @@ async function handleAdditionalOperations (request, filename, type) {
   } else {
     console.info(`CRM message not sent for document ${filename} - CRM messaging is disabled`)
   }
-  if (config.saveLogEnabled) {
-    await saveLog(request, filename, new Date())
-    console.info(`Log saved for document ${filename}`)
-  }
 }
 
 const publishStatements = async () => {
   const pendingStatements = await getPendingStatements()
   for (const pendingStatement of pendingStatements) {
-    const { publishedStatementId, statement, type, filename } = pendingStatement
-    console.log('Identified statement for publishing:', util.inspect(statement, false, null, true))
-    const sentToPublisher = await handleNotification(statement, filename, type)
-    await handleAdditionalOperations(statement, filename, type)
-    await setPublished(publishedStatementId, sentToPublisher)
+    const { outboxId, generationId, type } = pendingStatement
+    const { statementData, filename, documentReference } = await getGenerationById(generationId)
+    statementData.documentReference = documentReference
+    console.log('Identified statement for publishing:', util.inspect(statementData, false, null, true))
+    const sentToPublisher = await handleNotification(statementData, filename, type)
+    await handleAdditionalOperations(statementData, filename, type)
+    await setPublished(outboxId, sentToPublisher)
     console.log('Statement finished publishing')
   }
 }
