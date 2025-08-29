@@ -56,7 +56,7 @@ module.exports = Joi.object({
     postcode: createStringSchema('postcode', constants.number8)
   }),
   businessName: createStringSchema('businessName', constants.number160),
-  email: createEmailSchema('email', 260),
+  email: createEmailSchema('email', constants.number260),
   frn: createNumberSchemaWithMessages('frn', constants.minFrn, constants.maxFrn),
   sbi: createNumberSchemaWithMessages('sbi', constants.minSbi, constants.maxSbi),
   paymentReference: createStringSchema('paymentReference', constants.number30),
@@ -83,7 +83,7 @@ module.exports = Joi.object({
       'any.required': 'The field scheme short name is not present but it is required',
       'any.only': 'Scheme short name must be DP'
     }),
-    year: Joi.number().integer().valid(2024, 2025).messages({
+    year: Joi.number().integer().valid(constants.year2024, constants.year2025).messages({
       'number.base': 'Year should be a type of number',
       'number.integer': 'Year should be an integer',
       'any.required': 'The field year is not present but it is required',

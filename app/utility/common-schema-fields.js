@@ -16,7 +16,10 @@ const constants = {
   number100: 100,
   number160: 160,
   number200: 200,
-  number4000: 4000
+  number260: 260,
+  number4000: 4000,
+  year2024: 2024,
+  year2025: 2025
 }
 
 const messages = {
@@ -61,8 +64,10 @@ const emailSchema = (field, max) => {
     schema = schema.max(max).messages({
       'string.max': messages.stringMax(field, max)
     })
+    return schema
+  } else {
+    return schema
   }
-  return schema
 }
 
 const dateSchema = (field) => Joi.date().required().messages({
