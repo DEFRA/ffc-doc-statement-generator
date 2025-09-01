@@ -48,14 +48,13 @@ const stringSchema = (field, max, pattern) => {
     schema = schema.pattern(pattern).messages({
       'string.pattern.base': `${field} is not in the correct format`
     })
-    return schema
-  } else if (max !== undefined) {
+  }
+  if (max !== undefined && !pattern) {
     schema = schema.max(max).messages({
       'string.max': messages.stringMax(field, max)
     })
-  } else {
-    return schema
   }
+  return schema
 }
 
 const emailSchema = (field, max) => {
