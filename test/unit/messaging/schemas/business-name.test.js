@@ -6,6 +6,11 @@ describe('business name schema', () => {
     expect(result.error).toBeUndefined()
   })
 
+  test('validates fail if business name is too long', () => {
+    const result = schema.validate('vnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkvvnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkvvnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkvvnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkvvnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkvvnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkvvnaodnvenrnrankanlsnanvrarnrnvkrsnvrnvrnvrnkv')
+    expect(result.error).toBeDefined()
+  })
+
   test('validates fail if null business name', () => {
     const result = schema.validate(null)
     expect(result.error).toBeDefined()

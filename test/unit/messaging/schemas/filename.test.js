@@ -67,9 +67,9 @@ describe('filename schema', () => {
       expect(result).toBeInstanceOf(Object)
     })
 
-    test('returns an object with 1 key', () => {
+    test('returns an object with 2 keys', () => {
       const result = schema.validate(filename)
-      expect(Object.keys(result)).toHaveLength(1)
+      expect(Object.keys(result)).toHaveLength(2)
     })
 
     test('returns an object with "value" key', () => {
@@ -80,6 +80,41 @@ describe('filename schema', () => {
     test('returns filename for key "value"', () => {
       const result = schema.validate(filename)
       expect(result.value).toBe(filename)
+    })
+
+    test('returns an object with "error" key', () => {
+      const result = schema.validate(filename)
+      expect(Object.keys(result)).toContain('error')
+    })
+
+    test('returns an Error for key "error"', () => {
+      const result = schema.validate(filename)
+      expect(result.error).toBeInstanceOf(Error)
+    })
+
+    test('returns an object with 4 keys for key "error.details[0]"', () => {
+      const result = schema.validate(filename)
+      expect(Object.keys(result.error.details[0])).toHaveLength(4)
+    })
+
+    test('returns an object with "type" key for key "error.details[0]"', () => {
+      const result = schema.validate(filename)
+      expect(Object.keys(result.error.details[0])).toContain('type')
+    })
+
+    test('returns "string.pattern.base" for key "error.details[0].type"', () => {
+      const result = schema.validate(filename)
+      expect(result.error.details[0].type).toBe('string.pattern.base')
+    })
+
+    test('returns an object with "message" key for key "error.details[0]"', () => {
+      const result = schema.validate(filename)
+      expect(Object.keys(result.error.details[0])).toContain('message')
+    })
+
+    test('returns "filename must match the required pattern" for key "error.details[0].message"', () => {
+      const result = schema.validate(filename)
+      expect(result.error.details[0].message).toBe('filename must match the required pattern')
     })
   })
 
@@ -138,9 +173,9 @@ describe('filename schema', () => {
       expect(Object.keys(result.error.details[0])).toContain('message')
     })
 
-    test('returns "The filename must be a string." for key "error.details[0].message"', () => {
+    test('returns "filename must be a string" for key "error.details[0].message"', () => {
       const result = schema.validate(filename)
-      expect(result.error.details[0].message).toBe('The filename must be a string.')
+      expect(result.error.details[0].message).toBe('filename must be a string')
     })
   })
 
@@ -199,9 +234,9 @@ describe('filename schema', () => {
       expect(Object.keys(result.error.details[0])).toContain('message')
     })
 
-    test('returns "The filename must be a string." for key "error.details[0].message"', () => {
+    test('returns "filename must be a string" for key "error.details[0].message"', () => {
       const result = schema.validate(filename)
-      expect(result.error.details[0].message).toBe('The filename must be a string.')
+      expect(result.error.details[0].message).toBe('filename must be a string')
     })
   })
 
@@ -260,9 +295,9 @@ describe('filename schema', () => {
       expect(Object.keys(result.error.details[0])).toContain('message')
     })
 
-    test('returns "The filename must be a string." for key "error.details[0].message"', () => {
+    test('returns "filename must be a string" for key "error.details[0].message"', () => {
       const result = schema.validate(filename)
-      expect(result.error.details[0].message).toBe('The filename must be a string.')
+      expect(result.error.details[0].message).toBe('filename must be a string')
     })
   })
 
@@ -321,9 +356,9 @@ describe('filename schema', () => {
       expect(Object.keys(result.error.details[0])).toContain('message')
     })
 
-    test('returns "The filename must be a string." for key "error.details[0].message"', () => {
+    test('returns "filename must be a string" for key "error.details[0].message"', () => {
       const result = schema.validate(filename)
-      expect(result.error.details[0].message).toBe('The filename must be a string.')
+      expect(result.error.details[0].message).toBe('filename must be a string')
     })
   })
 
@@ -382,9 +417,9 @@ describe('filename schema', () => {
       expect(Object.keys(result.error.details[0])).toContain('message')
     })
 
-    test('returns "The filename must be a string." for key "error.details[0].message"', () => {
+    test('returns "filename must be a string" for key "error.details[0].message"', () => {
       const result = schema.validate(filename)
-      expect(result.error.details[0].message).toBe('The filename must be a string.')
+      expect(result.error.details[0].message).toBe('filename must be a string')
     })
   })
 
@@ -445,7 +480,7 @@ describe('filename schema', () => {
 
     test('returns "The filename is required." for key "error.details[0].message"', () => {
       const result = schema.validate(filename)
-      expect(result.error.details[0].message).toBe('The filename is required.')
+      expect(result.error.details[0].message).toBe('filename is missing but it is required')
     })
   })
 })
