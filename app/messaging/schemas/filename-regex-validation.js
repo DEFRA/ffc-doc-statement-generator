@@ -46,6 +46,7 @@ const validateFilename = (filename) => {
       throw new Error('invalid extension')
     }
   } catch (error) {
+    console.error(`Filename validation error: ${error.message}`)
     return false
   }
 
