@@ -1,7 +1,6 @@
 const { Joi, constants, numberSchema, stringSchema, emailSchema } = require('../../utility/common-schema-fields')
-const maxChars = 4000
 
-const createStringSchema = (name) => stringSchema(name, maxChars)
+const createStringSchema = (name) => stringSchema(name, constants.maxChars)
 const createEmailSchema = (name) => emailSchema(name)
 
 const createProgressiveReductionSchema = (name) => Joi.string().allow(null).messages({

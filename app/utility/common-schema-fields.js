@@ -13,7 +13,8 @@ const constants = {
   number20: 20,
   number50: 50,
   number100: 100,
-  number200: 200
+  number200: 200,
+  maxChars: 4000
 }
 
 const messages = {
@@ -32,12 +33,17 @@ const numberSchema = (field) => Joi.number().integer().required().messages({
   'any.required': messages.required(field)
 })
 
-const stringSchema = (field, max) => {
+const stringSchema = (field, max, pattern) => {
   let schema = Joi.string().required().messages({
     'string.base': messages.stringBase(field),
     'any.required': messages.required(field)
   })
-  if (max !== undefined) {
+  if (pattern) {
+    schema = schema.pattern(pattern).messages({
+      'string.pattern.base': `${field} is not in the correct format`
+    })
+  }
+  if (max !== undefined && !pattern) {
     schema = schema.max(max).messages({
       'string.max': messages.stringMax(field, max)
     })

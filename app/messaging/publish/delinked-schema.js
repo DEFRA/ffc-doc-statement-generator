@@ -1,7 +1,8 @@
 const Joi = require('joi')
 
-const decimalPlaces = 2
 const maxPaymentPeriod = 200
+const percentagePattern = /^\d{1,3}\.\d{2}$/
+const monetaryPattern = /^\d+\.\d{2}$/
 
 const businessName = require('../schemas/business-name')
 const sbi = require('../schemas/sbi')
@@ -19,21 +20,14 @@ const scheme = require('../schemas/delinked-scheme')
 const documentReference = require('../schemas/document-reference')
 const type = require('../schemas/type')
 const source = require('../schemas/source')
+const { stringSchema, constants } = require('../../utility/common-schema-fields')
 
-const createMonetarySchema = (name) => Joi.number().required().precision(decimalPlaces).strict().messages({
-  'number.base': `${name} must be a number`,
-  'number.precision': `${name} must have at most ${decimalPlaces} decimal places`,
-  'any.required': `${name} is required`
+const createMonetarySchema = (name) => Joi.string().pattern(monetaryPattern).required().messages({
+  'string.base': `${name} should be a type of string`,
+  'string.pattern.base': `${name} should adhere to the pattern ${monetaryPattern}`,
+  'any.required': `The field ${name} is not present but it is required`
 })
 
-const paymentBand1 = createMonetarySchema('paymentBand1')
-const paymentBand2 = createMonetarySchema('paymentBand2')
-const paymentBand3 = createMonetarySchema('paymentBand3')
-const paymentBand4 = createMonetarySchema('paymentBand4')
-const percentageReduction1 = createMonetarySchema('percentageReduction1')
-const percentageReduction2 = createMonetarySchema('percentageReduction2')
-const percentageReduction3 = createMonetarySchema('percentageReduction3')
-const percentageReduction4 = createMonetarySchema('percentageReduction4')
 const progressiveReductions1 = createMonetarySchema('progressiveReductions1')
 const progressiveReductions2 = createMonetarySchema('progressiveReductions2')
 const progressiveReductions3 = createMonetarySchema('progressiveReductions3')
@@ -58,14 +52,14 @@ module.exports = Joi.object({
     sbi,
     address,
     scheme,
-    paymentBand1,
-    paymentBand2,
-    paymentBand3,
-    paymentBand4,
-    percentageReduction1,
-    percentageReduction2,
-    percentageReduction3,
-    percentageReduction4,
+    paymentBand1: stringSchema('paymentBand1', constants.maxChars),
+    paymentBand2: stringSchema('paymentBand2', constants.maxChars),
+    paymentBand3: stringSchema('paymentBand3', constants.maxChars),
+    paymentBand4: stringSchema('paymentBand4', constants.maxChars),
+    percentageReduction1: stringSchema('percentageReduction1', null, percentagePattern),
+    percentageReduction2: stringSchema('percentageReduction2', null, percentagePattern),
+    percentageReduction3: stringSchema('percentageReduction3', null, percentagePattern),
+    percentageReduction4: stringSchema('percentageReduction4', null, percentagePattern),
     progressiveReductions1,
     progressiveReductions2,
     progressiveReductions3,
