@@ -16,6 +16,7 @@ const constants = {
   number100: 100,
   number160: 160,
   number200: 200,
+  number240: 240,
   number260: 260,
   number4000: 4000,
   year2024: 2024,
