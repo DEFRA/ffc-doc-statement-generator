@@ -1,6 +1,7 @@
 const Joi = require('joi')
 
 const decimalPlaces = 2
+const maxPaymentPeriod = 200
 
 const businessName = require('../schemas/business-name')
 const sbi = require('../schemas/sbi')
@@ -73,6 +74,11 @@ module.exports = Joi.object({
     totalProgressiveReduction,
     totalDelinkedPayment,
     paymentAmountCalculated,
+    paymentPeriod: Joi.string().max(maxPaymentPeriod).required().messages({
+      'string.base': 'Payment period must be a string',
+      'string.max': `Payment period must be at most ${maxPaymentPeriod} characters`,
+      'any.required': 'Payment period is required'
+    }),
     transactionDate
   }).required().messages({
     'object.base': 'The request body must be an object.',
