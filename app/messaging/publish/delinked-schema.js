@@ -20,7 +20,7 @@ const documentReference = require('../schemas/document-reference')
 const type = require('../schemas/type')
 const source = require('../schemas/source')
 
-const createMonetarySchema = (name) => Joi.number().required().precision(decimalPlaces).messages({
+const createMonetarySchema = (name) => Joi.number().required().precision(decimalPlaces).strict().messages({
   'number.base': `${name} must be a number`,
   'number.precision': `${name} must have at most ${decimalPlaces} decimal places`,
   'any.required': `${name} is required`
