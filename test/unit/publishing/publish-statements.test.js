@@ -54,7 +54,7 @@ describe('publishStatements', () => {
     expect(getPendingStatements).toHaveBeenCalled()
     expect(getGenerationById).toHaveBeenCalledWith(mockStatements[0].generationId)
     expect(sendPublishMessage).toHaveBeenCalledWith(mockGenerationData.statementData, mockGenerationData.filename, mockStatements[0].type.id)
-    expect(setPublished).toHaveBeenCalledWith(mockStatements[0].outboxId, true)
+    expect(setPublished).toHaveBeenCalledWith(mockStatements[0].outboxId, true, false, null)
     expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'), expect.any(String))
     expect(consoleInfoSpy).toHaveBeenCalledWith(`Publish message sent for document ${mockGenerationData.filename}`)
     expect(consoleLogSpy).toHaveBeenCalledWith('Statement finished publishing')

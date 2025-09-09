@@ -4,7 +4,7 @@ const maxFrn = 9999999999
 module.exports = Joi.number().integer().min(minFrn).max(maxFrn).required().messages({
   'number.base': 'FRN must be a number',
   'number.integer': 'FRN must be an integer',
-  'number.min': 'FRN must be at least 10 digits',
-  'number.max': 'FRN must be no more than 10 digits',
+  'number.min': `FRN must be at least ${minFrn}`,
+  'number.max': `FRN must be at most ${maxFrn}`,
   'any.required': 'is required'
 })
