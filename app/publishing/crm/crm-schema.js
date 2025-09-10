@@ -1,9 +1,9 @@
 const Joi = require('joi')
-const { STATEMENT } = require('../../constants/document-types')
 const minSbi = 105000000
 const maxSbi = 999999999
 const minFrn = 1000000000
 const maxFrn = 9999999999
+const maxString = 50
 
 module.exports = Joi.object({
   sbi: Joi.number().integer().min(minSbi).max(maxSbi).required().messages({
@@ -25,14 +25,15 @@ module.exports = Joi.object({
     'string.base': 'API link must be a string.',
     'string.uri': 'API link must be a valid URI.'
   }),
-  scheme: Joi.string().required().messages({
+  scheme: Joi.string().required().max(maxString).messages({
     'any.required': 'Scheme is missing but it is required.',
+    'string.max': `Scheme must be no more than ${maxString} characters.`,
     'string.base': 'Scheme must be a string.'
   }),
-  documentType: Joi.string().required().allow(STATEMENT).messages({
+  documentType: Joi.string().required().max(maxString).messages({
     'any.required': 'Document type is missing but it is required.',
     'string.base': 'Document type must be a string.',
-    'any.only': 'Document type must be STATEMENT.'
+    'string.max': `Document type must be no more than ${maxString} characters.`
   })
 }).required().messages({
   'any.required': 'crm-schema object is missing, but it is required.'

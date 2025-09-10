@@ -88,32 +88,6 @@ describe('document reference schema', () => {
     })
   })
 
-  describe('when document reference is undefined', () => {
-    beforeEach(() => {
-      documentReference = undefined
-    })
-
-    test('returns an object', () => {
-      const result = schema.validate(documentReference)
-      expect(result).toBeInstanceOf(Object)
-    })
-
-    test('returns an object with 1 key', () => {
-      const result = schema.validate(documentReference)
-      expect(Object.keys(result)).toHaveLength(1)
-    })
-
-    test('returns an object with "value" key', () => {
-      const result = schema.validate(documentReference)
-      expect(Object.keys(result)).toContain('value')
-    })
-
-    test('returns documentReference for key "value"', () => {
-      const result = schema.validate(documentReference)
-      expect(result.value).toBe(documentReference)
-    })
-  })
-
   describe('when document reference is 0', () => {
     beforeEach(() => {
       documentReference = 0

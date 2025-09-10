@@ -25,4 +25,9 @@ describe('email schema', () => {
     const result = schema.validate('')
     expect(result.error).toBeUndefined()
   })
+
+  test('validates failure if email too long', () => {
+    const result = schema.validate('A'.repeat(256) + '@email.com')
+    expect(result.error).toBeDefined()
+  })
 })

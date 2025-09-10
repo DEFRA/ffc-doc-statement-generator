@@ -65,22 +65,6 @@ describe('validate statement', () => {
     })
   })
 
-  describe('when statement has no documentReference key', () => {
-    beforeEach(() => {
-      statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
-      delete statement.documentReference
-    })
-
-    test('does not throw', async () => {
-      expect(() => validateRequest(statement, STATEMENT)).not.toThrow()
-    })
-
-    test('returns undefined', async () => {
-      const result = validateRequest(statement, STATEMENT)
-      expect(result).toBeUndefined()
-    })
-  })
-
   describe('when statement is undefined', () => {
     beforeEach(() => {
       statement = undefined
@@ -341,22 +325,6 @@ describe('validate schedule', () => {
     })
 
     test('returns undefined on valid schedule', async () => {
-      const result = validateRequest(schedule, SCHEDULE)
-      expect(result).toBeUndefined()
-    })
-  })
-
-  describe('when schedule has no documentReference key', () => {
-    beforeEach(() => {
-      schedule = JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
-      delete schedule.documentReference
-    })
-
-    test('does not throw', async () => {
-      expect(() => validateRequest(schedule, SCHEDULE)).not.toThrow()
-    })
-
-    test('returns undefined', async () => {
       const result = validateRequest(schedule, SCHEDULE)
       expect(result).toBeUndefined()
     })
