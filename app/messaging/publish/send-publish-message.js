@@ -6,7 +6,7 @@ const { createAlerts } = require('../create-alerts')
 const sendPublishMessage = async (statement, filename, typeId) => {
   let sender
   try {
-    const message = createMessage(statement, filename, typeId)
+    const message = await createMessage(statement, filename, typeId)
     sender = new MessageSender(config.publishTopic)
     await sender.sendMessage(message)
   } catch (error) {
