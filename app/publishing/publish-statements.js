@@ -37,7 +37,7 @@ const delinked2024Disabled = (request, type) => {
   return type.type === DELINKED.type && request.scheme.year === delinked2024 && !config.sendDelinked2024Statements
 }
 
-async function handleNotification (request, filename, type) {
+const handleNotification = async (request, filename, type) => {
   if (await shouldSendNotification(request, type) && !request.excludedFromNotify && !delinked2024Disabled(request, type)) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
@@ -47,13 +47,14 @@ async function handleNotification (request, filename, type) {
   return false
 }
 
-async function handleAdditionalOperations (request, filename, type) {
+const handleCRM = async (request, filename, type) => {
   if (config.sendCrmMessageEnabled) {
-    await sendCrmMessage(request, filename, type)
+    const receiverLink = await sendCrmMessage(request, filename, type)
     console.info(`CRM message sent for document ${filename}`)
-  } else {
-    console.info(`CRM message not sent for document ${filename} - CRM messaging is disabled`)
+    return { sentToCRM: true, receiverLink }
   }
+  console.info(`CRM message not sent for document ${filename} - CRM messaging is disabled`)
+  return { sentToCRM: false, receiverLink: null }
 }
 
 const publishStatements = async () => {
@@ -64,8 +65,8 @@ const publishStatements = async () => {
     statementData.documentReference = documentReference
     console.log('Identified statement for publishing:', util.inspect(statementData, false, null, true))
     const sentToPublisher = await handleNotification(statementData, filename, type)
-    await handleAdditionalOperations(statementData, filename, type)
-    await setPublished(outboxId, sentToPublisher)
+    const { sentToCRM, receiverLink } = await handleCRM(statementData, filename, type)
+    await setPublished(outboxId, sentToPublisher, sentToCRM, receiverLink)
     console.log('Statement finished publishing')
   }
 }

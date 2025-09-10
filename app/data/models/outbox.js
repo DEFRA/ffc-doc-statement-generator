@@ -5,7 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.JSONB,
     startProcessing: DataTypes.DATE,
     published: DataTypes.DATE,
-    sentToPublisher: DataTypes.BOOLEAN
+    sentToPublisher: DataTypes.BOOLEAN,
+    sentToCRM: DataTypes.BOOLEAN,
+    receiverLink: DataTypes.STRING
   },
   {
     tableName: 'outbox',

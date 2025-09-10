@@ -1,6 +1,9 @@
 const Joi = require('joi')
 
-module.exports = Joi.string().required().messages({
-  'any.required': 'business-name string is missing but it is required.',
-  'string.empty': 'The business name cannot be empty.'
+const maxBusinessNameLength = 160
+
+module.exports = Joi.string().max(maxBusinessNameLength).required().messages({
+  'string.base': 'Business name must be a string',
+  'string.max': `Business name must be at most ${maxBusinessNameLength} characters`,
+  'any.required': 'Business name is required'
 })

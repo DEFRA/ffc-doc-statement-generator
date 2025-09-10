@@ -7,6 +7,7 @@ const sendCrmMessage = async (statement, filename, type) => {
   const sender = new MessageSender(crmTopic)
   await sender.sendMessage(message)
   await sender.closeConnection()
+  return message?.body?.apiLink
 }
 
 module.exports = sendCrmMessage

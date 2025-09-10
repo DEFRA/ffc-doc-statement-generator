@@ -1,5 +1,9 @@
 const Joi = require('joi')
 
+const maxPaymentPeriod = 200
+const percentagePattern = /^\d{1,3}\.\d{2}$/
+const monetaryPattern = /^\d+\.\d{2}$/
+
 const businessName = require('../schemas/business-name')
 const sbi = require('../schemas/sbi')
 const frn = require('../schemas/frn')
@@ -14,46 +18,48 @@ const scheme = require('../schemas/delinked-scheme')
       })
   })
 const documentReference = require('../schemas/document-reference')
-const paymentPeriod = require('../schemas/payment-period')
 const type = require('../schemas/type')
 const source = require('../schemas/source')
-const paymentBand1 = Joi.number().required()
-const paymentBand2 = Joi.number().required()
-const paymentBand3 = Joi.number().required()
-const paymentBand4 = Joi.number().required()
-const percentageReduction1 = Joi.number().required()
-const percentageReduction2 = Joi.number().required()
-const percentageReduction3 = Joi.number().required()
-const percentageReduction4 = Joi.number().required()
-const progressiveReductions1 = Joi.number().required()
-const progressiveReductions2 = Joi.number().required()
-const progressiveReductions3 = Joi.number().required()
-const progressiveReductions4 = Joi.number().required()
-const referenceAmount = Joi.number().required()
-const totalProgressiveReduction = Joi.number().required()
-const totalDelinkedPayment = Joi.number().required()
-const paymentAmountCalculated = Joi.number().required()
-const transactionDate = Joi.date().iso().required()
+const { stringSchema, constants } = require('../../utility/common-schema-fields')
+
+const createMonetarySchema = (name) => Joi.string().pattern(monetaryPattern).required().messages({
+  'string.base': `${name} should be a type of string`,
+  'string.pattern.base': `${name} should adhere to the pattern ${monetaryPattern}`,
+  'any.required': `The field ${name} is not present but it is required`
+})
+
+const progressiveReductions1 = createMonetarySchema('progressiveReductions1')
+const progressiveReductions2 = createMonetarySchema('progressiveReductions2')
+const progressiveReductions3 = createMonetarySchema('progressiveReductions3')
+const progressiveReductions4 = createMonetarySchema('progressiveReductions4')
+const referenceAmount = createMonetarySchema('referenceAmount')
+const totalProgressiveReduction = createMonetarySchema('totalProgressiveReduction')
+const totalDelinkedPayment = createMonetarySchema('totalDelinkedPayment')
+const paymentAmountCalculated = createMonetarySchema('paymentAmountCalculated')
+const transactionDate = Joi.date().iso().required().messages({
+  'date.base': 'transactionDate must be a valid date',
+  'date.format': 'transactionDate must be in ISO 8601 date format',
+  'any.required': 'transactionDate is required'
+})
 
 module.exports = Joi.object({
   body: Joi.object({
-    businessName,
-    sbi,
-    frn,
-    address,
     email,
-    filename,
-    scheme,
     documentReference,
-    paymentPeriod,
-    paymentBand1,
-    paymentBand2,
-    paymentBand3,
-    paymentBand4,
-    percentageReduction1,
-    percentageReduction2,
-    percentageReduction3,
-    percentageReduction4,
+    filename,
+    businessName,
+    frn,
+    sbi,
+    address,
+    scheme,
+    paymentBand1: stringSchema('paymentBand1', constants.number4000),
+    paymentBand2: stringSchema('paymentBand2', constants.number4000),
+    paymentBand3: stringSchema('paymentBand3', constants.number4000),
+    paymentBand4: stringSchema('paymentBand4', constants.number4000),
+    percentageReduction1: stringSchema('percentageReduction1', null, percentagePattern),
+    percentageReduction2: stringSchema('percentageReduction2', null, percentagePattern),
+    percentageReduction3: stringSchema('percentageReduction3', null, percentagePattern),
+    percentageReduction4: stringSchema('percentageReduction4', null, percentagePattern),
     progressiveReductions1,
     progressiveReductions2,
     progressiveReductions3,
@@ -62,13 +68,20 @@ module.exports = Joi.object({
     totalProgressiveReduction,
     totalDelinkedPayment,
     paymentAmountCalculated,
+    paymentPeriod: Joi.string().max(maxPaymentPeriod).required().messages({
+      'string.base': 'Payment period must be a string',
+      'string.max': `Payment period must be at most ${maxPaymentPeriod} characters`,
+      'any.required': 'Payment period is required'
+    }),
     transactionDate
-  }).required(),
+  }).required().messages({
+    'object.base': 'The request body must be an object.',
+    '*': 'Invalid data type for field {#label}'
+  }),
   type,
   source
-}).required()
-  .messages({
-    'object.base': 'The publish message must be an object.',
-    'any.required': 'The publish message requires a message with a body.',
-    '*': 'The publish message must be an object.'
-  })
+}).required().messages({
+  'object.base': 'The publish message must be an object.',
+  'any.required': 'The publish message requires a message with a body.',
+  '*': 'The publish message must be an object.'
+})
