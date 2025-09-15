@@ -4,8 +4,26 @@ const sfi23QuarterlyStatementSchema = require('./schemas/sfi-23-quarterly-statem
 const delinkedStatementSchema = require('./schemas/delinked-statement')
 const { VALIDATION } = require('../errors')
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../constants/document-types')
+const { DATA_PUBLISHING_ERROR } = require('../constants/alerts')
+const { dataProcessingAlert } = require('../messaging/processing-alerts')
 
-const validateRequest = (request, type) => {
+const alertDefault = async (type, request) => {
+  const payloadType = type?.id ?? request?.type
+  const prettyName = type?.name ?? request?.type ?? 'unknown type'
+
+  const alertPayload = {
+    process: 'validate-request',
+    type: payloadType,
+    sbi: request?.sbi,
+    scheme: request?.scheme,
+    message: `Failed to generate content for ${prettyName}`
+  }
+
+  await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
+  throw new Error(`Unknown request type: ${prettyName}`)
+}
+
+const validateRequest = async (request, type) => {
   let validationResult
   switch (type) {
     case STATEMENT:
@@ -22,11 +40,45 @@ const validateRequest = (request, type) => {
       validationResult = delinkedStatementSchema.validate(request, { abortEarly: false, allowUnknown: true })
       break
     default:
-      throw new Error(`Unknown request type: ${type}`)
+      await alertDefault(type, request)
   }
-  if (validationResult.error) {
-    const error = new Error(`Request content is invalid for ${type.name}, ${validationResult.error.message}`)
+
+  const buildValidationMessage = (joiError) => {
+    if (!joiError) {
+      return undefined
+    }
+
+    if (Array.isArray(joiError.details) && joiError.details.length) {
+      return joiError.details.map(d => d.message).join('; ')
+    }
+
+    if (typeof joiError.message === 'string' && joiError.message.trim().length) {
+      return joiError.message
+    }
+    try {
+      return JSON.stringify(joiError)
+    } catch (err) {
+      console.error('Error stringifying joiError:', err)
+      return 'Validation failed'
+    }
+  }
+
+  if (validationResult?.error) {
+    const prettyName = type?.name ?? request?.type ?? 'unknown type'
+    const error = new Error(`Request content is invalid for ${prettyName}, ${validationResult.error.message}`)
     error.category = VALIDATION
+    const payloadType = type?.id ?? request?.type
+
+    const combinedMessage = buildValidationMessage(validationResult.error)
+
+    const alertPayload = {
+      process: 'validate-request',
+      type: payloadType,
+      sbi: request?.sbi,
+      scheme: request?.scheme,
+      message: combinedMessage ?? `Failed to generate content for ${prettyName}`
+    }
+    await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
     throw error
   }
 }

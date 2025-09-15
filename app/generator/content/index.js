@@ -4,8 +4,22 @@ const { createContent: createScheduleContent } = require('./schedule')
 const { createContent: createSFI23Content } = require('./sfi23-quarterly-statement')
 const { createContent: createDelinkedContent } = require('./delinked-statement')
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../constants/document-types')
+const { dataProcessingAlert } = require('../../messaging/processing-alerts')
+const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 
-const generateContent = (request, type) => {
+const alertDefault = async (type, request) => {
+  const alertPayload = {
+    process: 'generateContent',
+    type: request?.type?.id || 'unknown',
+    sbi: request?.sbi,
+    scheme: request?.scheme,
+    message: `Failed to generate content for ${type?.id || type || 'unknown'}`
+  }
+  await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
+  throw new Error(`Unknown request type: ${type?.id || type || 'unknown'}`)
+}
+
+const generateContent = async (request, type) => {
   switch (type) {
     case STATEMENT:
       return createStatementContent(request)
@@ -18,7 +32,7 @@ const generateContent = (request, type) => {
     case DELINKED:
       return createDelinkedContent(request)
     default:
-      throw new Error(`Unknown request type: ${type}`)
+      return alertDefault(type, request)
   }
 }
 
