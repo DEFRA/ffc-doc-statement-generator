@@ -32,7 +32,7 @@ const generateContent = async (request, type) => {
     case DELINKED:
       return createDelinkedContent(request)
     default:
-      return await alertDefault(type, request)
+      return alertDefault(type, request)
   }
 }
 
