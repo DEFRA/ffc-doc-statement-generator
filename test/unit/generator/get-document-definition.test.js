@@ -15,55 +15,55 @@ describe('getDocumentDefinition', () => {
   const verticalMargin = 5
 
   beforeEach(() => {
-    generateContent.mockReturnValue(mockContent)
+    generateContent.mockResolvedValue(mockContent)
   })
 
   const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT]
 
   documentTypes.forEach(type => {
-    test(`returns correct pageSize for type: ${type.id}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`returns correct pageSize for type: ${type.id}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.pageSize).toBe(A4)
     })
 
-    test(`returns correct content for type: ${type.id}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`returns correct content for type: ${type.id}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.content).toBe(mockContent)
       expect(generateContent).toHaveBeenCalledWith(mockRequest, type)
     })
 
-    test(`returns all defined styles for type: ${type.id}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`returns all defined styles for type: ${type.id}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.styles).toStrictEqual(styles)
     })
 
-    test(`sets default style as default style for type: ${type.id}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`sets default style as default style for type: ${type.id}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.defaultStyle).toBe(styles.default)
     })
 
-    test(`sets the left margin for ${type.name}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`sets the left margin for ${type.name}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.pageMargins[0]).toBe(millimetresToPoints(horizontalMargin))
     })
 
-    test(`sets the top margin for ${type.name}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`sets the top margin for ${type.name}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.pageMargins[1]).toBe(millimetresToPoints(verticalMargin))
     })
 
-    test(`sets the right margin for ${type.name}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`sets the right margin for ${type.name}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.pageMargins[2]).toBe(millimetresToPoints(horizontalMargin))
     })
 
-    test(`sets the bottom margin for ${type.name}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`sets the bottom margin for ${type.name}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result.pageMargins[3]).toBe(millimetresToPoints(verticalMargin))
     })
 
-    test(`returns an object with the correct structure for type: ${type.id}`, () => {
-      const result = getDocumentDefinition(mockRequest, type)
+    test(`returns an object with the correct structure for type: ${type.id}`, async () => {
+      const result = await getDocumentDefinition(mockRequest, type)
       expect(result).toHaveProperty('content')
       expect(result).toHaveProperty('pageSize')
       expect(result).toHaveProperty('pageMargins')
@@ -71,22 +71,10 @@ describe('getDocumentDefinition', () => {
       expect(result).toHaveProperty('defaultStyle')
     })
   })
-})
 
-describe('generateContent', () => {
-  test('handles STATEMENT type', () => {
-    expect(() => generateContent({}, STATEMENT)).not.toThrow()
-  })
-
-  test('handles SCHEDULE type', () => {
-    expect(() => generateContent({}, SCHEDULE)).not.toThrow()
-  })
-
-  test('handles SFI23QUARTERLYSTATEMENT type', () => {
-    expect(() => generateContent({}, SFI23QUARTERLYSTATEMENT)).not.toThrow()
-  })
-
-  test('handles SFI23ADVANCEDSTATEMENT type', () => {
-    expect(() => generateContent({}, SFI23ADVANCEDSTATEMENT)).not.toThrow()
+  test('throws error if generateContent fails', async () => {
+    const error = new Error('Test error')
+    generateContent.mockRejectedValue(error)
+    await expect(getDocumentDefinition(mockRequest, STATEMENT)).rejects.toThrow('Test error')
   })
 })

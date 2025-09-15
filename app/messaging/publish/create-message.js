@@ -6,7 +6,7 @@ const validatePublishModule = require('./validate-publish')
 const createMessage = async (document, filename, type) => {
   try {
     const mappedPublish = mapPublish(document, filename, type)
-    const validatedPublish = await validatePublishModule.validatePublish(mappedPublish, type)
+    const validatedPublish = validatePublishModule.validatePublish(mappedPublish, type)
     return validatedPublish
   } catch (error) {
     const alertPayload = {

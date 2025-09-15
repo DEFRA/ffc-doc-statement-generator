@@ -5,9 +5,9 @@ const { millimetresToPoints } = require('./conversion')
 const horizontalMargin = 15
 const verticalMargin = 5
 
-const getDocumentDefinition = (request, type) => {
+const getDocumentDefinition = async (request, type) => {
   return {
-    content: generateContent(request, type),
+    content: await generateContent(request, type),
     pageSize: A4,
     pageMargins: [
       millimetresToPoints(horizontalMargin),

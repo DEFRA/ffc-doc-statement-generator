@@ -11,7 +11,7 @@ const processMessage = async (message, receiver) => {
 
     const documentType = getDocumentType(message.applicationProperties.type)
 
-    validateRequest(request, documentType)
+    await validateRequest(request, documentType)
     await generateDocument(request, documentType)
     console.log('Completing message...')
     await receiver.completeMessage(message)
