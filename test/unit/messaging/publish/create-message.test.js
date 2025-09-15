@@ -429,6 +429,59 @@ describe('create publish message', () => {
       expect(payload.process).toMatch(/createMessage/)
       expect(payload.message).toContain('validation failed')
       expect(payload.error).toEqual({ message: validationError.message, stack: expect.any(String) })
+      expect(payload.type).toBe(sampleType)
+
+      validatePublishModule.validatePublish.mockRestore()
+    })
+
+    test('when validatePublish throws a string value, alert contains the string and original string is rethrown', async () => {
+      const stringErr = 'string error'
+      jest.spyOn(validatePublishModule, 'validatePublish').mockImplementation(() => { throw stringErr })
+
+      dataProcessingAlert.mockResolvedValue()
+
+      await expect(createMessage(sampleDoc, sampleFilename, sampleType)).rejects.toBe(stringErr)
+      expect(dataProcessingAlert).toHaveBeenCalledTimes(1)
+
+      const payload = dataProcessingAlert.mock.calls[0][0]
+      expect(payload.process).toMatch(/createMessage/)
+      // string error is preserved in payload.error, but message falls back to generic because error?.message is undefined for primitive strings
+      expect(payload.error).toBe(stringErr)
+      expect(payload.message).toBe(`Failed to create message for ${sampleFilename}`)
+      expect(payload.type).toBe(sampleType)
+
+      validatePublishModule.validatePublish.mockRestore()
+    })
+
+    test('when validatePublish throws a plain object with message, alert contains the object and message equals the object.message', async () => {
+      const objErr = { message: 'obj error', code: 123 }
+      jest.spyOn(validatePublishModule, 'validatePublish').mockImplementation(() => { throw objErr })
+
+      dataProcessingAlert.mockResolvedValue()
+
+      await expect(createMessage(sampleDoc, sampleFilename, sampleType)).rejects.toMatchObject({ message: 'obj error' })
+      expect(dataProcessingAlert).toHaveBeenCalledTimes(1)
+
+      const payload = dataProcessingAlert.mock.calls[0][0]
+      expect(payload.process).toMatch(/createMessage/)
+      expect(payload.error).toBe(objErr)
+      expect(payload.message).toBe('obj error')
+      expect(payload.type).toBe(sampleType)
+
+      validatePublishModule.validatePublish.mockRestore()
+    })
+
+    test('when filename is omitted process label does not include filename', async () => {
+      jest.spyOn(validatePublishModule, 'validatePublish').mockImplementation(() => { throw validationError })
+
+      dataProcessingAlert.mockResolvedValue()
+
+      await expect(createMessage(sampleDoc, undefined, sampleType)).rejects.toBe(validationError)
+
+      const payload = dataProcessingAlert.mock.calls[0][0]
+      expect(payload.process).toBe('createMessage')
+      expect(payload.message).toContain('validation failed')
+      expect(payload.type).toBe(sampleType)
 
       validatePublishModule.validatePublish.mockRestore()
     })

@@ -44,7 +44,9 @@ const validateRequest = async (request, type) => {
   }
 
   const buildValidationMessage = (joiError) => {
-    if (!joiError) return undefined
+    if (!joiError) {
+      return undefined
+    }
 
     if (Array.isArray(joiError.details) && joiError.details.length) {
       return joiError.details.map(d => d.message).join('; ')

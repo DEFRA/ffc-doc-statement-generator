@@ -74,7 +74,7 @@ const dataProcessingAlert = async (payload = {}, type = DATA_PUBLISHING_ERROR, o
   const { throwOnPublishError = false } = options
   const alertData = deriveAlertData(payload, processName)
 
-  if (Object.prototype.hasOwnProperty.call(alertData, 'type')) {
+  if (Object.hasOwn(alertData, 'type')) {
     delete alertData.type
   }
 

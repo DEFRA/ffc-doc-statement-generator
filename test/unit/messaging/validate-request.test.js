@@ -92,6 +92,17 @@ describe('validateRequest', () => {
         DATA_PUBLISHING_ERROR
       )
     })
+
+    test('alertDefault uses provided type.id and type.name when object type passed', async () => {
+      dataProcessingAlert.mockClear()
+      const providedType = { id: 'MY_ID', name: 'My Friendly Type' }
+      await expect(validateRequest({}, providedType)).rejects.toThrow(/Unknown request type: My Friendly Type/)
+      expect(dataProcessingAlert).toHaveBeenCalledTimes(1)
+      const [calledPayload] = dataProcessingAlert.mock.calls[0]
+      expect(calledPayload.process).toBe('validate-request')
+      expect(calledPayload.type).toBe(providedType.id)
+      expect(calledPayload.message).toBe(`Failed to generate content for ${providedType.name}`)
+    })
   })
 })
 
@@ -125,5 +136,62 @@ describe('validation message composition', () => {
     expect(calledType).toBe(DATA_PUBLISHING_ERROR)
     expect(calledPayload.message).toBe('err1; err2')
     expect(calledPayload.process).toBe('validate-request')
+  })
+
+  test('uses plain error.message when there are no details', async () => {
+    jest.resetModules()
+
+    const mockDataProcessingAlert = jest.fn()
+    jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
+    jest.doMock('../../../app/messaging/schemas/statement', () => ({
+      validate: () => ({
+        error: {
+          message: 'simple validation error'
+        }
+      })
+    }))
+    jest.doMock('../../../app/messaging/schemas/schedule', () => ({ validate: () => ({}) }))
+    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({ validate: () => ({}) }))
+    jest.doMock('../../../app/messaging/schemas/delinked-statement', () => ({ validate: () => ({}) }))
+
+    const { STATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
+    const { validateRequest: validateRequestWithMockedSchemas } = require('../../../app/messaging/validate-request')
+
+    await expect(validateRequestWithMockedSchemas({}, FRESH_STATEMENT)).rejects.toMatchObject({ category: VALIDATION })
+
+    expect(mockDataProcessingAlert).toHaveBeenCalledTimes(1)
+    const [calledPayload] = mockDataProcessingAlert.mock.calls[0]
+    expect(calledPayload.message).toBe('simple validation error')
+  })
+
+  test('falls back to "Validation failed" when the error cannot be stringified', async () => {
+    jest.resetModules()
+
+    const mockDataProcessingAlert = jest.fn()
+    jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
+
+    const circular = {}
+    circular.self = circular
+
+    jest.doMock('../../../app/messaging/schemas/statement', () => ({
+      validate: () => ({
+        error: circular
+      })
+    }))
+    jest.doMock('../../../app/messaging/schemas/schedule', () => ({ validate: () => ({}) }))
+    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({ validate: () => ({}) }))
+    jest.doMock('../../../app/messaging/schemas/delinked-statement', () => ({ validate: () => ({}) }))
+
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+    const { STATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
+    const { validateRequest: validateRequestWithMockedSchemas } = require('../../../app/messaging/validate-request')
+
+    await expect(validateRequestWithMockedSchemas({}, FRESH_STATEMENT)).rejects.toMatchObject({ category: VALIDATION })
+
+    expect(mockDataProcessingAlert).toHaveBeenCalledTimes(1)
+    const [calledPayload] = mockDataProcessingAlert.mock.calls[0]
+    expect(calledPayload.message).toBe('Validation failed')
+
+    consoleSpy.mockRestore()
   })
 })
