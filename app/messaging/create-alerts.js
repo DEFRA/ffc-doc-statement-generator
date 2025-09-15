@@ -1,9 +1,9 @@
 const { EventPublisher } = require('ffc-pay-event-publisher')
 const { SOURCE } = require('../constants/source')
-const { PUBLISH_ERROR } = require('../constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../constants/alerts')
 const messageConfig = require('../config/message')
 
-const createAlerts = async (inputs, type = PUBLISH_ERROR) => {
+const createAlerts = async (inputs, type = DATA_PUBLISHING_ERROR) => {
   if (!inputs?.length) {
     return
   }

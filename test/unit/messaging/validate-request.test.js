@@ -1,7 +1,7 @@
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
 const { VALIDATION } = require('../../../app/errors')
 const { validateRequest } = require('../../../app/messaging/validate-request')
-const { PUBLISH_ERROR } = require('../../../app/constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../../../app/constants/alerts')
 
 jest.mock('../../../app/messaging/processing-alerts', () => ({
   dataProcessingAlert: jest.fn()
@@ -52,7 +52,7 @@ describe('validateRequest', () => {
           scheme: value?.scheme,
           message: `Failed to generate content for ${type?.name ?? value?.type ?? 'unknown type'}`
         }
-        expect(dataProcessingAlert).toHaveBeenCalledWith(expectedPayload, PUBLISH_ERROR)
+        expect(dataProcessingAlert).toHaveBeenCalledWith(expectedPayload, DATA_PUBLISHING_ERROR)
       })
     })
   })
@@ -72,7 +72,7 @@ describe('validateRequest', () => {
           scheme: undefined,
           message: 'Failed to generate content for unknown type'
         },
-        PUBLISH_ERROR
+        DATA_PUBLISHING_ERROR
       )
     })
 
@@ -88,7 +88,7 @@ describe('validateRequest', () => {
           scheme: request.scheme,
           message: `Failed to generate content for ${request.type}`
         },
-        PUBLISH_ERROR
+        DATA_PUBLISHING_ERROR
       )
     })
   })

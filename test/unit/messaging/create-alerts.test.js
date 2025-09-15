@@ -1,4 +1,4 @@
-const { PUBLISH_ERROR } = require('../../../app/constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../../../app/constants/alerts')
 const { SOURCE } = require('../../../app/constants/source')
 
 describe('createAlerts', () => {
@@ -30,8 +30,8 @@ describe('createAlerts', () => {
     expect(publishEventsMock).toHaveBeenCalledTimes(1)
 
     expect(publishEventsMock).toHaveBeenCalledWith([
-      { source: SOURCE, type: PUBLISH_ERROR, data: errors[0] },
-      { source: SOURCE, type: PUBLISH_ERROR, data: errors[1] }
+      { source: SOURCE, type: DATA_PUBLISHING_ERROR, data: errors[0] },
+      { source: SOURCE, type: DATA_PUBLISHING_ERROR, data: errors[1] }
     ])
   })
 
@@ -71,16 +71,16 @@ describe('createAlerts', () => {
     expect(publishEventsMock).toHaveBeenCalledWith(expectedAlerts)
   })
 
-  test('when inputs is an alert-array and no fallback type param provided, missing type falls back to PUBLISH_ERROR', async () => {
+  test('when inputs is an alert-array and no fallback type param provided, missing type falls back to DATA_PUBLISHING_ERROR', async () => {
     const inputs = [
-      { data: { x: 1 } } // missing type -> should fall back to default PUBLISH_ERROR
+      { data: { x: 1 } } // missing type -> should fall back to default DATA_PUBLISHING_ERROR
     ]
     const { createAlerts } = require('../../../app/messaging/create-alerts')
 
-    await createAlerts(inputs) // no type param -> default PUBLISH_ERROR
+    await createAlerts(inputs) // no type param -> default DATA_PUBLISHING_ERROR
 
     expect(publishEventsMock).toHaveBeenCalledWith([
-      { source: SOURCE, type: PUBLISH_ERROR, data: { x: 1 } }
+      { source: SOURCE, type: DATA_PUBLISHING_ERROR, data: { x: 1 } }
     ])
   })
 

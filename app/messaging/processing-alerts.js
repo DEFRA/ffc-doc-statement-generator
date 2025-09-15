@@ -1,5 +1,5 @@
 const { createAlerts } = require('./create-alerts')
-const { PUBLISH_ERROR } = require('../constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../constants/alerts')
 
 const validatePayload = (payload) => {
   if (!payload || typeof payload !== 'object') {
@@ -69,7 +69,7 @@ const publish = async (alertPayloadArray, type, throwOnPublishError) => {
   }
 }
 
-const dataProcessingAlert = async (payload = {}, type = PUBLISH_ERROR, options = {}) => {
+const dataProcessingAlert = async (payload = {}, type = DATA_PUBLISHING_ERROR, options = {}) => {
   const processName = validatePayload(payload)
   const { throwOnPublishError = false } = options
   const alertData = deriveAlertData(payload, processName)

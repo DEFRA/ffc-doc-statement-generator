@@ -5,7 +5,7 @@ const { createContent: createSFI23Content } = require('./sfi23-quarterly-stateme
 const { createContent: createDelinkedContent } = require('./delinked-statement')
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../constants/document-types')
 const { dataProcessingAlert } = require('../../messaging/processing-alerts')
-const { PUBLISH_ERROR } = require('../../constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 
 const alertDefault = async (type, request) => {
   const alertPayload = {
@@ -15,7 +15,7 @@ const alertDefault = async (type, request) => {
     scheme: request?.scheme,
     message: `Failed to generate content for ${type?.name || type?.type || type || 'unknown'}`
   }
-  await dataProcessingAlert(alertPayload, PUBLISH_ERROR)
+  await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
   throw new Error(`Unknown request type: ${type?.name || type?.type || type || 'unknown'}`)
 }
 

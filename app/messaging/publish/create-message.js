@@ -1,4 +1,4 @@
-const { PUBLISH_ERROR } = require('../../constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 const { dataProcessingAlert } = require('../processing-alerts')
 const mapPublish = require('./map-publish')
 const validatePublishModule = require('./validate-publish')
@@ -20,7 +20,7 @@ const createMessage = async (document, filename, type) => {
     }
 
     try {
-      await dataProcessingAlert(alertPayload, PUBLISH_ERROR)
+      await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
     } catch (alertErr) {
       console.error('Failed to publish processing alert for createMessage', {
         originalError: error?.message,

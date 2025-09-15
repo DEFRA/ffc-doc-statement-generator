@@ -4,7 +4,7 @@ const sfi23QuarterlyStatementSchema = require('./schemas/sfi-23-quarterly-statem
 const delinkedStatementSchema = require('./schemas/delinked-statement')
 const { VALIDATION } = require('../errors')
 const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../constants/document-types')
-const { PUBLISH_ERROR } = require('../constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../constants/alerts')
 const { dataProcessingAlert } = require('../messaging/processing-alerts')
 
 const alertDefault = async (type, request) => {
@@ -19,7 +19,7 @@ const alertDefault = async (type, request) => {
     message: `Failed to generate content for ${prettyName}`
   }
 
-  await dataProcessingAlert(alertPayload, PUBLISH_ERROR)
+  await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
   throw new Error(`Unknown request type: ${prettyName}`)
 }
 
@@ -55,7 +55,7 @@ const validateRequest = async (request, type) => {
       scheme: request?.scheme,
       message: `Failed to generate content for ${prettyName}`
     }
-    await dataProcessingAlert(alertPayload, PUBLISH_ERROR)
+    await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
     throw error
   }
 }

@@ -1,7 +1,7 @@
 const schema = require('./schema')
 const delinkedSchema = require('./delinked-schema')
 const dataProcessingAlert = require('../processing-alerts')
-const { PUBLISH_ERROR } = require('../../constants/alerts')
+const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 
 const validatePublish = async (publish, type) => {
   let result
@@ -23,7 +23,7 @@ const validatePublish = async (publish, type) => {
     }
 
     try {
-      await dataProcessingAlert(alertPayload, PUBLISH_ERROR)
+      await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
     } catch (alertErr) {
       console.error(`${type} does not have the required details: ${result.error?.message}`, {
         originalError: result.error?.message,
