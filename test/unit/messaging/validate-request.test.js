@@ -44,15 +44,16 @@ describe('validateRequest', () => {
         }
 
         await expect(validateRequest(value, type)).rejects.toMatchObject({ category: VALIDATION })
+        expect(dataProcessingAlert).toHaveBeenCalledTimes(1)
+        const [calledPayload, calledType] = dataProcessingAlert.mock.calls[0]
 
-        const expectedPayload = {
-          process: 'validate-request',
-          type: type?.id ?? value?.type,
-          sbi: value?.sbi,
-          scheme: value?.scheme,
-          message: `Failed to generate content for ${type?.name ?? value?.type ?? 'unknown type'}`
-        }
-        expect(dataProcessingAlert).toHaveBeenCalledWith(expectedPayload, DATA_PUBLISHING_ERROR)
+        expect(calledType).toBe(DATA_PUBLISHING_ERROR)
+        expect(calledPayload.process).toBe('validate-request')
+        expect(calledPayload.type).toBe(type?.id ?? value?.type)
+        expect(calledPayload.sbi).toBe(value?.sbi)
+        expect(calledPayload.scheme).toBe(value?.scheme)
+        expect(typeof calledPayload.message).toBe('string')
+        expect(calledPayload.message.length).toBeGreaterThan(0)
       })
     })
   })
@@ -91,5 +92,38 @@ describe('validateRequest', () => {
         DATA_PUBLISHING_ERROR
       )
     })
+  })
+})
+
+describe('validation message composition', () => {
+  test('combines messages from Joi-style details into a single message', async () => {
+    jest.resetModules()
+
+    const mockDataProcessingAlert = jest.fn()
+    jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
+    jest.doMock('../../../app/messaging/schemas/statement', () => ({
+      validate: () => ({
+        error: {
+          details: [{ message: 'err1' }, { message: 'err2' }],
+          message: 'err1; err2'
+        }
+      })
+    }))
+
+    jest.doMock('../../../app/messaging/schemas/schedule', () => ({ validate: () => ({}) }))
+    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({ validate: () => ({}) }))
+    jest.doMock('../../../app/messaging/schemas/delinked-statement', () => ({ validate: () => ({}) }))
+
+    const { STATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
+    const { validateRequest: validateRequestWithMockedSchemas } = require('../../../app/messaging/validate-request')
+
+    await expect(validateRequestWithMockedSchemas({}, FRESH_STATEMENT)).rejects.toMatchObject({ category: VALIDATION })
+
+    expect(mockDataProcessingAlert).toHaveBeenCalledTimes(1)
+    const [calledPayload, calledType] = mockDataProcessingAlert.mock.calls[0]
+
+    expect(calledType).toBe(DATA_PUBLISHING_ERROR)
+    expect(calledPayload.message).toBe('err1; err2')
+    expect(calledPayload.process).toBe('validate-request')
   })
 })

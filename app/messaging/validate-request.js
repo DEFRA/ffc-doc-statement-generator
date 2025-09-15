@@ -43,17 +43,38 @@ const validateRequest = async (request, type) => {
       await alertDefault(type, request)
   }
 
+  const buildValidationMessage = (joiError) => {
+    if (!joiError) return undefined
+
+    if (Array.isArray(joiError.details) && joiError.details.length) {
+      return joiError.details.map(d => d.message).join('; ')
+    }
+
+    if (typeof joiError.message === 'string' && joiError.message.trim().length) {
+      return joiError.message
+    }
+    try {
+      return JSON.stringify(joiError)
+    } catch (err) {
+      console.error('Error stringifying joiError:', err)
+      return 'Validation failed'
+    }
+  }
+
   if (validationResult?.error) {
     const prettyName = type?.name ?? request?.type ?? 'unknown type'
     const error = new Error(`Request content is invalid for ${prettyName}, ${validationResult.error.message}`)
     error.category = VALIDATION
     const payloadType = type?.id ?? request?.type
+
+    const combinedMessage = buildValidationMessage(validationResult.error)
+
     const alertPayload = {
       process: 'validate-request',
       type: payloadType,
       sbi: request?.sbi,
       scheme: request?.scheme,
-      message: `Failed to generate content for ${prettyName}`
+      message: combinedMessage ?? `Failed to generate content for ${prettyName}`
     }
     await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
     throw error
