@@ -10,13 +10,13 @@ const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 const alertDefault = async (type, request) => {
   const alertPayload = {
     process: 'generateContent',
-    type: request?.type?.name || request?.type?.type || 'unknown',
+    type: request?.type?.id || 'unknown',
     sbi: request?.sbi,
     scheme: request?.scheme,
-    message: `Failed to generate content for ${type?.name || type?.type || type || 'unknown'}`
+    message: `Failed to generate content for ${type?.id || type || 'unknown'}`
   }
   await dataProcessingAlert(alertPayload, DATA_PUBLISHING_ERROR)
-  throw new Error(`Unknown request type: ${type?.name || type?.type || type || 'unknown'}`)
+  throw new Error(`Unknown request type: ${type?.id || type || 'unknown'}`)
 }
 
 const generateContent = async (request, type) => {
