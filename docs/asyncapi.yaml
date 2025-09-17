@@ -8,22 +8,16 @@ channels:
     address: ffc-doc-statements/ffc-doc-statement-generator
     messages:
       subscribe.message.0:
-        $ref: "#/components/messages/PaymentSchedule"
-      subscribe.message.1:
-        $ref: "#/components/messages/PaymentStatement"
-      subscribe.message.2:
-        $ref: "#/components/messages/Sfi23QuarterlyStatement"
-      subscribe.message.3:
         $ref: "#/components/messages/DelinkedStatement"
+      subscribe.message.1:
+        $ref: "#/components/messages/Sfi23QuarterlyStatement"
   ffc-doc-statement-publish:
     address: ffc-doc-statement-publish
     messages:
       publish.message.0:
-        $ref: "#/components/messages/DocumentSchedule"
+        $ref: "#/components/messages/DelinkedStatement"
       publish.message.1:
-        $ref: "#/components/messages/DocumentStatement"
-      publish.message.2:
-        $ref: "#/components/messages/DocumentDelinked"
+        $ref: "#/components/messages/Sfi23QuarterlyStatement"
   ffc-doc-statement-crm:
     address: ffc-doc-statement-crm
     messages:
@@ -37,8 +31,6 @@ operations:
     messages:
       - $ref: "#/channels/ffc-doc-statements~1ffc-doc-statement-generator/messages/subscribe.message.0"
       - $ref: "#/channels/ffc-doc-statements~1ffc-doc-statement-generator/messages/subscribe.message.1"
-      - $ref: "#/channels/ffc-doc-statements~1ffc-doc-statement-generator/messages/subscribe.message.2"
-      - $ref: "#/channels/ffc-doc-statements~1ffc-doc-statement-generator/messages/subscribe.message.3"
   ffc-doc-statement-publish.publish:
     action: receive
     channel:
@@ -46,7 +38,6 @@ operations:
     messages:
       - $ref: "#/channels/ffc-doc-statement-publish/messages/publish.message.0"
       - $ref: "#/channels/ffc-doc-statement-publish/messages/publish.message.1"
-      - $ref: "#/channels/ffc-doc-statement-publish/messages/publish.message.2"
   ffc-doc-statement-crm.publish:
     action: receive
     channel:
@@ -55,48 +46,18 @@ operations:
       - $ref: "#/channels/ffc-doc-statement-crm/messages/publish.message.0"
 components:
   messages:
-    PaymentSchedule:
-      title: Payment schedule
-      name: Payment schedule
-      contentType: application/json
-      payload:
-        $ref: "#/components/schemas/PaymentSchedule"
-    PaymentStatement:
-      title: Payment statement
-      name: Payment statement
-      contentType: application/json
-      payload:
-        $ref: "#/components/schemas/PaymentStatement"
-    Sfi23QuarterlyStatement:
-      title: Sfi23 Quarterly Statement
-      name: Sfi23 Quarterly Statement
-      contentType: application/json
-      payload:
-        $ref: "#/components/schemas/SFI23QuarterlyPaymentStatement"
     DelinkedStatement:
       title: Delinked Statement
       name: Delinked Statement
       contentType: application/json
       payload:
         $ref: "#/components/schemas/DelinkedStatement"
-    DocumentSchedule:
-      title: Payment schedule
-      name: Payment schedule
+    Sfi23QuarterlyStatement:
+      title: Sfi23 Quarterly Statement
+      name: Sfi23 Quarterly Statement
       contentType: application/json
       payload:
-        $ref: "#/components/schemas/BodySchedule"
-    DocumentStatement:
-      title: Payment Statement
-      name: Payment statement
-      contentType: application/json
-      payload:
-        $ref: "#/components/schemas/BodyStatement"
-    DocumentDelinked:
-      title: Payment Statement
-      name: Payment statement
-      contentType: application/json
-      payload:
-        $ref: "#/components/schemas/BodyDelinkedStatement"
+        $ref: "#/components/schemas/SFI23QuarterlyPaymentStatement"
     Crm:
       title: Crm Message
       name: Crm Message
@@ -154,32 +115,6 @@ components:
       type: string
       description: Name of the action
       example: Manage hedgerows
-    Adjustment:
-      type: object
-      description: Overview of the total adjustment
-      required:
-        - currentValue
-        - newValue
-        - adjustmentValue
-      properties:
-        currentValue:
-          $ref: "#/components/schemas/AdjustmentCurrentValue"
-        newValue:
-          $ref: "#/components/schemas/AdjustmentNewValue"
-        adjustmentValue:
-          $ref: "#/components/schemas/AdjustmentValue"
-    AdjustmentCurrentValue:
-      type: string
-      description: Current settled payment value
-      example: "1000.00"
-    AdjustmentNewValue:
-      type: string
-      description: New to-be settled payment value
-      example: "1500.00"
-    AdjustmentValue:
-      type: string
-      description: Delta between the new value and current value
-      example: "500.00"
     Address:
       additionalProperties: false
       required:
@@ -227,56 +162,10 @@ components:
       format: decimal
       description: The area claimed for the calculation in hectares
       example: 84.05
-    BodyDelinkedStatement:
-      additionalProperties: false
-      type: object
-      required:
-        - body
-        - source
-        - type
-      properties:
-        body:
-          $ref: "#/components/schemas/DocumentDelinked"
-        source:
-          $ref: "#/components/schemas/Source"
-        type:
-          $ref: "#/components/schemas/TypeStatement"
-    BodySchedule:
-      additionalProperties: false
-      type: object
-      required:
-        - body
-        - source
-        - type
-      properties:
-        body:
-          $ref: "#/components/schemas/DocumentSchedule"
-        source:
-          $ref: "#/components/schemas/Source"
-        type:
-          $ref: "#/components/schemas/TypeSchedule"
-    BodyStatement:
-      additionalProperties: false
-      type: object
-      required:
-        - body
-        - source
-        - type
-      properties:
-        body:
-          $ref: "#/components/schemas/DocumentStatement"
-        source:
-          $ref: "#/components/schemas/Source"
-        type:
-          $ref: "#/components/schemas/TypeStatement"
     BusinessName:
       type: string
       description: The business name
       example: Summer Days Farm
-    Calculated:
-      type: string
-      description: The calculated date of the payment request
-      example: 16 Jun 2022
     CalculationDate:
       type: string
       format: date-time
@@ -436,112 +325,11 @@ components:
           type: boolean
           description: Indicates if the statement is excluded from notify
           example: false
-    DocumentDelinked:
-      additionalProperties: false
-      type: object
-      required:
-        - address
-        - businessName
-        - documentReference
-        - filename
-        - frn
-        - sbi
-        - scheme
-        - paymentAmountCalculated
-      properties:
-        address:
-          $ref: "#/components/schemas/Address"
-        businessName:
-          $ref: "#/components/schemas/BusinessName"
-        documentReference:
-          $ref: "#/components/schemas/DocumentReference"
-        email:
-          $ref: "#/components/schemas/Email"
-        filename:
-          $ref: "#/components/schemas/FilenameDelinkedStatement"
-        frn:
-          $ref: "#/components/schemas/FRN"
-        sbi:
-          $ref: "#/components/schemas/SBI"
-        scheme:
-          $ref: "#/components/schemas/SchemeDelinked"
-        paymentAmountCalculated:
-          $ref: "#/components/schemas/PaymentAmountCalculated"
     DocumentReference:
       type: number
       description: Unique identifier of the document
       minimum: 1
       example: 1
-    DocumentSchedule:
-      additionalProperties: false
-      type: object
-      required:
-        - address
-        - businessName
-        - documentReference
-        - remainingAmount
-        - filename
-        - frn
-        - sbi
-        - scheme
-      properties:
-        address:
-          $ref: "#/components/schemas/Address"
-        businessName:
-          $ref: "#/components/schemas/BusinessName"
-        documentReference:
-          $ref: "#/components/schemas/DocumentReference"
-        remainingAmount:
-          $ref: "#/components/schemas/RemainingAmount"
-        email:
-          $ref: "#/components/schemas/Email"
-        filename:
-          $ref: "#/components/schemas/FilenameSchedule"
-        frn:
-          $ref: "#/components/schemas/FRN"
-        sbi:
-          $ref: "#/components/schemas/SBI"
-        scheme:
-          $ref: "#/components/schemas/Scheme"
-    DocumentStatement:
-      additionalProperties: false
-      type: object
-      required:
-        - address
-        - businessName
-        - documentReference
-        - remainingAmount
-        - filename
-        - frn
-        - sbi
-        - scheme
-      properties:
-        address:
-          $ref: "#/components/schemas/Address"
-        businessName:
-          $ref: "#/components/schemas/BusinessName"
-        documentReference:
-          $ref: "#/components/schemas/DocumentReference"
-        remainingAmount:
-          $ref: "#/components/schemas/RemainingAmount"
-        email:
-          $ref: "#/components/schemas/Email"
-        filename:
-          $ref: "#/components/schemas/FilenameStatement"
-        frn:
-          $ref: "#/components/schemas/FRN"
-        sbi:
-          $ref: "#/components/schemas/SBI"
-        scheme:
-          $ref: "#/components/schemas/Scheme"
-    DueDate:
-      type: string
-      description: The due date of the payment request
-      example: 1 August 2022
-    DueDateAdjustment:
-      type: string
-      description: The due date of the adjustment payment
-      example: ""
     Email:
       type: string
       description: The business email address
@@ -554,16 +342,6 @@ components:
       type: string
       description: PDF filename, formatted as product code using 3 to 6 uppercase letters, then the document type, then the scheme short name, then the year, then the FRN, then the timestamp using 16 digits and then .pdf. All separated by underscore
       example: FFC_PaymentDelinkedStatement_DP_2024_1100016529_2024102408191499.pdf
-      pattern: ^[A-Z]{3,6}\_[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*\_[A-Z]{3,6}_\d{4}_\d{10}_\d{16}\.pdf$
-    FilenameSchedule:
-      type: string
-      description: PDF filename, formatted as product code using 3 to 6 uppercase letters, then the document type, then the scheme short name, then the year, then the FRN, then the timestamp using 16 digits and then .pdf. All separated by underscore
-      example: FFC_PaymentSchedule_SFI_2022_1234567890_2023051810181212.pdf
-      pattern: ^[A-Z]{3,6}\_[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*\_[A-Z]{3,6}_\d{4}_\d{10}_\d{16}\.pdf$
-    FilenameStatement:
-      type: string
-      description: PDF filename, formatted as product code using 3 to 6 uppercase letters, then the document type, then the scheme short name, then the year, then the FRN, then the timestamp using 16 digits and then .pdf. All separated by underscore
-      example: FFC_PaymentStatement_SFI_2022_1234567890_2023051810181212.pdf
       pattern: ^[A-Z]{3,6}\_[A-Z]([A-Z0-9]*[a-z][a-z0-9]*[A-Z]|[a-z0-9]*[A-Z][A-Z0-9]*[a-z])[A-Za-z0-9]*\_[A-Z]{3,6}_\d{4}_\d{10}_\d{16}\.pdf$
     FRN:
       type: number
@@ -705,46 +483,11 @@ components:
       type: string
       description: Invoice number of payment request
       example: S000000200000002V001
-    Order:
-      type: number
-      format: integer
-      description: The order in which the schedule columns are displayed
-      example: 1
-    OrderAdjustment:
-      type: number
-      format: integer
-      description: The order in which the schedule columns are displayed
-      example: 2
     OverDeclarationPenalty:
       type: string
       format: decimal
       description: The over declaration penalty
       example: 120.5
-    Payment:
-      type: object
-      required:
-        - invoiceNumber
-        - dueDate
-        - period
-        - value
-        - settled
-        - calculated
-        - paymentType
-      properties:
-        invoiceNumber:
-          $ref: "#/components/schemas/InvoiceNumber"
-        dueDate:
-          $ref: "#/components/schemas/DueDate"
-        period:
-          $ref: "#/components/schemas/Period"
-        value:
-          $ref: "#/components/schemas/Value"
-        settled:
-          $ref: "#/components/schemas/Settled"
-        calculated:
-          $ref: "#/components/schemas/Calculated"
-        paymentType:
-          $ref: "#/components/schemas/PaymentType"
     PaymentAmount:
       type: number
       format: decimal
@@ -758,19 +501,23 @@ components:
     PaymentBand1:
       type: string
       description: first payment band bracket amount
-      example: Up to £30000
+      example: "30000"
+      pattern: '^\d+(\.\d{2})?$'
     PaymentBand2:
       type: string
       description: second payment band bracket amount
-      example: "£30,000.01 to £50,000"
+      example: "50000"
+      pattern: '^\d+(\.\d{2})?$'
     PaymentBand3:
       type: string
       description: third payment band bracket amount
-      example: "£50,000.01 to £150,000"
+      example: "150000"
+      pattern: '^\d+(\.\d{2})?$'
     PaymentBand4:
       type: string
       description: fourth payment band bracket amount
-      example: "150,000+"
+      example: "99999999.99"
+      pattern: '^\d+(\.\d{2})?$'
     PaymentPeriod:
       type: string
       description: The period covered by the payment
@@ -779,103 +526,6 @@ components:
       type: string
       description: Unique identifier for payment as shown on the remittance advice
       example: PY1234545
-    PaymentSchedule:
-      additionalProperties: false
-      type: object
-      required:
-        - businessName
-        - frn
-        - sbi
-        - email
-        - address
-        - funding
-        - payments
-        - scheme
-        - documentReference
-        - remainingAmount
-      properties:
-        businessName:
-          $ref: "#/components/schemas/BusinessName"
-        frn:
-          $ref: "#/components/schemas/FRN"
-        sbi:
-          $ref: "#/components/schemas/SBI"
-        email:
-          $ref: "#/components/schemas/Email"
-        address:
-          $ref: "#/components/schemas/Address"
-        scheme:
-          $ref: "#/components/schemas/Scheme"
-        documentReference:
-          $ref: "#/components/schemas/DocumentReference"
-        remainingAmount:
-          $ref: "#/components/schemas/RemainingAmount"
-        schedule:
-          type: array
-          items:
-            $ref: "#/components/schemas/Schedule"
-        adjustment:
-          $ref: "#/components/schemas/Adjustment"
-        funding:
-          type: array
-          items:
-            $ref: "#/components/schemas/Funding"
-        payments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Payment"
-    PaymentStatement:
-      additionalProperties: false
-      type: object
-      required:
-        - businessName
-        - frn
-        - sbi
-        - address
-        - funding
-        - payments
-        - scheme
-        - documentReference
-        - remainingAmount
-      properties:
-        businessName:
-          $ref: "#/components/schemas/BusinessName"
-        email:
-          $ref: "#/components/schemas/Email"
-        frn:
-          $ref: "#/components/schemas/FRN"
-        sbi:
-          $ref: "#/components/schemas/SBI"
-        address:
-          $ref: "#/components/schemas/Address"
-        funding:
-          type: array
-          items:
-            $ref: "#/components/schemas/Funding"
-        payments:
-          type: array
-          items:
-            $ref: "#/components/schemas/Payment"
-        scheme:
-          $ref: "#/components/schemas/Scheme"
-        documentReference:
-          $ref: "#/components/schemas/DocumentReference"
-        remainingAmount:
-          $ref: "#/components/schemas/RemainingAmount"
-    PaymentType:
-      type: string
-      description: The payment description
-      enum:
-        - Immediate payment
-        - Quarterly payment
-      example: Quarterly payment
-    PaymentTypeAdjustment:
-      type: string
-      description: The payment description
-      enum:
-        - Immediate payment
-        - Quarterly payment
-      example: Immediate payment
     PercentageReduction1:
       type: string
       description: First percentage bracket for progressive reductions
@@ -896,14 +546,6 @@ components:
       description: Fourth percentage bracket for progressive reductions
       example: "70.00"
       pattern: '^\d{1,3}\.\d{2}$'
-    Period:
-      type: string
-      description: The period of the payment
-      example: April to June 2022
-    PeriodAdjustment:
-      type: string
-      description: The period of the payment adjustment
-      example: ""
     Postcode:
       type: string
       description: The postcode
@@ -973,56 +615,12 @@ components:
       type: string
       description: The fourth line of the address
       example: Some Region
-    RemainingAmount:
-      type: number
-      description: Remaining amount to be paid can be any number
-      example: 1000.00
     SBI:
       type: number
       description: Single Business Identifier
       minimum: 105000000
       maximum: 999999999
       example: 123456789
-    Schedule:
-      additionalProperties: false
-      type: object
-      required:
-        - order
-        - dueDate
-        - period
-        - value
-        - paymentType
-      properties:
-        order:
-          $ref: "#/components/schemas/Order"
-        dueDate:
-          $ref: "#/components/schemas/DueDate"
-        period:
-          $ref: "#/components/schemas/Period"
-        value:
-          $ref: "#/components/schemas/Value"
-        paymentType:
-          $ref: "#/components/schemas/PaymentType"
-    ScheduleAdjustment:
-      additionalProperties: false
-      type: object
-      required:
-        - order
-        - dueDate
-        - period
-        - value
-        - paymentType
-      properties:
-        order:
-          $ref: "#/components/schemas/OrderAdjustment"
-        dueDate:
-          $ref: "#/components/schemas/DueDateAdjustment"
-        period:
-          $ref: "#/components/schemas/PeriodAdjustment"
-        value:
-          $ref: "#/components/schemas/ValueAdjustment"
-        paymentType:
-          $ref: "#/components/schemas/PaymentTypeAdjustment"
     Scheme:
       additionalProperties: false
       type: object
@@ -1083,10 +681,6 @@ components:
       type: string
       description: The marketing year
       example: "2022"
-    Settled:
-      type: string
-      description: The settled date of the payment request
-      example: 3 July 2022
     SFI23QuarterlyPaymentStatement:
       type: object
       additionalProperties: false
@@ -1185,29 +779,7 @@ components:
       format: date-time
       description: The date the transaction was made
       example: "2022-08-22T16:45:20.891Z"
-    Type:
-      type: string
-      description: The type of message being sent
-      oneOf:
-        - $ref: "#/components/schemas/TypeSchedule"
-        - $ref: "#/components/schemas/TypeStatement"
-    TypeSchedule:
-      type: string
-      description: The schedule type of message being sent
-      example: uk.gov.doc.schedule.publish
-    TypeStatement:
-      type: string
-      description: The statement type of message being sent
-      example: uk.gov.doc.statement.publish
     UnitOfMeasure:
       type: string
       description: The unit of measure
       example: Ha
-    Value:
-      type: string
-      description: The value of the payment
-      example: "250.00"
-    ValueAdjustment:
-      type: string
-      description: The value of the adjustment payment
-      example: ""
