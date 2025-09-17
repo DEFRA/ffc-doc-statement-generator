@@ -29,6 +29,7 @@ async function createAndPublishDocument (request, type) {
   const docDefinition = await getDocumentDefinition(request, type)
   const timestamp = new Date()
   const pdfDoc = printer.createPdfKitDocument(docDefinition)
+  pdfDoc.end()
   const filename = await publish(pdfDoc, request, moment(timestamp).format('YYYYMMDDHHmmssSS'), type)
   console.info(`Document published to blob storage: ${filename}`)
   return filename
