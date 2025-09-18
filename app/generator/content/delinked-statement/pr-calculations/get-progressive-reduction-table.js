@@ -1,19 +1,31 @@
-const formatPaymentBand = (value, index) => {
-  if (isNaN(value) || value < 0) {
+const BAND_UP_TO_30000 = 30000
+const BAND_30000_TO_50000 = 50000
+const BAND_50000_TO_150000 = 150000
+
+const formatPaymentBand = (value) => {
+  let numericValue = value
+  if (typeof value === 'string') {
+    numericValue = value.replace(/[£,+]/g, '')
+  }
+
+  numericValue = parseFloat(numericValue)
+  if (isNaN(numericValue) || numericValue < 0) {
     throw new Error(`Invalid payment band value: ${value}`)
   }
-  const formattedValue = parseFloat(value).toLocaleString('en-GB', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
-  switch (index) {
-    case 'BAND_UP_TO_30000': // paymentBand1
-      return `Up to £${formattedValue}`
-    case 'BAND_30000_TO_50000': // paymentBand2
-      return `£30,000.01 to £${formattedValue}`
-    case 'BAND_50000_TO_150000': // paymentBand3
-      return `£50,000.01 to £${formattedValue}`
-    case 'BAND_ABOVE_150000': // paymentBand4
-      return 'Above £150,000'
-    default:
-      return `£${formattedValue}`
+
+  const formattedValue = numericValue.toLocaleString('en-GB', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  })
+
+  if (numericValue <= BAND_UP_TO_30000) {
+    return `Up to £${formattedValue}`
+  } else if (numericValue <= BAND_30000_TO_50000) {
+    return `£30,000.01 to £${formattedValue}`
+  } else if (numericValue <= BAND_50000_TO_150000) {
+    return `£50,000.01 to £${formattedValue}`
+  } else {
+    return 'Above £150,000'
   }
 }
 
@@ -48,7 +60,7 @@ const generateTableBody = (delinkedStatement) => {
 
   if (parseFloat(delinkedStatement.progressiveReductions1) !== 0) {
     tableBody.push([
-      { text: formatPaymentBand(delinkedStatement.paymentBand1, 'BAND_UP_TO_30000') },
+      { text: formatPaymentBand(delinkedStatement.paymentBand1) },
       { text: formatPercentage(delinkedStatement.percentageReduction1) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions1) }
     ])
@@ -56,7 +68,7 @@ const generateTableBody = (delinkedStatement) => {
 
   if (parseFloat(delinkedStatement.progressiveReductions2) !== 0) {
     tableBody.push([
-      { text: formatPaymentBand(delinkedStatement.paymentBand2, 'BAND_30000_TO_50000') },
+      { text: formatPaymentBand(delinkedStatement.paymentBand2) },
       { text: formatPercentage(delinkedStatement.percentageReduction2) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions2) }
     ])
@@ -64,7 +76,7 @@ const generateTableBody = (delinkedStatement) => {
 
   if (parseFloat(delinkedStatement.progressiveReductions3) !== 0) {
     tableBody.push([
-      { text: formatPaymentBand(delinkedStatement.paymentBand3, 'BAND_50000_TO_150000') },
+      { text: formatPaymentBand(delinkedStatement.paymentBand3) },
       { text: formatPercentage(delinkedStatement.percentageReduction3) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions3) }
     ])
@@ -72,7 +84,7 @@ const generateTableBody = (delinkedStatement) => {
 
   if (parseFloat(delinkedStatement.progressiveReductions4) !== 0) {
     tableBody.push([
-      { text: formatPaymentBand(delinkedStatement.paymentBand4, 'BAND_ABOVE_150000') },
+      { text: formatPaymentBand(delinkedStatement.paymentBand4) },
       { text: formatPercentage(delinkedStatement.percentageReduction4) },
       { text: formatProgressiveReduction(delinkedStatement.progressiveReductions4) }
     ])
