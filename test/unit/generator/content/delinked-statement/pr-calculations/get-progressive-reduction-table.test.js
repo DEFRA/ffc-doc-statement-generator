@@ -90,7 +90,7 @@ describe('getProgressiveReductionTable', () => {
 
   test('should format payment band with default case', () => {
     const result = formatPaymentBand(1000, 'UNKNOWN_BAND')
-    expect(result).toBe('£1,000')
+    expect(result).toBe('Up to £1,000')
   })
 
   test('should throw an error for invalid payment band value', () => {
