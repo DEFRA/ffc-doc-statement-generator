@@ -1,5 +1,5 @@
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
-const { VALIDATION } = require('../../../app/errors')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
+const { VALIDATION } = require('../../../app/constants/errors')
 const { validateRequest } = require('../../../app/messaging/validate-request')
 const { DATA_PUBLISHING_ERROR } = require('../../../app/constants/alerts')
 
@@ -10,16 +10,13 @@ jest.mock('../../../app/messaging/processing-alerts', () => ({
 const { dataProcessingAlert } = require('../../../app/messaging/processing-alerts')
 
 const getMockForType = (type) => {
-  if (type === STATEMENT) return JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
-  if (type === SCHEDULE) return JSON.parse(JSON.stringify(require('../../mocks/mock-schedule').topUpSchedule))
   if (type === SFI23QUARTERLYSTATEMENT) return JSON.parse(JSON.stringify(require('../../mocks/mock-statement-sfi23-quarterly')))
-  if (type === SFI23ADVANCEDSTATEMENT) return JSON.parse(JSON.stringify(require('../../mocks/mock-statement-sfia')))
   if (type === DELINKED) return JSON.parse(JSON.stringify(require('../../mocks/mock-delinked-statement')))
   return undefined
 }
 
 describe('validateRequest', () => {
-  const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED]
+  const documentTypes = [SFI23QUARTERLYSTATEMENT, DELINKED]
   const invalidValues = [undefined, {}, [], true, false, 0, 1, '', 'statement']
 
   documentTypes.forEach(type => {
@@ -112,7 +109,7 @@ describe('validation message composition', () => {
 
     const mockDataProcessingAlert = jest.fn()
     jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
-    jest.doMock('../../../app/messaging/schemas/statement', () => ({
+    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({
       validate: () => ({
         error: {
           details: [{ message: 'err1' }, { message: 'err2' }],
@@ -121,11 +118,9 @@ describe('validation message composition', () => {
       })
     }))
 
-    jest.doMock('../../../app/messaging/schemas/schedule', () => ({ validate: () => ({}) }))
-    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({ validate: () => ({}) }))
     jest.doMock('../../../app/messaging/schemas/delinked-statement', () => ({ validate: () => ({}) }))
 
-    const { STATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
+    const { SFI23QUARTERLYSTATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
     const { validateRequest: validateRequestWithMockedSchemas } = require('../../../app/messaging/validate-request')
 
     await expect(validateRequestWithMockedSchemas({}, FRESH_STATEMENT)).rejects.toMatchObject({ category: VALIDATION })
@@ -143,18 +138,16 @@ describe('validation message composition', () => {
 
     const mockDataProcessingAlert = jest.fn()
     jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
-    jest.doMock('../../../app/messaging/schemas/statement', () => ({
+    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({
       validate: () => ({
         error: {
           message: 'simple validation error'
         }
       })
     }))
-    jest.doMock('../../../app/messaging/schemas/schedule', () => ({ validate: () => ({}) }))
-    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({ validate: () => ({}) }))
     jest.doMock('../../../app/messaging/schemas/delinked-statement', () => ({ validate: () => ({}) }))
 
-    const { STATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
+    const { SFI23QUARTERLYSTATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
     const { validateRequest: validateRequestWithMockedSchemas } = require('../../../app/messaging/validate-request')
 
     await expect(validateRequestWithMockedSchemas({}, FRESH_STATEMENT)).rejects.toMatchObject({ category: VALIDATION })
@@ -173,17 +166,15 @@ describe('validation message composition', () => {
     const circular = {}
     circular.self = circular
 
-    jest.doMock('../../../app/messaging/schemas/statement', () => ({
+    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({
       validate: () => ({
         error: circular
       })
     }))
-    jest.doMock('../../../app/messaging/schemas/schedule', () => ({ validate: () => ({}) }))
-    jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({ validate: () => ({}) }))
     jest.doMock('../../../app/messaging/schemas/delinked-statement', () => ({ validate: () => ({}) }))
 
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-    const { STATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+    const { SFI23QUARTERLYSTATEMENT: FRESH_STATEMENT } = require('../../../app/constants/document-types')
     const { validateRequest: validateRequestWithMockedSchemas } = require('../../../app/messaging/validate-request')
 
     await expect(validateRequestWithMockedSchemas({}, FRESH_STATEMENT)).rejects.toMatchObject({ category: VALIDATION })

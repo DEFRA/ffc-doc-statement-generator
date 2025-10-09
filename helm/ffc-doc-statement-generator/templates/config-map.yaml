@@ -33,13 +33,10 @@ data:
   {{ else }}
   STATEMENT_RECEIVER_ENDPOINT: {{ .Values.container.statementReceiverEndpoint }}.{{ .Values.ingress.server }}
   {{- end }}
-  SCHEDULES_ARE_PUBLISHED: {{ quote .Values.container.schedulesArePublished }}
   SHOW_SFI_23_PAYMENT_PERIOD: {{ quote .Values.container.showSfi23PaymentPeriod }}
   SFI23QUARTERLYSTATEMENT_ENABLED: {{ quote .Values.container.sfi23QuarterlyStatementEnabled }}
   DELINKEDPAYMENTSTATEMENT_ENABLED: {{ quote .Values.container.delinkedPaymentStatementEnabled }}
   SEND_CRM_MESSAGE_ENABLED: {{ quote .Values.container.sendCrmMessageEnabled }}
-  SCHEDULE_ENABLED: {{ quote .Values.container.scheduleEnabled }}
-  SEND_DELINKED_2024_STATEMENTS: {{ quote .Values.container.sendDelinked2024Statements }}
   PUBLISHING_FREQUENCY: {{ quote .Values.container.publishingFrequency }}
   ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}
 {{- end -}}

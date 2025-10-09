@@ -2,7 +2,7 @@ const util = require('util')
 const { getDocumentType } = require('./get-document-type')
 const { validateRequest } = require('./validate-request')
 const { generateDocument } = require('../generator')
-const { VALIDATION } = require('../errors')
+const { VALIDATION } = require('../constants/errors')
 
 const processMessage = async (message, receiver) => {
   try {

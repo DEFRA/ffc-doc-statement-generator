@@ -10,7 +10,7 @@ describe('create log', () => {
   beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 15, 30, 10, 12))
     timestamp = moment(new Date()).format('YYYYMMDDHHmmssSS')
-    statement = JSON.parse(JSON.stringify(require('../../mocks/mock-statement')))
+    statement = JSON.parse(JSON.stringify(require('../../mocks/mock-delinked-statement')))
   })
 
   afterEach(() => {
