@@ -1,9 +1,7 @@
-const statementSchema = require('./schemas/statement')
-const scheduleSchema = require('./schemas/schedule')
 const sfi23QuarterlyStatementSchema = require('./schemas/sfi-23-quarterly-statement')
 const delinkedStatementSchema = require('./schemas/delinked-statement')
-const { VALIDATION } = require('../errors')
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../constants/document-types')
+const { VALIDATION } = require('../constants/errors')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../constants/document-types')
 const { DATA_PUBLISHING_ERROR } = require('../constants/alerts')
 const { dataProcessingAlert } = require('../messaging/processing-alerts')
 
@@ -26,13 +24,6 @@ const alertDefault = async (type, request) => {
 const validateRequest = async (request, type) => {
   let validationResult
   switch (type) {
-    case STATEMENT:
-    case SFI23ADVANCEDSTATEMENT:
-      validationResult = statementSchema.validate(request, { abortEarly: false, allowUnknown: true })
-      break
-    case SCHEDULE:
-      validationResult = scheduleSchema.validate(request, { abortEarly: false, allowUnknown: true })
-      break
     case SFI23QUARTERLYSTATEMENT:
       validationResult = sfi23QuarterlyStatementSchema.validate(request, { abortEarly: false, allowUnknown: true })
       break

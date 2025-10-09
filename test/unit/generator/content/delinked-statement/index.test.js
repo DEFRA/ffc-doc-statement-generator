@@ -3,7 +3,7 @@ const delinkedIntroduction = require('../../../../../app/generator/content/delin
 const paymentSummary = require('../../../../../app/generator/content/delinked-statement/payment-summary')
 const prCalculations = require('../../../../../app/generator/content/delinked-statement/pr-calculations')
 const paymentCalculations = require('../../../../../app/generator/content/delinked-statement/paymentCalculations')
-const delinkedHelpInfo = require('../../../../../app/generator/content/delinked-help-info')
+const delinkedHelpInfo = require('../../../../../app/generator/content/delinked-statement/delinked-help-info')
 const { createContent } = require('../../../../../app/generator/content/delinked-statement/index')
 
 jest.mock('../../../../../app/generator/content/summary', () => jest.fn())
@@ -11,7 +11,7 @@ jest.mock('../../../../../app/generator/content/delinked-statement/delinked-intr
 jest.mock('../../../../../app/generator/content/delinked-statement/payment-summary', () => jest.fn())
 jest.mock('../../../../../app/generator/content/delinked-statement/pr-calculations', () => jest.fn())
 jest.mock('../../../../../app/generator/content/delinked-statement/paymentCalculations', () => jest.fn())
-jest.mock('../../../../../app/generator/content/delinked-help-info', () => jest.fn())
+jest.mock('../../../../../app/generator/content/delinked-statement/delinked-help-info', () => jest.fn())
 
 describe('createContent', () => {
   test('should call all dependencies and combine their results into an array', () => {

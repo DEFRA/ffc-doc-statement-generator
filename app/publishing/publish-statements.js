@@ -1,6 +1,6 @@
 const util = require('util')
 const config = require('../config')
-const { SFI23QUARTERLYSTATEMENT, SCHEDULE, DELINKED } = require('../constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../constants/document-types')
 
 const { getPendingStatements } = require('./get-pending-statements')
 const sendPublishMessage = require('../messaging/publish/send-publish-message')
@@ -9,11 +9,8 @@ const sendCrmMessage = require('./crm/send-crm-message')
 const { setPublished } = require('./set-published')
 const getGenerationById = require('./get-generation-by-id')
 
-const delinked2024 = 2024
-
 const isPublishEnabledForType = (type) => {
   return (type.type === SFI23QUARTERLYSTATEMENT.type && config.sfi23QuarterlyStatementEnabled) ||
-    (type.type === SCHEDULE.type && config.scheduleEnabled) ||
     (type.type === DELINKED.type && config.delinkedGenerateStatementEnabled)
 }
 
@@ -23,7 +20,6 @@ const isNotifyAllowed = async (request, type) => {
   }
   const noNotify = await getNoNotifyByAgreementNumber(request.scheme.agreementNumber)
   return type.type !== SFI23QUARTERLYSTATEMENT.type &&
-    type.type !== SCHEDULE.type &&
     !noNotify
 }
 
@@ -33,12 +29,8 @@ async function shouldSendNotification (request, type) {
   return publishEnabled || notifyAllowed
 }
 
-const delinked2024Disabled = (request, type) => {
-  return type.type === DELINKED.type && request.scheme.year === delinked2024 && !config.sendDelinked2024Statements
-}
-
 const handleNotification = async (request, filename, type) => {
-  if (await shouldSendNotification(request, type) && !request.excludedFromNotify && !delinked2024Disabled(request, type)) {
+  if (await shouldSendNotification(request, type) && !request.excludedFromNotify) {
     await sendPublishMessage(request, filename, type.id)
     console.info(`Publish message sent for document ${filename}`)
     return true

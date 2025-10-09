@@ -1,5 +1,5 @@
 const config = require('../../../app/config')
-const { DELINKED, SCHEDULE } = require('../../../app/constants/document-types')
+const { DELINKED, SFI23QUARTERLYSTATEMENT } = require('../../../app/constants/document-types')
 const sendPublishMessage = require('../../../app/messaging/publish/send-publish-message')
 const sendCrmMessage = require('../../../app/publishing/crm/send-crm-message')
 const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
@@ -35,7 +35,7 @@ describe('publishStatements', () => {
     const mockStatements = [{
       outboxId: 1,
       generationId: 1,
-      type: { id: 'type-id', type: SCHEDULE.type }
+      type: { id: 'type-id', type: DELINKED.type }
     }]
     const mockGenerationData = {
       statementData: { scheme: { agreementNumber: '12345' } },
@@ -45,7 +45,6 @@ describe('publishStatements', () => {
     getPendingStatements.mockResolvedValue(mockStatements)
     getGenerationById.mockResolvedValue(mockGenerationData)
     config.sfi23QuarterlyStatementEnabled = true
-    config.scheduleEnabled = true
     config.delinkedGenerateStatementEnabled = true
     config.sendCrmMessageEnabled = false
 
@@ -60,11 +59,11 @@ describe('publishStatements', () => {
     expect(consoleLogSpy).toHaveBeenCalledWith('Statement finished publishing')
   })
 
-  test('should send CRM message and log when enabled', async () => {
+  test('should send CRM message and log when CRM enabled', async () => {
     const mockStatements = [{
       outboxId: 1,
       generationId: 1,
-      type: { id: 'type-id', type: SCHEDULE.type }
+      type: { id: 'type-id', type: DELINKED.type }
     }]
     const mockGenerationData = {
       statementData: { scheme: { agreementNumber: '12345' } },
@@ -85,7 +84,7 @@ describe('publishStatements', () => {
     const mockStatements = [{
       outboxId: 1,
       generationId: 1,
-      type: { id: 'type-id', type: SCHEDULE.type }
+      type: { id: 'type-id', type: DELINKED.type }
     }]
     const mockGenerationData = {
       statementData: { scheme: { agreementNumber: '12345' } },
@@ -106,7 +105,7 @@ describe('publishStatements', () => {
     const mockStatements = [{
       outboxId: 1,
       generationId: 1,
-      type: { id: 'type-id', type: SCHEDULE.type }
+      type: { id: 'type-id', type: SFI23QUARTERLYSTATEMENT.type }
     }]
     const mockGenerationData = {
       statementData: { scheme: { agreementNumber: '12345' }, excludedFromNotify: false },
@@ -117,30 +116,7 @@ describe('publishStatements', () => {
     getGenerationById.mockResolvedValue(mockGenerationData)
     getNoNotifyByAgreementNumber.mockResolvedValue(true)
     config.sfi23QuarterlyStatementEnabled = false
-    config.scheduleEnabled = false
     config.delinkedGenerateStatementEnabled = false
-
-    await publishStatements()
-
-    expect(sendPublishMessage).not.toHaveBeenCalled()
-    expect(consoleInfoSpy).toHaveBeenCalledWith(expect.stringContaining('Publish message not sent for document'))
-  })
-
-  test('should not send publish message if delinked2024 is disabled and log info', async () => {
-    const mockStatements = [{
-      outboxId: 1,
-      generationId: 1,
-      type: { id: 'type-id', type: DELINKED.type }
-    }]
-    const mockGenerationData = {
-      statementData: { scheme: { agreementNumber: '12345', year: 2024 } },
-      filename: 'file1.pdf'
-    }
-
-    getPendingStatements.mockResolvedValue(mockStatements)
-    getGenerationById.mockResolvedValue(mockGenerationData)
-    config.sendDelinked2024Statements = false
-    config.delinkedGenerateStatementEnabled = true
 
     await publishStatements()
 
@@ -153,7 +129,7 @@ describe('publishStatements', () => {
       {
         outboxId: 1,
         generationId: 1,
-        type: { id: 'type1', type: SCHEDULE.type }
+        type: { id: 'type1', type: DELINKED.type }
       },
       {
         outboxId: 2,
@@ -176,7 +152,6 @@ describe('publishStatements', () => {
       if (id === 2) return Promise.resolve(mockGenerationData2)
     })
     config.sfi23QuarterlyStatementEnabled = true
-    config.scheduleEnabled = true
     config.delinkedGenerateStatementEnabled = true
     config.sendCrmMessageEnabled = true
     getNoNotifyByAgreementNumber.mockResolvedValue(false)

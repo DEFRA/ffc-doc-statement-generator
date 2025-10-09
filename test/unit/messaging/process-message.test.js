@@ -12,10 +12,10 @@ jest.mock('../../../app/messaging/validate-request', () => {
     validateRequest: mockValidation
   }
 })
-const mockStatement = require('../../mocks/mock-statement')
+const mockStatement = require('../../mocks/mock-delinked-statement')
 const processMessage = require('../../../app/messaging/process-message')
-const { VALIDATION } = require('../../../app/errors')
-const { STATEMENT } = require('../../../app/constants/document-types')
+const { VALIDATION } = require('../../../app/constants/errors')
+const { DELINKED: STATEMENT } = require('../../../app/constants/document-types')
 let receiver
 
 const mockValidationImplementation = () => {

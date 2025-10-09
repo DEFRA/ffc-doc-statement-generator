@@ -15,9 +15,9 @@ jest.mock('../../../../app/publishing/crm/create-crm-message')
 const createCrmMessage = require('../../../../app/publishing/crm/create-crm-message')
 
 const sendCrmMessage = require('../../../../app/publishing/crm/send-crm-message')
-const mockStatement = require('../../../mocks/mock-statement')
-const FILENAME = 'FFC_PaymentStatement_SFI_2022_1234567890_2022080515301212.pdf'
-const { STATEMENT } = require('../../../../app/constants/document-types')
+const mockStatement = require('../../../mocks/mock-delinked-statement')
+const { DELINKEDSTATEMENT: FILENAME } = require('../../../mocks/components/filename')
+const { DELINKED } = require('../../../../app/constants/document-types')
 
 describe('send crm message', () => {
   beforeEach(() => {
@@ -25,17 +25,17 @@ describe('send crm message', () => {
   })
 
   test('should call createCrmMessage when statement and filename are given', async () => {
-    await sendCrmMessage(mockStatement, FILENAME, STATEMENT)
+    await sendCrmMessage(mockStatement, FILENAME, DELINKED)
     expect(createCrmMessage).toHaveBeenCalled()
   })
 
   test('should call createCrmMessage once when statement and filename are given', async () => {
-    await sendCrmMessage(mockStatement, FILENAME, STATEMENT)
+    await sendCrmMessage(mockStatement, FILENAME, DELINKED)
     expect(createCrmMessage).toHaveBeenCalledTimes(1)
   })
 
   test('should call createCrmMessage with statement and filename when statement and filename are given', async () => {
-    await sendCrmMessage(mockStatement, FILENAME, STATEMENT)
-    expect(createCrmMessage).toHaveBeenCalledWith(mockStatement, FILENAME, STATEMENT)
+    await sendCrmMessage(mockStatement, FILENAME, DELINKED)
+    expect(createCrmMessage).toHaveBeenCalledWith(mockStatement, FILENAME, DELINKED)
   })
 })
