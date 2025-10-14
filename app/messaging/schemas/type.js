@@ -1,8 +1,8 @@
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../constants/document-types')
 
 const Joi = require('joi')
 
-const TYPES = [`uk.gov.doc.${STATEMENT.id}.publish`, `uk.gov.doc.${SCHEDULE.id}.publish`, `uk.gov.doc.${SFI23QUARTERLYSTATEMENT.id}.publish`, `uk.gov.doc.${SFI23ADVANCEDSTATEMENT.id}.publish`, `uk.gov.doc.${DELINKED.id}.publish`]
+const TYPES = [`uk.gov.doc.${SFI23QUARTERLYSTATEMENT.id}.publish`, `uk.gov.doc.${DELINKED.id}.publish`]
 
 module.exports = Joi.string().valid(...TYPES).required()
   .messages({

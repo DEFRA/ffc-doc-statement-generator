@@ -3,7 +3,7 @@ const getDocumentDefinition = require('../../../app/generator/get-document-defin
 const { generateContent } = require('../../../app/generator/content')
 const { A4 } = require('../../../app/generator/page-sizes')
 const { millimetresToPoints } = require('../../../app/generator/conversion')
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT } = require('../../../app/constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
 
 jest.mock('../../../app/generator/content')
 
@@ -18,7 +18,7 @@ describe('getDocumentDefinition', () => {
     generateContent.mockResolvedValue(mockContent)
   })
 
-  const documentTypes = [STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT]
+  const documentTypes = [SFI23QUARTERLYSTATEMENT, DELINKED]
 
   documentTypes.forEach(type => {
     test(`returns correct pageSize for type: ${type.id}`, async () => {
@@ -75,6 +75,6 @@ describe('getDocumentDefinition', () => {
   test('throws error if generateContent fails', async () => {
     const error = new Error('Test error')
     generateContent.mockRejectedValue(error)
-    await expect(getDocumentDefinition(mockRequest, STATEMENT)).rejects.toThrow('Test error')
+    await expect(getDocumentDefinition(mockRequest, DELINKED)).rejects.toThrow('Test error')
   })
 })

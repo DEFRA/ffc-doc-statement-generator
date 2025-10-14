@@ -1,13 +1,13 @@
-const { STATEMENT, SCHEDULE } = require('../../../mocks/components/filename')
+const { SFI23QUARTERLYSTATEMENT, DELINKEDSTATEMENT } = require('../../../mocks/components/filename')
 
 const schema = require('../../../../app/messaging/schemas/filename')
 
 let filename
 
 describe('filename schema', () => {
-  describe('when filename is STATEMENT', () => {
+  describe('when filename is SFI23QUARTERLYSTATEMENT', () => {
     beforeEach(() => {
-      filename = STATEMENT
+      filename = SFI23QUARTERLYSTATEMENT
     })
 
     test('returns an object', () => {
@@ -31,9 +31,9 @@ describe('filename schema', () => {
     })
   })
 
-  describe('when filename is SCHEDULE', () => {
+  describe('when filename is DELINKEDSTATEMENT', () => {
     beforeEach(() => {
-      filename = SCHEDULE
+      filename = DELINKEDSTATEMENT
     })
 
     test('returns an object', () => {

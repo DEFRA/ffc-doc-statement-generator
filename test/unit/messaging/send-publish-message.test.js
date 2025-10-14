@@ -5,11 +5,11 @@ const createMessage = require('../../../app/messaging/publish/create-message')
 jest.mock('../../../app/messaging/create-alerts')
 const { createAlerts } = require('../../../app/messaging/create-alerts')
 
-const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE } = require('../../../app/constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
 
-const { STATEMENT: STATEMENT_FILENAME, SCHEDULE: SCHEDULE_FILENAME } = require('../../mocks/components/filename')
-const { STATEMENT_MESSAGE: STATEMENT_MESSAGE_INCOMING, SCHEDULE_MESSAGE: SCHEDULE_MESSAGE_INCOMING } = require('../../mocks/messages/mock-process-message')
-const { STATEMENT_MESSAGE: STATEMENT_MESSAGE_OUTGOING, SCHEDULE_MESSAGE: SCHEDULE_MESSAGE_OUTGOING } = require('../../mocks/messages/publish')
+const { SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_FILENAME, DELINKEDSTATEMENT } = require('../../mocks/components/filename')
+const { SFI23QUARTERLYSTATEMENT_MESSAGE, DELINKEDSTATEMENT_MESSAGE } = require('../../mocks/messages/mock-process-message')
+const { SFI23QUARTERLYSTATEMENT_MESSAGE: SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH, DELINKEDSTATEMENT_MESSAGE: DELINKEDSTATEMENT_MESSAGE_PUBLISH } = require('../../mocks/messages/publish')
 
 const sendPublishMessage = require('../../../app/messaging/publish/send-publish-message')
 
@@ -22,13 +22,13 @@ describe('send publish message', () => {
     jest.clearAllMocks()
   })
 
-  describe('when document is a statement', () => {
+  describe('when document is an sfi23 statement', () => {
     beforeEach(() => {
-      document = STATEMENT_MESSAGE_INCOMING.body
-      filename = STATEMENT_FILENAME
-      type = STATEMENT_TYPE.id
+      document = SFI23QUARTERLYSTATEMENT_MESSAGE.body
+      filename = SFI23QUARTERLYSTATEMENT_FILENAME
+      type = SFI23QUARTERLYSTATEMENT.id
 
-      createMessage.mockReturnValue(STATEMENT_MESSAGE_OUTGOING)
+      createMessage.mockReturnValue(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH)
     })
 
     test('should call createMessage', async () => {
@@ -93,12 +93,12 @@ describe('send publish message', () => {
 
     test('should call mockMessageSender.sendMessage with body.type', async () => {
       await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].type).toBe(STATEMENT_MESSAGE_OUTGOING.type)
+      expect(mockMessageSender().sendMessage.mock.calls[0][0].type).toBe(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH.type)
     })
 
     test('should call mockMessageSender.sendMessage with body.source', async () => {
       await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].source).toBe(STATEMENT_MESSAGE_OUTGOING.source)
+      expect(mockMessageSender().sendMessage.mock.calls[0][0].source).toBe(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH.source)
     })
 
     test('should call mockMessageSender.sendMessage with createMessage', async () => {
@@ -117,13 +117,13 @@ describe('send publish message', () => {
     })
   })
 
-  describe('when document is a schedule', () => {
+  describe('when document is a delinked statement', () => {
     beforeEach(() => {
-      document = SCHEDULE_MESSAGE_INCOMING.body
-      filename = SCHEDULE_FILENAME
-      type = SCHEDULE_TYPE.id
+      document = DELINKEDSTATEMENT_MESSAGE.body
+      filename = DELINKEDSTATEMENT
+      type = DELINKED.id
 
-      createMessage.mockReturnValue(SCHEDULE_MESSAGE_OUTGOING)
+      createMessage.mockReturnValue(DELINKEDSTATEMENT_MESSAGE_PUBLISH)
     })
 
     test('should call createMessage', async () => {
@@ -188,12 +188,7 @@ describe('send publish message', () => {
 
     test('should call mockMessageSender.sendMessage with body.type', async () => {
       await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].type).toBe(SCHEDULE_MESSAGE_OUTGOING.type)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.source', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].source).toBe(SCHEDULE_MESSAGE_OUTGOING.source)
+      expect(mockMessageSender().sendMessage.mock.calls[0][0].type).toBe(DELINKEDSTATEMENT_MESSAGE_PUBLISH.type)
     })
 
     test('should call mockMessageSender.sendMessage with createMessage', async () => {

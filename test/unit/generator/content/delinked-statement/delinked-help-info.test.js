@@ -1,4 +1,4 @@
-const delinkedHelpInfo = require('../../../../app/generator/content/delinked-help-info')
+const delinkedHelpInfo = require('../../../../../app/generator/content/delinked-statement/delinked-help-info')
 
 describe('delinkedHelpInfo', () => {
   test('should correctly generate the delinked help info', () => {
