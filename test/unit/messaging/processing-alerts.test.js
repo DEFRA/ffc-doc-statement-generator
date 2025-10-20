@@ -3,7 +3,7 @@ jest.mock('../../../app/messaging/create-alerts', () => ({
 }))
 
 const { createAlerts } = require('../../../app/messaging/create-alerts')
-const { dataProcessingAlert, deriveAlertData } = require('../../../app/messaging/processing-alerts')
+const { dataProcessingAlert, deriveAlertData } = require('ffc-alerting-utils')
 
 describe('deriveAlertData', () => {
   test('keeps existing non-empty message unchanged', () => {
