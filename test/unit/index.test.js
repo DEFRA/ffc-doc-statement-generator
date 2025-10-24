@@ -38,7 +38,7 @@ describe('Startup script', () => {
 
   test('should initialize alerting with config if init exists', async () => {
     await require('../../app/index')
-    
+
     expect(alertingMock.init).toHaveBeenCalledWith({
       topic: 'test-topic',
       source: 'test-source',
