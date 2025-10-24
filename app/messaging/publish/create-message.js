@@ -1,5 +1,5 @@
 const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
-const { dataProcessingAlert } = require('../processing-alerts')
+const { dataProcessingAlert } = require('ffc-alerting-utils')
 const mapPublish = require('./map-publish')
 const validatePublishModule = require('./validate-publish')
 

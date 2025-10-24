@@ -3,11 +3,11 @@ const { VALIDATION } = require('../../../app/constants/errors')
 const { validateRequest } = require('../../../app/messaging/validate-request')
 const { DATA_PUBLISHING_ERROR } = require('../../../app/constants/alerts')
 
-jest.mock('../../../app/messaging/processing-alerts', () => ({
+jest.mock('ffc-alerting-utils', () => ({
   dataProcessingAlert: jest.fn()
 }))
 
-const { dataProcessingAlert } = require('../../../app/messaging/processing-alerts')
+const { dataProcessingAlert } = require('ffc-alerting-utils')
 
 const getMockForType = (type) => {
   if (type === SFI23QUARTERLYSTATEMENT) return JSON.parse(JSON.stringify(require('../../mocks/mock-statement-sfi23-quarterly')))
@@ -108,7 +108,7 @@ describe('validation message composition', () => {
     jest.resetModules()
 
     const mockDataProcessingAlert = jest.fn()
-    jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
+    jest.doMock('ffc-alerting-utils', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
     jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({
       validate: () => ({
         error: {
@@ -137,7 +137,7 @@ describe('validation message composition', () => {
     jest.resetModules()
 
     const mockDataProcessingAlert = jest.fn()
-    jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
+    jest.doMock('ffc-alerting-utils', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
     jest.doMock('../../../app/messaging/schemas/sfi-23-quarterly-statement', () => ({
       validate: () => ({
         error: {
@@ -161,7 +161,7 @@ describe('validation message composition', () => {
     jest.resetModules()
 
     const mockDataProcessingAlert = jest.fn()
-    jest.doMock('../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
+    jest.doMock('ffc-alerting-utils', () => ({ dataProcessingAlert: mockDataProcessingAlert }))
 
     const circular = {}
     circular.self = circular

@@ -1,7 +1,7 @@
 const { SFI23QUARTERLYSTATEMENT_MESSAGE, DELINKEDSTATEMENT_MESSAGE } = require('../../../mocks/messages/publish')
 const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../../app/constants/document-types')
 
-jest.mock('../../../../app/messaging/processing-alerts', () => ({
+jest.mock('ffc-alerting-utils', () => ({
   dataProcessingAlert: jest.fn()
 }))
 

@@ -11,7 +11,7 @@ jest.mock('../../../../app/generator/content/delinked-statement', () => ({
   createContent: jest.fn()
 }))
 
-jest.mock('../../../../app/messaging/processing-alerts', () => ({
+jest.mock('ffc-alerting-utils', () => ({
   dataProcessingAlert: jest.fn()
 }))
 

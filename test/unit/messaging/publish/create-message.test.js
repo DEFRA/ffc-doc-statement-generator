@@ -4,8 +4,8 @@ const { SFI23QUARTERLYSTATEMENT_MESSAGE } = require('../../../mocks/messages/moc
 const { SFI23QUARTERLYSTATEMENT_MESSAGE: SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH } = require('../../../mocks/messages/publish')
 const { SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_FILENAME } = require('../../../mocks/components/filename')
 
-jest.mock('../../../../app/messaging/processing-alerts', () => ({ dataProcessingAlert: jest.fn() }))
-const { dataProcessingAlert } = require('../../../../app/messaging/processing-alerts')
+jest.mock('ffc-alerting-utils', () => ({ dataProcessingAlert: jest.fn() }))
+const { dataProcessingAlert } = require('ffc-alerting-utils')
 
 const validatePublishModule = require('../../../../app/messaging/publish/validate-publish')
 const createMessage = require('../../../../app/messaging/publish/create-message')
