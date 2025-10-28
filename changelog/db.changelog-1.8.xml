@@ -35,24 +35,16 @@
       <column name="email" type="VARCHAR(127)" />
     </addColumn>
     <addColumn tableName="generations">
-      <column name="schemeName" type="VARCHAR(175)">
-        <constraints nullable="false" />
-      </column>   
+      <column name="schemeName" type="VARCHAR(175)" />
     </addColumn>
     <addColumn tableName="generations">
-      <column name="schemeShortName" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>    
+      <column name="schemeShortName" type="VARCHAR(50)" />
     </addColumn>
     <addColumn tableName="generations">
-      <column name="schemeYear" type="VARCHAR(4)">
-        <constraints nullable="false" />
-      </column>
+      <column name="schemeYear" type="VARCHAR(4)" />
     </addColumn>
     <addColumn tableName="generations">
-      <column name="schemeFrequency" type="VARCHAR(50)">
-        <constraints nullable="false" />
-      </column>   
+      <column name="schemeFrequency" type="VARCHAR(50)" />   
     </addColumn>           
   </changeSet>
 </databaseChangeLog>
