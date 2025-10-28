@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.9.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+  <changeSet author="John Barnard" id="1">
+    <tagDatabase tag="v1.8.0" />
+  </changeSet>
+  <changeSet author="John Barnard" id="2">
+    <addColumn tableName="generations">
+      <column name="businessName" type="VARCHAR(127)" />
+    </addColumn>
+        <addColumn tableName="generations">
+      <column name="frn" type="BIGINT" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="sbi" type="INTEGER" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine1" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine2" type="VARCHAR(127)" />
+    </addColumn>
+        <addColumn tableName="generations">
+      <column name="addressLine3" type="VARCHAR(127)" />
+    </addColumn>
+        <addColumn tableName="generations">
+      <column name="addressLine4" type="VARCHAR(127)" />
+    </addColumn>
+        <addColumn tableName="generations">
+      <column name="addressLine5" type="VARCHAR(127)" />
+    </addColumn>
+        <addColumn tableName="generations">
+      <column name="postcode" type="VARCHAR(8)" />
+    </addColumn>
+        <addColumn tableName="generations">
+      <column name="email" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeName" type="VARCHAR(175)">
+        <constraints nullable="false" />
+      </column>   
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeShortName" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>    
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeYear" type="VARCHAR(4)">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeFrequency" type="VARCHAR(50)">
+        <constraints nullable="false" />
+      </column>   
+    </addColumn>           
+  </changeSet>
+</databaseChangeLog>
