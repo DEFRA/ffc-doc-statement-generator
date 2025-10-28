@@ -44,4 +44,25 @@ describe('create log', () => {
     await saveLog(statement, 'test.pdf', timestamp)
     expect(mockGeneration.create.mock.calls[0][0].filename).toBe('test.pdf')
   })
+
+  test('creates log with extracted fields from statementData', async () => {
+    await saveLog(statement, 'test.pdf', timestamp)
+
+    const callArgs = mockGeneration.create.mock.calls[0][0]
+
+    expect(callArgs.businessName).toBe(statement.BusinessName)
+    expect(callArgs.frn).toBe(statement.Frn)
+    expect(callArgs.sbi).toBe(statement.Sbi)
+    expect(callArgs.addressLine1).toBe(statement.AddressLine1)
+    expect(callArgs.addressLine2).toBe(statement.AddressLine2)
+    expect(callArgs.addressLine3).toBe(statement.AddressLine3)
+    expect(callArgs.addressLine4).toBe(statement.AddressLine4)
+    expect(callArgs.addressLine5).toBe(statement.AddressLine5)
+    expect(callArgs.postcode).toBe(statement.Postcode)
+    expect(callArgs.email).toBe(statement.Email)
+    expect(callArgs.schemeName).toBe(statement.SchemeName)
+    expect(callArgs.schemeShortName).toBe(statement.SchemeShortName)
+    expect(callArgs.schemeYear).toBe(statement.SchemeYear)
+    expect(callArgs.schemeFrequency).toBe(statement.SchemeFrequency)
+  })
 })
