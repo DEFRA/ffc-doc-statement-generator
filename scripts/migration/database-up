@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "db update on $POSTGRES_HOST $SCHEMA_NAME as $SCHEMA_USERNAME"
 /scripts/postgres-wait && /liquibase/liquibase \
+--contexts="!" \
 --driver=org.postgresql.Driver \
 --hub-mode=off \
 --changeLogFile=/changelog/db.changelog.xml \
