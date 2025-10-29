@@ -3,11 +3,26 @@
   <changeSet author="John Barnard" id="1">
     <tagDatabase tag="v1.10.0" />
   </changeSet>
- <changeSet author="John Barnard" id="4">
-  <comment>Enforce NOT NULL constraints after data population</comment>
-  <addNotNullConstraint tableName="generations" columnName="schemeName" columnDataType="VARCHAR(175)" />
-  <addNotNullConstraint tableName="generations" columnName="schemeShortName" columnDataType="VARCHAR(50)" />
-  <addNotNullConstraint tableName="generations" columnName="schemeYear" columnDataType="VARCHAR(4)" />
-  <addNotNullConstraint tableName="generations" columnName="schemeFrequency" columnDataType="VARCHAR(50)" />
+ <changeSet author="John Barnard" id="3">
+  <comment>Populate new columns from "statementData" JSON</comment>
+  <sql>
+    UPDATE generations
+    SET
+      "businessName" = "statementData"->>'businessName',
+      frn = ("statementData"->>'frn')::BIGINT,
+      sbi = ("statementData"->>'sbi')::INTEGER,
+      "addressLine1" = "statementData"->>'addressLine1',
+      "addressLine2" = "statementData"->>'addressLine2',
+      "addressLine3" = "statementData"->>'addressLine3',
+      "addressLine4" = "statementData"->>'addressLine4',
+      "addressLine5" = "statementData"->>'addressLine5',
+      postcode = "statementData"->>'postcode',
+      email = "statementData"->>'email',
+      "schemeName" = "statementData"->>'schemeName',
+      "schemeShortName" = "statementData"->>'schemeShortName',
+      "schemeYear" = "statementData"->>'schemeYear',
+      "schemeFrequency" = "statementData"->>'schemeFrequency'
+    WHERE "statementData" IS NOT NULL;
+  </sql>
 </changeSet>
 </databaseChangeLog>
