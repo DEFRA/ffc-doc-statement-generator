@@ -17,7 +17,9 @@
         "schemeName": "Mock Scheme",
         "schemeShortName": "MS",
         "schemeYear": "2025",
-        "schemeFrequency": "Annual"
+        "schemeFrequency": "Annual",
+        "email": "test@mail.com",
+        "postcode": "AB12 3CD"
       }'
     );
   </sql>

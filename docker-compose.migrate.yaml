@@ -16,6 +16,7 @@ services:
     image: liquibase/liquibase:4.12.0
     environment:
       <<: [*common-postgres, *common-migration]
+      LIQUIBASE_CONTEXTS: ${LIQUIBASE_CONTEXTS:-!}
     entrypoint: >
       sh -c "/scripts/migration/database-up"
     depends_on:
