@@ -3,42 +3,50 @@ const db = require('../data')
 const saveLog = async (statementData, filename, dateGenerated) => {
   const {
     documentReference: documentRef,
-    BusinessName,
-    Frn,
-    Sbi,
-    AddressLine1,
-    AddressLine2,
-    AddressLine3,
-    AddressLine4,
-    AddressLine5,
-    Postcode,
-    Email,
-    SchemeName,
-    SchemeShortName,
-    SchemeYear,
-    SchemeFrequency,
+    businessName,
+    frn,
+    sbi,
+    email,
+    address,
+    scheme,
     ...rest
   } = statementData
+
+  const {
+    line1: addressLine1,
+    line2: addressLine2,
+    line3: addressLine3,
+    line4: addressLine4,
+    line5: addressLine5,
+    postcode
+  } = address || {}
+
+  const {
+    name: schemeName,
+    shortName: schemeShortName,
+    year: schemeYear,
+    frequency: schemeFrequency
+  } = scheme || {}
 
   return db.generation.create({
     statementData: rest,
     documentReference: documentRef,
     filename,
     dateGenerated,
-    businessName: BusinessName,
-    frn: Frn,
-    sbi: Sbi,
-    addressLine1: AddressLine1,
-    addressLine2: AddressLine2,
-    addressLine3: AddressLine3,
-    addressLine4: AddressLine4,
-    addressLine5: AddressLine5,
-    postcode: Postcode,
-    email: Email,
-    schemeName: SchemeName,
-    schemeShortName: SchemeShortName,
-    schemeYear: SchemeYear,
-    schemeFrequency: SchemeFrequency
+    businessName,
+    frn,
+    sbi,
+    addressLine1,
+    addressLine2,
+    addressLine3,
+    addressLine4,
+    addressLine5,
+    postcode,
+    email,
+    schemeName,
+    schemeShortName,
+    schemeYear,
+    schemeFrequency
   })
 }
 
