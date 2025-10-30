@@ -16,11 +16,22 @@ describe('create log', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
-
   test('creates log with statement data', async () => {
     delete statement.documentReference
     await saveLog(statement, 'test.pdf', timestamp)
-    expect(mockGeneration.create.mock.calls[0][0].statementData).toStrictEqual(statement)
+
+    const {
+      address,
+      scheme,
+      businessName,
+      frn,
+      sbi,
+      email,
+      documentReference,
+      ...expectedStatementData
+    } = statement
+
+    expect(mockGeneration.create.mock.calls[0][0].statementData).toMatchObject(expectedStatementData)
   })
 
   test('creates log with statement data with no documentReference', async () => {
@@ -53,16 +64,16 @@ describe('create log', () => {
     expect(callArgs.businessName).toBe(statement.businessName)
     expect(callArgs.frn).toBe(statement.frn)
     expect(callArgs.sbi).toBe(statement.sbi)
-    expect(callArgs.addressLine1).toBe(statement.addressLine1)
-    expect(callArgs.addressLine2).toBe(statement.addressLine2)
-    expect(callArgs.addressLine3).toBe(statement.addressLine3)
-    expect(callArgs.addressLine4).toBe(statement.addressLine4)
-    expect(callArgs.addressLine5).toBe(statement.addressLine5)
-    expect(callArgs.postcode).toBe(statement.postcode)
+    expect(callArgs.addressLine1).toBe(statement.address.line1)
+    expect(callArgs.addressLine2).toBe(statement.address.line2)
+    expect(callArgs.addressLine3).toBe(statement.address.line3)
+    expect(callArgs.addressLine4).toBe(statement.address.line4)
+    expect(callArgs.addressLine5).toBe(statement.address.line5)
+    expect(callArgs.postcode).toBe(statement.address.postcode)
     expect(callArgs.email).toBe(statement.email)
-    expect(callArgs.schemeName).toBe(statement.schemeName)
-    expect(callArgs.schemeShortName).toBe(statement.schemeShortName)
-    expect(callArgs.schemeYear).toBe(statement.schemeYear)
-    expect(callArgs.schemeFrequency).toBe(statement.schemeFrequency)
+    expect(callArgs.schemeName).toBe(statement.scheme.name)
+    expect(callArgs.schemeShortName).toBe(statement.scheme.shortName)
+    expect(callArgs.schemeYear).toBe(statement.scheme.year)
+    expect(callArgs.schemeFrequency).toBe(statement.scheme.frequency)
   })
 })
