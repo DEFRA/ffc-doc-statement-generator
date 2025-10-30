@@ -8,6 +8,5 @@
   <addNotNullConstraint tableName="generations" columnName="schemeName" columnDataType="VARCHAR(175)" />
   <addNotNullConstraint tableName="generations" columnName="schemeShortName" columnDataType="VARCHAR(50)" />
   <addNotNullConstraint tableName="generations" columnName="schemeYear" columnDataType="VARCHAR(4)" />
-  <addNotNullConstraint tableName="generations" columnName="schemeFrequency" columnDataType="VARCHAR(50)" />
 </changeSet>
 </databaseChangeLog>
