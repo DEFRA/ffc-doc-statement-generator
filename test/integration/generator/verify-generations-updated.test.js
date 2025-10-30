@@ -11,14 +11,6 @@ describe('Liquibase migration populates columns from statementData', () => {
         }
       }
     })
-
-    // Sanitize BigInt fields for safe test usage
-    if (inserted) {
-      inserted = {
-        ...inserted.toJSON(),
-        frn: inserted.frn?.toString()
-      }
-    }
   })
 
   afterAll(async () => {
