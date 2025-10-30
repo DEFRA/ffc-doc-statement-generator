@@ -3,7 +3,7 @@ let noNotify
 
 const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 
-describe('process get no-notify by agreementNumber object', () => {
+describe.s('process get no-notify by agreementNumber object', () => {
   beforeAll(async () => {
     await db.sequelize.truncate({
       cascade: true,
