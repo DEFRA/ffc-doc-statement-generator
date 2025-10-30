@@ -3,25 +3,25 @@
   <changeSet author="John Barnard" id="1">
     <tagDatabase tag="v1.10.0" />
   </changeSet>
- <changeSet author="John Barnard" id="3">
-  <comment>Populate new columns from "statementData" JSON</comment>
+ <changeSet author="John Barnard" id="2">
+  <comment>Populate new columns from nested "statementData" JSON</comment>
   <sql>
     UPDATE generations
     SET
       "businessName" = "statementData"->>'businessName',
       frn = ("statementData"->>'frn')::BIGINT,
       sbi = ("statementData"->>'sbi')::INTEGER,
-      "addressLine1" = "statementData"->>'addressLine1',
-      "addressLine2" = "statementData"->>'addressLine2',
-      "addressLine3" = "statementData"->>'addressLine3',
-      "addressLine4" = "statementData"->>'addressLine4',
-      "addressLine5" = "statementData"->>'addressLine5',
-      postcode = "statementData"->>'postcode',
+      "addressLine1" = "statementData"->'address'->>'line1',
+      "addressLine2" = "statementData"->'address'->>'line2',
+      "addressLine3" = "statementData"->'address'->>'line3',
+      "addressLine4" = "statementData"->'address'->>'line4',
+      "addressLine5" = "statementData"->'address'->>'line5',
+      postcode = "statementData"->'address'->>'postcode',
       email = "statementData"->>'email',
-      "schemeName" = "statementData"->>'schemeName',
-      "schemeShortName" = "statementData"->>'schemeShortName',
-      "schemeYear" = "statementData"->>'schemeYear',
-      "schemeFrequency" = "statementData"->>'schemeFrequency'
+      "schemeName" = "statementData"->'scheme'->>'name',
+      "schemeShortName" = "statementData"->'scheme'->>'shortName',
+      "schemeYear" = "statementData"->'scheme'->>'year',
+      "schemeFrequency" = "statementData"->'scheme'->>'frequency'
     WHERE "statementData" IS NOT NULL;
   </sql>
 </changeSet>
