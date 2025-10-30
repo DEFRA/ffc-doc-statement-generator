@@ -7,7 +7,7 @@
     <addColumn tableName="generations">
       <column name="businessName" type="VARCHAR(127)" />
     </addColumn>
-        <addColumn tableName="generations">
+    <addColumn tableName="generations">
       <column name="frn" type="BIGINT" />
     </addColumn>
     <addColumn tableName="generations">
@@ -19,19 +19,19 @@
     <addColumn tableName="generations">
       <column name="addressLine2" type="VARCHAR(127)" />
     </addColumn>
-        <addColumn tableName="generations">
+    <addColumn tableName="generations">
       <column name="addressLine3" type="VARCHAR(127)" />
     </addColumn>
-        <addColumn tableName="generations">
+    <addColumn tableName="generations">
       <column name="addressLine4" type="VARCHAR(127)" />
     </addColumn>
-        <addColumn tableName="generations">
+    <addColumn tableName="generations">
       <column name="addressLine5" type="VARCHAR(127)" />
     </addColumn>
-        <addColumn tableName="generations">
+    <addColumn tableName="generations">
       <column name="postcode" type="VARCHAR(8)" />
     </addColumn>
-        <addColumn tableName="generations">
+    <addColumn tableName="generations">
       <column name="email" type="VARCHAR(127)" />
     </addColumn>
     <addColumn tableName="generations">
