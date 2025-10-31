@@ -6,8 +6,9 @@
   "main": "app/index.js",
   "scripts": {
     "pretest": "npm run test:lint",
-    "test": "jest --runInBand --forceExit",
-    "test:watch": "jest --coverage=false --onlyChanged --watch --runInBand",
+    "test": "jest --runInBand --forceExit --testPathIgnorePatterns=\"test/integration/generator/verify-generations-updated.test.js\"",
+    "test:watch": "jest --coverage=false --testPathIgnorePatterns=\"test/integration/generator/verify-generations-updated.test.js\" --onlyChanged --watch --runInBand",
+    "test-verify-generations-updated": "jest --runInBand --forceExit -- test/integration/generator/verify-generations-updated.test.js",
     "test:lint": "standard",
     "test:debug": "node --inspect-brk=0.0.0.0 ./node_modules/jest/bin/jest.js --coverage=false --onlyChanged --watch --runInBand --no-cache",
     "start:watch": "nodemon --inspect=0.0.0.0 --ext js --legacy-watch app/index.js",
