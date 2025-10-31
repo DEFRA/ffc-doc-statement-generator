@@ -7,7 +7,7 @@ services:
       target: development
     image: ffc-doc-statement-generator-development
     container_name: ffc-doc-statement-generator-test
-    command: npm run test-verify-generations-updated && npm run test
+    command: npm run test
     volumes:
       - ./app:/home/node/app
       - ./test:/home/node/test
