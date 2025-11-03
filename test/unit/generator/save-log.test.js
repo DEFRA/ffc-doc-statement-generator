@@ -80,4 +80,30 @@ describe('create log', () => {
     expect(callArgs.schemeYear).toBe(statement.scheme.year)
     expect(callArgs.schemeFrequency).toBe(statement.scheme.frequency)
   })
+
+  test('handles missing address gracefully', async () => {
+    delete statement.address
+    await saveLog(statement, 'test.pdf', timestamp)
+
+    const callArgs = mockGeneration.create.mock.calls[0][0]
+
+    expect(callArgs.addressLine1).toBeUndefined()
+    expect(callArgs.addressLine2).toBeUndefined()
+    expect(callArgs.addressLine3).toBeUndefined()
+    expect(callArgs.addressLine4).toBeUndefined()
+    expect(callArgs.addressLine5).toBeUndefined()
+    expect(callArgs.postcode).toBeUndefined()
+  })
+
+  test('handles missing scheme gracefully', async () => {
+    delete statement.scheme
+    await saveLog(statement, 'test.pdf', timestamp)
+
+    const callArgs = mockGeneration.create.mock.calls[0][0]
+
+    expect(callArgs.schemeName).toBeUndefined()
+    expect(callArgs.schemeShortName).toBeUndefined()
+    expect(callArgs.schemeYear).toBeUndefined()
+    expect(callArgs.schemeFrequency).toBeUndefined()
+  })
 })
