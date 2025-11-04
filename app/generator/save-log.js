@@ -8,8 +8,7 @@ const saveLog = async (statementData, filename, dateGenerated) => {
     sbi,
     email,
     address,
-    scheme,
-    ...rest
+    scheme
   } = statementData
 
   const {
