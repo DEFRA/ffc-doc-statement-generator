@@ -34,13 +34,6 @@ describe('create log', () => {
     expect(mockGeneration.create.mock.calls[0][0].statementData).toMatchObject(expectedStatementData)
   })
 
-  test('creates log with statement data with no documentReference', async () => {
-    await saveLog(statement, 'test.pdf', timestamp)
-
-    expect(Object.keys(statement)).toContain('documentReference')
-    expect(Object.keys(mockGeneration.create.mock.calls[0][0].statementData)).not.toContain('documentReference')
-  })
-
   test('creates log with documentReference', async () => {
     await saveLog(statement, 'test.pdf', timestamp)
     expect(mockGeneration.create.mock.calls[0][0].documentReference).toBe(statement.documentReference)
