@@ -29,7 +29,7 @@ const saveLog = async (statementData, filename, dateGenerated) => {
   } = scheme || {}
 
   return db.generation.create({
-    statementData: rest,
+    statementData,
     documentReference: documentRef,
     filename,
     dateGenerated,
