@@ -9,13 +9,10 @@ const schema = Joi.object({
   env: Joi.string().valid(DEVELOPMENT, TEST, PRODUCTION).default(DEVELOPMENT),
   statementReceiverApiVersion: Joi.string().required(),
   statementReceiverEndpoint: Joi.string().required(),
-  schedulesArePublished: Joi.boolean().required().default(false),
   showSfi23PaymentPeriod: Joi.boolean().optional().default(false),
   sfi23QuarterlyStatementEnabled: Joi.boolean().optional().default(false),
-  scheduleEnabled: Joi.boolean().optional().default(false),
-  sendCrmMessageEnabled: Joi.boolean().optional().default(false),
   delinkedGenerateStatementEnabled: Joi.boolean().optional().default(true),
-  sendDelinked2024Statements: Joi.boolean().optional().default(true),
+  sendCrmMessageEnabled: Joi.boolean().optional().default(false),
   publishingFrequency: Joi.number().default(60000)
 })
 
@@ -23,13 +20,10 @@ const config = {
   env: process.env.NODE_ENV,
   statementReceiverApiVersion: process.env.STATEMENT_RECEIVER_API_VERSION,
   statementReceiverEndpoint: process.env.STATEMENT_RECEIVER_ENDPOINT,
-  schedulesArePublished: process.env.SCHEDULES_ARE_PUBLISHED,
   showSfi23PaymentPeriod: process.env.SHOW_SFI_23_PAYMENT_PERIOD,
   sfi23QuarterlyStatementEnabled: process.env.SFI23QUARTERLYSTATEMENT_ENABLED,
   delinkedGenerateStatementEnabled: process.env.DELINKED_GENERATE_STATEMENT_ENABLED,
-  scheduleEnabled: process.env.SCHEDULE_ENABLED,
   sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
-  sendDelinked2024Statements: process.env.SEND_DELINKED_2024_STATEMENTS,
   publishingFrequency: process.env.PUBLISHING_FREQUENCY
 }
 

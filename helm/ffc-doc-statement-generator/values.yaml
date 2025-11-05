@@ -41,16 +41,13 @@ container:
   storageFolder: outbound
   statementReceiverApiVersion: v1
   statementReceiverEndpoint: https://ffc-doc-statement-receiver
-  schedulesArePublished: false
   showSfi23PaymentPeriod: false
   emailAddress: dummy
   apiKey: dummy
   emailTemplateKey: dummy
   sfi23QuarterlyStatementEnabled: false
   delinkedPaymentStatementEnabled: false
-  scheduleEnabled: false
   sendCrmMessageEnabled: false
-  sendDelinked2024Statements: true
   publishingFrequency: 60000
   alertTopicAddress: ffc-doc-alerting
 

@@ -1,5 +1,5 @@
-const { STATEMENT_MESSAGE, SCHEDULE_MESSAGE } = require('../../../mocks/messages/publish')
-const { STATEMENT: STATEMENT_TYPE, SCHEDULE: SCHEDULE_TYPE } = require('../../../../app/constants/document-types')
+const { SFI23QUARTERLYSTATEMENT_MESSAGE, DELINKEDSTATEMENT_MESSAGE } = require('../../../mocks/messages/publish')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../../app/constants/document-types')
 
 jest.mock('../../../../app/messaging/processing-alerts', () => ({
   dataProcessingAlert: jest.fn()
@@ -11,15 +11,15 @@ let publish
 let type
 
 describe('validate publish', () => {
-  describe('when publish is a statement', () => {
+  describe('when publish is an sfi23 statement', () => {
     beforeEach(() => {
-      type = STATEMENT_TYPE.id
+      type = SFI23QUARTERLYSTATEMENT.id
     })
 
     describe('when publish is valid', () => {
       beforeEach(() => {
-        publish = STATEMENT_MESSAGE
-        type = STATEMENT_TYPE.id
+        publish = SFI23QUARTERLYSTATEMENT_MESSAGE
+        type = SFI23QUARTERLYSTATEMENT.id
       })
 
       test('returns an object', async () => {
@@ -39,7 +39,7 @@ describe('validate publish', () => {
 
       test('returns publish.body for key "body"', async () => {
         const result = await validatePublish(publish, type)
-        expect(result.body).toStrictEqual(publish.body)
+        expect(result.body).toStrictEqual({ ...publish.body })
       })
 
       test('returns an object with "type" key', async () => {
@@ -76,21 +76,21 @@ describe('validate publish', () => {
         await expect(validatePublish(publish, type)).rejects.toThrow(Error)
       })
 
-      test('throws error which starts "statement does not have the required details"', async () => {
-        await expect(validatePublish(publish, type)).rejects.toThrow(/^statement does not have the required details/)
+      test('throws error which starts "sfi-23-quarterly-statement does not have the required details"', async () => {
+        await expect(validatePublish(publish, type)).rejects.toThrow(/^sfi-23-quarterly-statement does not have the required details/)
       })
     })
   })
 
-  describe('when publish is a schedule', () => {
+  describe('when publish is a delinked statement', () => {
     beforeEach(() => {
-      publish = SCHEDULE_MESSAGE
-      type = SCHEDULE_TYPE.id
+      publish = DELINKEDSTATEMENT_MESSAGE
+      type = DELINKED.id
     })
 
     describe('when publish is valid', () => {
       beforeEach(() => {
-        publish = SCHEDULE_MESSAGE
+        publish = DELINKEDSTATEMENT_MESSAGE
       })
 
       test('returns an object', async () => {
@@ -110,7 +110,8 @@ describe('validate publish', () => {
 
       test('returns publish.body for key "body"', async () => {
         const result = await validatePublish(publish, type)
-        expect(result.body).toStrictEqual(publish.body)
+        expect(result.body).toStrictEqual({ ...publish.body, transactionDate: expect.any(Date) })
+        expect(result.body.transactionDate.toISOString()).toBe(publish.body.transactionDate)
       })
 
       test('returns an object with "type" key', async () => {
@@ -147,8 +148,8 @@ describe('validate publish', () => {
         await expect(validatePublish(publish, type)).rejects.toThrow(Error)
       })
 
-      test('throws error which starts "schedule does not have the required details"', async () => {
-        await expect(validatePublish(publish, type)).rejects.toThrow(/^schedule does not have the required details/)
+      test('throws error which starts "delinked-statement does not have the required details"', async () => {
+        await expect(validatePublish(publish, type)).rejects.toThrow(/^delinked-statement does not have the required details/)
       })
     })
   })

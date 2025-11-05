@@ -1,9 +1,6 @@
-const { createContent: createStatementContent } = require('./statement/SFI')
-const { createContent: createSFI23AdvancedStatementContent } = require('./statement/SFIA')
-const { createContent: createScheduleContent } = require('./schedule')
 const { createContent: createSFI23Content } = require('./sfi23-quarterly-statement')
 const { createContent: createDelinkedContent } = require('./delinked-statement')
-const { STATEMENT, SCHEDULE, SFI23QUARTERLYSTATEMENT, SFI23ADVANCEDSTATEMENT, DELINKED } = require('../../constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../constants/document-types')
 const { dataProcessingAlert } = require('../../messaging/processing-alerts')
 const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 
@@ -21,14 +18,8 @@ const alertDefault = async (type, request) => {
 
 const generateContent = async (request, type) => {
   switch (type) {
-    case STATEMENT:
-      return createStatementContent(request)
-    case SCHEDULE:
-      return createScheduleContent(request)
     case SFI23QUARTERLYSTATEMENT:
       return createSFI23Content(request)
-    case SFI23ADVANCEDSTATEMENT:
-      return createSFI23AdvancedStatementContent(request)
     case DELINKED:
       return createDelinkedContent(request)
     default:

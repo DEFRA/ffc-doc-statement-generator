@@ -9,8 +9,8 @@ module.exports = {
   },
   businessName: 'name10',
   email: 'delinked4@godson.com',
-  frn: '1100016529',
-  sbi: '106678823',
+  frn: 1100016529,
+  sbi: 106678823,
   paymentReference: 'PY2066835',
   calculationId: '124876578',
   paymentPeriod: '2024',
@@ -39,7 +39,7 @@ module.exports = {
     year: '2025'
   },
   previousPaymentCount: '0',
-  documentReference: '100020',
+  documentReference: 100020,
   type: 'uk.gov.doc.delinked-statement.publish',
   excludedFromNotify: false
 }

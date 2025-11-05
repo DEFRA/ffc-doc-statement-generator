@@ -1,13 +1,13 @@
 const { getDocumentType } = require('../../../app/messaging/get-document-type')
-const { STATEMENT, SCHEDULE } = require('../../../app/constants/document-types')
+const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
 
 describe('get document type', () => {
-  test('returns statement type', async () => {
-    expect(getDocumentType(STATEMENT.type)).toBe(STATEMENT)
+  test('returns SFI23QUARTERLYSTATEMENT type', async () => {
+    expect(getDocumentType(SFI23QUARTERLYSTATEMENT.type)).toBe(SFI23QUARTERLYSTATEMENT)
   })
 
-  test('returns schedule type', async () => {
-    expect(getDocumentType(SCHEDULE.type)).toBe(SCHEDULE)
+  test('returns DELINKED type', async () => {
+    expect(getDocumentType(DELINKED.type)).toBe(DELINKED)
   })
 
   test('throws on unknown type', async () => {
