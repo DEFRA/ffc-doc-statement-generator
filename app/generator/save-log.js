@@ -1,15 +1,16 @@
 const db = require('../data')
 
 const saveLog = async (statementData, filename, dateGenerated) => {
+  const { documentReference: documentRef, ...data } = statementData
+
   const {
-    documentReference: documentRef,
     businessName,
     frn,
     sbi,
     email,
     address,
     scheme
-  } = statementData
+  } = data
 
   const {
     line1: addressLine1,
@@ -28,7 +29,7 @@ const saveLog = async (statementData, filename, dateGenerated) => {
   } = scheme || {}
 
   return db.generation.create({
-    statementData,
+    statementData: data,
     documentReference: documentRef,
     filename,
     dateGenerated,
