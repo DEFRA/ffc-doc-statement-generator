@@ -3,37 +3,48 @@
   <changeSet author="John Barnard" id="1">
     <tagDatabase tag="v1.8.0" />
   </changeSet>
-  <changeSet id="2" author="John Barnard" context="test">
-    <comment>Insert mock data for testing only</comment>
-    <sql>
-      INSERT INTO generations ("statementData")
-      VALUES (
-        '{
-          "businessName": "Test Farm",
-          "frn": 123456789,
-          "sbi": 987654,
-          "email": "test@mail.com",
-          "address": {
-            "line1": "Test Lane",
-            "line2": "Unit 2",
-            "line3": "Building A",
-            "line4": "Testville",
-            "line5": "Testshire",
-            "postcode": "AB12 3CD"
-          },
-          "scheme": {
-            "name": "Mock Scheme",
-            "shortName": "MS",
-            "year": "2025",
-            "frequency": "Annual",
-            "agreementNumber": "AG123456"
-          },
-          "transactionDate": "2025-01-01",
-          "calculationId": 111111111,
-          "paymentAmount": 1234.56,
-          "excludedFromNotify": false
-        }'
-      );
-    </sql>
+  <changeSet author="John Barnard" id="2">
+    <addColumn tableName="generations">
+      <column name="businessName" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="frn" type="BIGINT" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="sbi" type="INTEGER" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine1" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine2" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine3" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine4" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="addressLine5" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="postcode" type="VARCHAR(8)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="email" type="VARCHAR(127)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeName" type="VARCHAR(175)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeShortName" type="VARCHAR(50)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeYear" type="VARCHAR(4)" />
+    </addColumn>
+    <addColumn tableName="generations">
+      <column name="schemeFrequency" type="VARCHAR(50)" />   
+    </addColumn>           
   </changeSet>
 </databaseChangeLog>
