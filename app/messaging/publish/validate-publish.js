@@ -14,7 +14,7 @@ const validatePublish = async (publish, type) => {
   if (result.error) {
     const alertPayload = {
       process: 'validatePublish',
-      type,
+      payloadType: type,
       sbi: publish?.sbi,
       documentReference: publish?.documentReference,
       scheme: publish?.scheme,

@@ -11,7 +11,7 @@ const createMessage = async (document, filename, type) => {
   } catch (error) {
     const alertPayload = {
       process: 'createMessage' + (filename ? ' - ' + filename : ''),
-      type,
+      payloadType: type,
       sbi: document?.sbi,
       documentReference: document?.documentReference,
       scheme: document?.scheme,

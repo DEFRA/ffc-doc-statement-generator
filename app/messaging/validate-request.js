@@ -11,7 +11,7 @@ const alertDefault = async (type, request) => {
 
   const alertPayload = {
     process: 'validate-request',
-    type: payloadType,
+    payloadType,
     sbi: request?.sbi,
     scheme: request?.scheme,
     message: `Failed to generate content for ${prettyName}`
@@ -64,7 +64,7 @@ const validateRequest = async (request, type) => {
 
     const alertPayload = {
       process: 'validate-request',
-      type: payloadType,
+      payloadType,
       sbi: request?.sbi,
       scheme: request?.scheme,
       message: combinedMessage ?? `Failed to generate content for ${prettyName}`
