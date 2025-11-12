@@ -1,10 +1,11 @@
 const part2 = require('../../../../app/generator/content/sfi23-quarterly-statement/part2/index')
 const config = require('../../../../app/config')
-const getPaymentSummary = require('../../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-summary')
 const toCurrencyString = require('../../../../app/generator/to-currency-string')
 
-jest.mock('../../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-summary')
 jest.mock('../../../../app/generator/to-currency-string')
+jest.mock('../../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-summary')
+
+const getPaymentSummary = require('../../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-summary')
 
 describe('part2', () => {
   beforeEach(() => {
@@ -25,7 +26,7 @@ describe('part2', () => {
       { text: 'What you\'ve been paid', style: 'tableHeader2' },
       ...(showPeriod ? [{ text: [{ text: 'Period: ', bold: true, lineBreak: false }, '2024 Q1'] }] : []),
       { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
-      { text: 'This is usually paid into your account within 2 working days of March 31, 2024.' },
+      { text: 'This is usually paid into your account within 2 working days of 31 March 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'SFI23-123456789'] }
     ]
 
@@ -57,15 +58,19 @@ describe('getPaymentSummary', () => {
   test.each([true, false])('should generate payment summary with showSfi23PaymentPeriod=%p', (showPeriod) => {
     config.showSfi23PaymentPeriod = showPeriod
 
+    jest.unmock('../../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-summary')
+
+    const getPaymentSummaryOriginal = require('../../../../app/generator/content/sfi23-quarterly-statement/part2/get-payment-summary')
+
     const expected = [
       { text: 'What you\'ve been paid', style: 'tableHeader2' },
       ...(showPeriod ? [{ text: [{ text: 'Period: ', bold: true, lineBreak: false }, '2024 Q1'] }] : []),
       { text: [{ text: 'Payment amount: ', bold: true, lineBreak: false, style: 'separator' }, '£1,234.56'] },
-      { text: 'This is usually paid into your account within 2 working days of March 31, 2024.' },
+      { text: 'This is usually paid into your account within 2 working days of 31 March 2024.' },
       { text: [{ text: 'Payment reference: ', bold: true, lineBreak: false }, 'SFI23-123456789'] }
     ]
 
-    const result = getPaymentSummary(mockStatement)
+    const result = getPaymentSummaryOriginal(mockStatement)
 
     expect(result).toEqual(expected)
   })

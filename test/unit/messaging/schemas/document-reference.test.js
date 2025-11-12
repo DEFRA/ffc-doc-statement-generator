@@ -21,7 +21,8 @@ describe('documentReferenceSchema', () => {
       const result = schema.validate(value)
       expect(result).toBeInstanceOf(Object)
       expect(Object.keys(result)).toHaveLength(keysLength)
-      expect(result.value).toBe(valueOutput)
+
+      expect(result.value).toStrictEqual(valueOutput)
 
       if (errorType) {
         expect(result.error).toBeInstanceOf(Error)

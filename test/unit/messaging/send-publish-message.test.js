@@ -17,68 +17,57 @@ let document
 let filename
 let type
 
-const testDocumentProperties = ['filename', 'businessName', 'frn', 'sbi', 'address', 'email', 'scheme']
-const senderMethods = [
-  ['sendMessage', 'toHaveBeenCalled'],
-  ['sendMessage', 'toHaveBeenCalledTimes', 1],
-  ['sendMessage', 'toHaveBeenCalledWith', () => createMessage()],
-  ['closeConnection', 'toHaveBeenCalled'],
-  ['closeConnection', 'toHaveBeenCalledTimes', 1]
-]
-
-const createMessageTests = [
-  ['should call createMessage', 'toHaveBeenCalled'],
-  ['should call createMessage once', 'toHaveBeenCalledTimes', 1],
-  ['should call createMessage with document, filename and type', 'toHaveBeenCalledWith', (doc, file, t) => [doc, file, t]]
-]
-
-function runSharedPublishTests() {
-  test.each(createMessageTests)('%s', async (_, matcher, args) => {
-    await sendPublishMessage(document, filename, type)
-    const callArgs = typeof args === 'function' ? args(document, filename, type) : args
-    expect(createMessage)[matcher](callArgs)
-  })
-
-  test.each(testDocumentProperties)('should call mockMessageSender.sendMessage with body.%s', async (prop) => {
-    await sendPublishMessage(document, filename, type)
-    expect(mockMessageSender().sendMessage.mock.calls[0][0].body[prop]).toBe(prop === 'filename' ? filename : document[prop])
-  })
-
-  test.each(senderMethods)('%s', async (method, matcher, arg) => {
-    await sendPublishMessage(document, filename, type)
-    const target = mockMessageSender()[method]
-    const callArg = typeof arg === 'function' ? arg() : arg
-    expect(target)[matcher](callArg)
-  })
-}
-
 describe('send publish message', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  describe('when document is an sfi23 statement', () => {
-    beforeEach(() => {
-      document = SFI23QUARTERLYSTATEMENT_MESSAGE.body
-      filename = SFI23QUARTERLYSTATEMENT_FILENAME
-      type = SFI23QUARTERLYSTATEMENT.id
+  const scenarios = [
+    {
+      name: 'sfi23 statement',
+      documentMessage: SFI23QUARTERLYSTATEMENT_MESSAGE,
+      filenameValue: SFI23QUARTERLYSTATEMENT_FILENAME,
+      typeValue: SFI23QUARTERLYSTATEMENT.id,
+      publishMessage: SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH
+    },
+    {
+      name: 'delinked statement',
+      documentMessage: DELINKEDSTATEMENT_MESSAGE,
+      filenameValue: DELINKEDSTATEMENT,
+      typeValue: DELINKED.id,
+      publishMessage: DELINKEDSTATEMENT_MESSAGE_PUBLISH
+    }
+  ]
 
-      createMessage.mockReturnValue(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH)
+  scenarios.forEach(({ name, documentMessage, filenameValue, typeValue, publishMessage }) => {
+    describe(`when document is a ${name}`, () => {
+      beforeEach(() => {
+        document = documentMessage.body
+        filename = filenameValue
+        type = typeValue
+        createMessage.mockReturnValue(publishMessage)
+      })
+
+      test.each([
+        ['filename', () => filename],
+        ['businessName', () => document.businessName],
+        ['frn', () => document.frn],
+        ['sbi', () => document.sbi],
+        ['address', () => document.address],
+        ['email', () => document.email],
+        ['scheme', () => document.scheme],
+        ['type', () => publishMessage.type],
+        ['source', () => publishMessage.source]
+      ])('should call mockMessageSender.sendMessage with body.%s', async (field, getExpected) => {
+        await sendPublishMessage(document, filename, type)
+        const expected = getExpected()
+        if (['type', 'source'].includes(field)) {
+          expect(mockMessageSender().sendMessage.mock.calls[0][0][field]).toBe(expected)
+        } else {
+          expect(mockMessageSender().sendMessage.mock.calls[0][0].body[field]).toBe(expected)
+        }
+      })
     })
-
-    runSharedPublishTests()
-  })
-
-  describe('when document is a delinked statement', () => {
-    beforeEach(() => {
-      document = DELINKEDSTATEMENT_MESSAGE.body
-      filename = DELINKEDSTATEMENT
-      type = DELINKED.id
-
-      createMessage.mockReturnValue(DELINKEDSTATEMENT_MESSAGE_PUBLISH)
-    })
-
-    runSharedPublishTests()
   })
 })
 

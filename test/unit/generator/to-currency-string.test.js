@@ -18,7 +18,7 @@ describe('toCurrencyString', () => {
     { input: '123456789.01', expected: '£123,456,789.01' },
     { input: '1234567890.12', expected: '£1,234,567,890.12' },
     { input: '12345678901.23', expected: '£12,345,678,901.23' },
-    { input: '123456789012.34', expected: '£123,456,789,012.34' },
+    { input: '123456789012.34', expected: '£123,456,789,012.34' }
   ]
 
   testCases.forEach(({ input, expected }) => {

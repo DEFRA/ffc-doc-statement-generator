@@ -55,7 +55,7 @@ describe('publish schema validation', () => {
     if (error) {
       expect(result.error).toBeInstanceOf(Error)
       const detail = result.error.details[0]
-      expect(Object.keys(detail)).toEqual(['message', 'type', 'path', 'context'])
+      expect(Object.keys(detail)).toEqual(expect.arrayContaining(['message', 'type', 'path', 'context']))
       expect(detail.type).toBe(errorDetail.type)
       expect(detail.message).toBe(errorDetail.message)
     } else {

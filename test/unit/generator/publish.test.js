@@ -13,30 +13,30 @@ describe('publish', () => {
   let mockFilename
   let mockBlobClient
 
-  const chunk = Buffer.from('testChunk')
-
   beforeEach(() => {
-    mockPdfDoc = { on: jest.fn(), end: jest.fn() }
+    mockPdfDoc = {
+      on: jest.fn(),
+      end: jest.fn()
+    }
     mockStatement = {}
     mockTimestamp = Date.now()
     mockType = 'testType'
     mockFilename = 'testFilename.pdf'
-    mockBlobClient = { upload: jest.fn() }
+    mockBlobClient = {
+      upload: jest.fn()
+    }
 
     createFilename.mockReturnValue(mockFilename)
     getOutboundBlobClient.mockResolvedValue(mockBlobClient)
   })
 
-  const mockPdfEvents = (events) => {
+  test('should resolve with filename on successful publish', async () => {
     mockPdfDoc.on.mockImplementation((event, callback) => {
-      if (events[event]) events[event](callback)
-    })
-  }
-
-  test('resolves with filename on successful publish', async () => {
-    mockPdfEvents({
-      data: (cb) => cb(chunk),
-      end: (cb) => cb()
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
     })
 
     const result = await publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)
@@ -44,42 +44,114 @@ describe('publish', () => {
     expect(result).toBe(mockFilename)
     expect(createFilename).toHaveBeenCalledWith(mockStatement, mockTimestamp, mockType)
     expect(getOutboundBlobClient).toHaveBeenCalledWith(mockFilename)
-    expect(mockBlobClient.upload).toHaveBeenCalledWith(chunk, chunk.length)
+    expect(mockBlobClient.upload).toHaveBeenCalledWith(Buffer.from('testChunk'), Buffer.from('testChunk').length)
   })
 
-  describe('rejects with errors', () => {
-    const errorCases = [
-      ['pdfDoc emits error', { error: (cb) => cb(new Error('pdfError')) }, 'pdfError'],
-      ['pdfDoc emits non-error value', { error: (cb) => cb(new Error('pdfError')) }, 'pdfError'],
-      ['uploadToStorage throws error in end',
-        { data: (cb) => cb(chunk), end: (cb) => cb() },
-        'uploadError',
-        () => { mockBlobClient.upload.mockImplementation(() => { throw new Error('uploadError') }) }
-      ],
-      ['uploadToStorage throws non-error value',
-        { data: (cb) => cb(chunk), end: (cb) => cb() },
-        'uploadError',
-        () => { mockBlobClient.upload.mockImplementation(() => { throw new Error('uploadError') }) }
-      ],
-      ['getOutboundBlobClient rejects',
-        { data: (cb) => cb(chunk), end: (cb) => cb() },
-        'blobClientError',
-        () => { getOutboundBlobClient.mockRejectedValue(new Error('blobClientError')) }
-      ],
-      ['pdfDoc emits error after data',
-        { data: (cb) => cb(chunk), error: (cb) => cb(new Error('pdfError')) },
-        'pdfError'
-      ],
-      ['pdfDoc emits error after end',
-        { end: (cb) => cb(), error: (cb) => cb(new Error('pdfError')) },
-        'pdfError'
-      ]
-    ]
-
-    test.each(errorCases)('%s', async (_, events, expectedMessage, extraSetup) => {
-      if (extraSetup) extraSetup()
-      mockPdfEvents(events)
-      await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow(expectedMessage)
+  test('should reject with error on pdfDoc error', async () => {
+    const mockError = new Error('testError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'error') {
+        callback(mockError)
+      }
     })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
+
+  test('should reject with error on uploadToStorage error', async () => {
+    const mockError = new Error('uploadError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
+    })
+    mockBlobClient.upload.mockRejectedValue(mockError)
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('uploadError')
+  })
+
+  test('should reject with error on getOutboundBlobClient error', async () => {
+    const mockError = new Error('blobClientError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
+    })
+    getOutboundBlobClient.mockRejectedValue(mockError)
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('blobClientError')
+  })
+
+  test('should reject with error on uploadToStorage error within end event', async () => {
+    const mockError = new Error('uploadError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
+    })
+    mockBlobClient.upload.mockImplementation(() => {
+      throw mockError
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('uploadError')
+  })
+
+  test('should reject with error if pdfDoc emits error after data event', async () => {
+    const mockError = new Error('testError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'error') {
+        callback(mockError)
+      }
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
+
+  test('should reject with error if pdfDoc emits error after end event', async () => {
+    const mockError = new Error('testError')
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'end') {
+        callback()
+      } else if (event === 'error') {
+        callback(mockError)
+      }
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
+
+  test('should reject with new Error if pdfDoc emits non-error value', async () => {
+    const mockError = 'testError'
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'error') {
+        callback(mockError)
+      }
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('testError')
+  })
+
+  test('should reject with new Error if uploadToStorage throws non-error value', async () => {
+    const mockError = 'uploadError'
+    mockPdfDoc.on.mockImplementation((event, callback) => {
+      if (event === 'data') {
+        callback(Buffer.from('testChunk'))
+      } else if (event === 'end') {
+        callback()
+      }
+    })
+    mockBlobClient.upload.mockImplementation(() => {
+      throw mockError
+    })
+
+    await expect(publish(mockPdfDoc, mockStatement, mockTimestamp, mockType)).rejects.toThrow('uploadError')
   })
 })

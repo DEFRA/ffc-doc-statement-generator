@@ -1,65 +1,66 @@
 const getAddress = require('../../../../app/generator/content/get-address')
 
-const businessName = require('../../../mocks/components/business-name')
-const fullAddress = require('../../../mocks/components/address')
+const businessNameMock = require('../../../mocks/components/business-name')
+const fullAddressMock = require('../../../mocks/components/address')
 
 describe('getAddress', () => {
   const scenarios = [
     {
       name: 'empty address',
+      businessName: '',
       address: {},
       expectedLines: Array(8).fill('') // 8 empty lines
     },
     {
       name: 'full address',
-      address: fullAddress,
+      address: fullAddressMock,
       expectedLines: [
-        businessName,
-        fullAddress.line1,
-        fullAddress.line2,
-        fullAddress.line3,
-        fullAddress.line4,
-        fullAddress.line5,
-        fullAddress.postcode,
+        businessNameMock,
+        fullAddressMock.line1,
+        fullAddressMock.line2,
+        fullAddressMock.line3,
+        fullAddressMock.line4,
+        fullAddressMock.line5,
+        fullAddressMock.postcode,
         ''
       ]
     },
     {
       name: 'address with undefined values',
-      address: { ...fullAddress, line1: undefined, line4: undefined, postcode: undefined },
+      address: { ...fullAddressMock, line1: undefined, line4: undefined, postcode: undefined },
       expectedLines: [
-        businessName,
-        fullAddress.line2,
-        fullAddress.line3,
-        fullAddress.line5,
+        businessNameMock,
+        fullAddressMock.line2,
+        fullAddressMock.line3,
+        fullAddressMock.line5,
         '', '', '', ''
       ]
     },
     {
       name: 'address with null values',
-      address: { ...fullAddress, line1: null, line4: null, postcode: null },
+      address: { ...fullAddressMock, line1: null, line4: null, postcode: null },
       expectedLines: [
-        businessName,
-        fullAddress.line2,
-        fullAddress.line3,
-        fullAddress.line5,
+        businessNameMock,
+        fullAddressMock.line2,
+        fullAddressMock.line3,
+        fullAddressMock.line5,
         '', '', '', ''
       ]
     },
     {
       name: 'address with empty string values',
-      address: { ...fullAddress, line1: '', line4: '', postcode: '' },
+      address: { ...fullAddressMock, line1: '', line4: '', postcode: '' },
       expectedLines: [
-        businessName,
-        fullAddress.line2,
-        fullAddress.line3,
-        fullAddress.line5,
+        businessNameMock,
+        fullAddressMock.line2,
+        fullAddressMock.line3,
+        fullAddressMock.line5,
         '', '', '', ''
       ]
     }
   ]
 
-  test.each(scenarios)('should correctly format $name', ({ address, expectedLines }) => {
+  test.each(scenarios)('should correctly format $name', ({ businessName = businessNameMock, address, expectedLines }) => {
     const result = getAddress(businessName, address)
 
     const expectedText = expectedLines.map(line => line?.toUpperCase().substring(0, 50) || '').join('\n') + '\n'

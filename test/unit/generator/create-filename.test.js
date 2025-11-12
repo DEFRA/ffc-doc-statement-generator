@@ -13,6 +13,7 @@ let timestamp
 
 describe('create filename', () => {
   beforeEach(() => {
+    jest.resetModules()
     mockDelinkedStatement = require('../../mocks/mock-delinked-statement')
     mockSfi23QuarterlyStatement = require('../../mocks/mock-statement-sfi23-quarterly')
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 15, 30, 10, 120))
@@ -20,11 +21,12 @@ describe('create filename', () => {
   })
 
   test.each([
-    [mockDelinkedStatement, DELINKED, DELINKEDSTATEMENT_PREFIX, 'DP', 1100016529],
-    [mockSfi23QuarterlyStatement, SFI23QUARTERLYSTATEMENT, SFI23QUARTERLYSTATEMENT_PREFIX, 'SFI', 1104376954]
+    ['delinked', DELINKED, DELINKEDSTATEMENT_PREFIX, 'DP', 1100016529, () => ({ ...mockDelinkedStatement, scheme: { ...mockDelinkedStatement.scheme } })],
+    ['sfi23', SFI23QUARTERLYSTATEMENT, SFI23QUARTERLYSTATEMENT_PREFIX, 'SFI', 1104376954, () => ({ ...mockSfi23QuarterlyStatement, scheme: { ...mockSfi23QuarterlyStatement.scheme } })]
   ])(
     'generates correct filename for type %s',
-    (statement, type, prefix, schemeShortName, frn) => {
+    (name, type, prefix, schemeShortName, frn, statementFactory) => {
+      const statement = statementFactory()
       statement.scheme.shortName = schemeShortName
       statement.frn = frn
       const result = getFilename(statement, timestamp, type)
@@ -38,14 +40,15 @@ describe('create filename', () => {
   )
 
   test('falls back to document prefix for unknown type', () => {
-    const result = getFilename(mockDelinkedStatement, timestamp, 'unknown')
+    const statement = { ...mockDelinkedStatement, scheme: { ...mockDelinkedStatement.scheme } }
+    const result = getFilename(statement, timestamp, 'unknown')
     expect(result.startsWith(DOCUMENT_PREFIX)).toBeTruthy()
   })
 
   test('removes spaces for SFI23 quarterly statement', () => {
-    mockSfi23QuarterlyStatement.scheme.shortName = 'SFI'
-    mockSfi23QuarterlyStatement.frn = 1104376954
-    const result = getFilename(mockSfi23QuarterlyStatement, timestamp, SFI23QUARTERLYSTATEMENT)
+    const statement = { ...mockSfi23QuarterlyStatement, scheme: { ...mockSfi23QuarterlyStatement.scheme }, frn: 1104376954 }
+    statement.scheme.shortName = 'SFI'
+    const result = getFilename(statement, timestamp, SFI23QUARTERLYSTATEMENT)
     expect(result).toBe('FFC_PaymentSfi23QuarterlyStatement_SFI_2023_1104376954_2022080515301012.pdf')
   })
 })
