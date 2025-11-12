@@ -5,122 +5,45 @@ const { SFI23QUARTERLYSTATEMENT: SFI23QUARTERLYSTATEMENT_FILENAME, DELINKED_STAT
 
 const mapPublish = require('../../../../app/messaging/publish/map-publish')
 
-let document
-let filename
-let type
-let mappedPublish
-let expected
+describe('mapPublish', () => {
+  const testCases = [
+    {
+      desc: 'sfi23 valid document',
+      type: SFI23QUARTERLYSTATEMENT_TYPE.id,
+      document: SFI23QUARTERLYSTATEMENT_MESSAGE.body,
+      mappedMessage: { ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED, body: { ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED.body, filename: SFI23QUARTERLYSTATEMENT_FILENAME } },
+      filename: SFI23QUARTERLYSTATEMENT_FILENAME
+    },
+    {
+      desc: 'sfi23 null documentReference',
+      type: SFI23QUARTERLYSTATEMENT_TYPE.id,
+      document: { ...SFI23QUARTERLYSTATEMENT_MESSAGE.body, documentReference: null },
+      mappedMessage: { ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED, body: { ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED.body, documentReference: null, filename: SFI23QUARTERLYSTATEMENT_FILENAME } },
+      filename: SFI23QUARTERLYSTATEMENT_FILENAME
+    },
+    {
+      desc: 'delinked valid document',
+      type: DELINKED_TYPE.id,
+      document: DELINKEDSTATEMENT_MESSAGE.body,
+      mappedMessage: { ...DELINKEDSTATEMENT_MESSAGE_MAPPED, body: { ...DELINKEDSTATEMENT_MESSAGE_MAPPED.body, filename: DELINKEDSTATEMENT_FILENAME } },
+      filename: DELINKEDSTATEMENT_FILENAME
+    },
+    {
+      desc: 'delinked null documentReference',
+      type: DELINKED_TYPE.id,
+      document: { ...DELINKEDSTATEMENT_MESSAGE.body, documentReference: null },
+      mappedMessage: { ...DELINKEDSTATEMENT_MESSAGE_MAPPED, body: { ...DELINKEDSTATEMENT_MESSAGE_MAPPED.body, documentReference: null, filename: DELINKEDSTATEMENT_FILENAME } },
+      filename: DELINKEDSTATEMENT_FILENAME
+    }
+  ]
 
-describe('map publish', () => {
-  describe('when document is an sfi23 statement', () => {
-    beforeEach(() => {
-      filename = SFI23QUARTERLYSTATEMENT_FILENAME
-      type = SFI23QUARTERLYSTATEMENT_TYPE.id
-    })
+  test.each(testCases)('$desc', ({ type, document, mappedMessage, filename }) => {
+    // remove agreementNumber if present in mappedMessage.body
+    const expected = { ...mappedMessage, body: { ...mappedMessage.body } }
+    delete expected.body.agreementNumber
 
-    describe('when document is valid', () => {
-      beforeEach(() => {
-        document = SFI23QUARTERLYSTATEMENT_MESSAGE.body
-        mappedPublish = {
-          ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED,
-          body: {
-            ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED.body,
-            filename
-          }
-        }
-        expected = {
-          ...mappedPublish
-        }
-        delete expected.body.agreementNumber
-      })
-
-      test('returns an object', () => {
-        const result = mapPublish(document, filename, type)
-        expect(result).toEqual(expected)
-      })
-
-      test('returns an object with 3 keys', () => {
-        const result = mapPublish(document, filename, type)
-        expect(Object.keys(result)).toHaveLength(3)
-      })
-    })
-
-    describe('when document has null documentReference', () => {
-      beforeEach(() => {
-        document = {
-          ...SFI23QUARTERLYSTATEMENT_MESSAGE.body,
-          documentReference: null
-        }
-        mappedPublish = {
-          ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED,
-          body: {
-            ...SFI23QUARTERLYSTATEMENT_MESSAGE_MAPPED.body,
-            documentReference: null,
-            filename
-          }
-        }
-        expected = {
-          ...mappedPublish
-        }
-        delete expected.body.agreementNumber
-      })
-
-      test('returns an object', () => {
-        const result = mapPublish(document, filename, type)
-        expect(result).toEqual(expected)
-      })
-    })
-  })
-
-  describe('when document is a delinked statement', () => {
-    beforeEach(() => {
-      filename = DELINKEDSTATEMENT_FILENAME
-      type = DELINKED_TYPE.id
-    })
-
-    describe('when document is valid', () => {
-      beforeEach(() => {
-        document = DELINKEDSTATEMENT_MESSAGE.body
-        mappedPublish = {
-          ...DELINKEDSTATEMENT_MESSAGE_MAPPED,
-          body: {
-            ...DELINKEDSTATEMENT_MESSAGE_MAPPED.body,
-            filename
-          }
-        }
-      })
-
-      test('returns an object', () => {
-        const result = mapPublish(document, filename, type)
-        expect(result).toEqual(mappedPublish)
-      })
-
-      test('returns an object with 3 keys', () => {
-        const result = mapPublish(document, filename, type)
-        expect(Object.keys(result)).toHaveLength(3)
-      })
-    })
-
-    describe('when document has null documentReference', () => {
-      beforeEach(() => {
-        document = {
-          ...DELINKEDSTATEMENT_MESSAGE.body,
-          documentReference: null
-        }
-        mappedPublish = {
-          ...DELINKEDSTATEMENT_MESSAGE_MAPPED,
-          body: {
-            ...DELINKEDSTATEMENT_MESSAGE_MAPPED.body,
-            documentReference: null,
-            filename
-          }
-        }
-      })
-
-      test('returns an object', () => {
-        const result = mapPublish(document, filename, type)
-        expect(result).toEqual(mappedPublish)
-      })
-    })
+    const result = mapPublish(document, filename, type)
+    expect(result).toEqual(expected)
+    expect(Object.keys(result)).toHaveLength(3)
   })
 })

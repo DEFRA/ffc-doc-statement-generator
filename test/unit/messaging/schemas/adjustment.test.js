@@ -2,7 +2,9 @@ const schema = require('../../../../app/messaging/schemas/adjustment')
 
 let mockAdjustment
 
-describe('adjustment schema', () => {
+describe('adjustmentSchema', () => {
+  const requiredFields = ['currentValue', 'newValue', 'adjustmentValue']
+
   beforeEach(() => {
     mockAdjustment = JSON.parse(JSON.stringify(require('../../../mocks/objects/adjustment').topUpAdjustment))
   })
@@ -12,20 +14,8 @@ describe('adjustment schema', () => {
     expect(result.error).toBeUndefined()
   })
 
-  test('validates fail if missing current value', () => {
-    delete mockAdjustment.currentValue
-    const result = schema.validate(mockAdjustment)
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates fail if missing new value', () => {
-    delete mockAdjustment.newValue
-    const result = schema.validate(mockAdjustment)
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates fail if missing adjustment value', () => {
-    delete mockAdjustment.adjustmentValue
+  test.each(requiredFields)('validates fail if missing %s', (field) => {
+    delete mockAdjustment[field]
     const result = schema.validate(mockAdjustment)
     expect(result.error).toBeDefined()
   })

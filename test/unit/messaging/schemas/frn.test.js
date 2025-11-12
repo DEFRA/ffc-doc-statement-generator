@@ -1,43 +1,23 @@
 const schema = require('../../../../app/messaging/schemas/frn')
 
 describe('frn schema', () => {
-  test('validates success if frn valid', () => {
-    const result = schema.validate(1000000000)
+  const validFRNs = [1000000000, '1000000000']
+  const invalidFRNs = [
+    10000000000, // too high
+    100, // too low
+    null, // null
+    undefined, // undefined
+    '', // empty string
+    '100000000a' // unparseable string
+  ]
+
+  test.each(validFRNs)('validates success for valid FRN: %s', (frn) => {
+    const result = schema.validate(frn)
     expect(result.error).toBeUndefined()
   })
 
-  test('validates fail if frn too high', () => {
-    const result = schema.validate(10000000000)
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates fail if frn too low', () => {
-    const result = schema.validate(100)
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates fail if null frn', () => {
-    const result = schema.validate(null)
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates fail if undefined frn', () => {
-    const result = schema.validate(undefined)
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates fail if empty frn', () => {
-    const result = schema.validate('')
-    expect(result.error).toBeDefined()
-  })
-
-  test('validates success if frn is a string that can be parsed', () => {
-    const result = schema.validate('1000000000')
-    expect(result.error).not.toBeDefined()
-  })
-
-  test('validates fail if frn is a string that cannot be parsed', () => {
-    const result = schema.validate('100000000a')
+  test.each(invalidFRNs)('validates failure for invalid FRN: %s', (frn) => {
+    const result = schema.validate(frn)
     expect(result.error).toBeDefined()
   })
 })
