@@ -11,3 +11,5 @@ resources:
       role: sender
     - name: ffc-doc-statement-crm
       role: sender
+    - name: ffc-doc-alerting
+      role: sender
