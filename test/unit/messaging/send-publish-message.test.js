@@ -22,188 +22,51 @@ describe('send publish message', () => {
     jest.clearAllMocks()
   })
 
-  describe('when document is an sfi23 statement', () => {
-    beforeEach(() => {
-      document = SFI23QUARTERLYSTATEMENT_MESSAGE.body
-      filename = SFI23QUARTERLYSTATEMENT_FILENAME
-      type = SFI23QUARTERLYSTATEMENT.id
+  const scenarios = [
+    {
+      name: 'sfi23 statement',
+      documentMessage: SFI23QUARTERLYSTATEMENT_MESSAGE,
+      filenameValue: SFI23QUARTERLYSTATEMENT_FILENAME,
+      typeValue: SFI23QUARTERLYSTATEMENT.id,
+      publishMessage: SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH
+    },
+    {
+      name: 'delinked statement',
+      documentMessage: DELINKEDSTATEMENT_MESSAGE,
+      filenameValue: DELINKEDSTATEMENT,
+      typeValue: DELINKED.id,
+      publishMessage: DELINKEDSTATEMENT_MESSAGE_PUBLISH
+    }
+  ]
 
-      createMessage.mockReturnValue(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH)
-    })
+  scenarios.forEach(({ name, documentMessage, filenameValue, typeValue, publishMessage }) => {
+    describe(`when document is a ${name}`, () => {
+      beforeEach(() => {
+        document = documentMessage.body
+        filename = filenameValue
+        type = typeValue
+        createMessage.mockReturnValue(publishMessage)
+      })
 
-    test('should call createMessage', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(createMessage).toHaveBeenCalled()
-    })
-
-    test('should call createMessage once', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(createMessage).toHaveBeenCalledTimes(1)
-    })
-
-    test('should call createMessage with document, filename and type', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(createMessage).toHaveBeenCalledWith(document, filename, type)
-    })
-
-    test('should call mockMessageSender.sendMessage', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage).toHaveBeenCalled()
-    })
-
-    test('should call mockMessageSender.sendMessage once', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.filename', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(filename)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.businessName', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.businessName).toBe(document.businessName)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.frn', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.frn).toBe(document.frn)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.sbi', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.sbi).toBe(document.sbi)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.address', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.address).toBe(document.address)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.email', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.email).toBe(document.email)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.scheme', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.scheme).toBe(document.scheme)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.type', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].type).toBe(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH.type)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.source', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].source).toBe(SFI23QUARTERLYSTATEMENT_MESSAGE_PUBLISH.source)
-    })
-
-    test('should call mockMessageSender.sendMessage with createMessage', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage).toHaveBeenCalledWith(createMessage())
-    })
-
-    test('should call mockMessageSender.closeConnection', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().closeConnection).toHaveBeenCalled()
-    })
-
-    test('should call mockMessageSender.closeConnection once', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().closeConnection).toHaveBeenCalledTimes(1)
-    })
-  })
-
-  describe('when document is a delinked statement', () => {
-    beforeEach(() => {
-      document = DELINKEDSTATEMENT_MESSAGE.body
-      filename = DELINKEDSTATEMENT
-      type = DELINKED.id
-
-      createMessage.mockReturnValue(DELINKEDSTATEMENT_MESSAGE_PUBLISH)
-    })
-
-    test('should call createMessage', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(createMessage).toHaveBeenCalled()
-    })
-
-    test('should call createMessage once', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(createMessage).toHaveBeenCalledTimes(1)
-    })
-
-    test('should call createMessage with document, filename and type', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(createMessage).toHaveBeenCalledWith(document, filename, type)
-    })
-
-    test('should call mockMessageSender.sendMessage', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage).toHaveBeenCalled()
-    })
-
-    test('should call mockMessageSender.sendMessage once', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.filename', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.filename).toBe(filename)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.businessName', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.businessName).toBe(document.businessName)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.frn', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.frn).toBe(document.frn)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.sbi', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.sbi).toBe(document.sbi)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.address', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.address).toBe(document.address)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.email', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.email).toBe(document.email)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.scheme', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].body.scheme).toBe(document.scheme)
-    })
-
-    test('should call mockMessageSender.sendMessage with body.type', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage.mock.calls[0][0].type).toBe(DELINKEDSTATEMENT_MESSAGE_PUBLISH.type)
-    })
-
-    test('should call mockMessageSender.sendMessage with createMessage', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().sendMessage).toHaveBeenCalledWith(createMessage())
-    })
-
-    test('should call mockMessageSender.closeConnection', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().closeConnection).toHaveBeenCalled()
-    })
-
-    test('should call mockMessageSender.closeConnection once', async () => {
-      await sendPublishMessage(document, filename, type)
-      expect(mockMessageSender().closeConnection).toHaveBeenCalledTimes(1)
+      test.each([
+        ['filename', () => filename],
+        ['businessName', () => document.businessName],
+        ['frn', () => document.frn],
+        ['sbi', () => document.sbi],
+        ['address', () => document.address],
+        ['email', () => document.email],
+        ['scheme', () => document.scheme],
+        ['type', () => publishMessage.type],
+        ['source', () => publishMessage.source]
+      ])('should call mockMessageSender.sendMessage with body.%s', async (field, getExpected) => {
+        await sendPublishMessage(document, filename, type)
+        const expected = getExpected()
+        if (['type', 'source'].includes(field)) {
+          expect(mockMessageSender().sendMessage.mock.calls[0][0][field]).toBe(expected)
+        } else {
+          expect(mockMessageSender().sendMessage.mock.calls[0][0].body[field]).toBe(expected)
+        }
+      })
     })
   })
 })

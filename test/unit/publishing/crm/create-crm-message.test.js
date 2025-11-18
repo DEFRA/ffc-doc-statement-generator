@@ -35,28 +35,26 @@ describe('send crm message for statement', () => {
     schema.validate.mockReturnValue({ value: crmValid })
   })
 
-  test('should map DP scheme to Delinked in message', async () => {
+  test('should map DP scheme to Delinked in message', () => {
     const result = createCrmMessage(mockStatement, FILENAME, DELINKED)
     expect(result.body.scheme).toBe('Delinked')
   })
 
-  test('should call schema.validate when statement and filename are given', async () => {
-    createCrmMessage(mockStatement, FILENAME, DELINKED)
-    expect(schema.validate).toHaveBeenCalled()
-  })
-
-  test('should call schema.validate once when statement and filename are given', async () => {
-    createCrmMessage(mockStatement, FILENAME, DELINKED)
-    expect(schema.validate).toHaveBeenCalledTimes(1)
-  })
-
-  test('should return valid message when statement and filename are given', async () => {
+  test('should return valid message when statement and filename are given', () => {
     const result = createCrmMessage(mockStatement, FILENAME, DELINKED)
     expect(result).toStrictEqual(crmMessage)
   })
 
-  test('should throw Error when schema validate throws Error', async () => {
+  test('should throw Error when schema validate throws Error', () => {
     schema.validate.mockReturnValue({ error: 'Not a valid object' })
     expect(() => createCrmMessage(mockStatement, FILENAME, DELINKED)).toThrow(Error)
+  })
+
+  test.each([
+    ['should call schema.validate', 1],
+    ['should call schema.validate once', 1]
+  ])('%s', (_, expectedCallCount) => {
+    createCrmMessage(mockStatement, FILENAME, DELINKED)
+    expect(schema.validate).toHaveBeenCalledTimes(expectedCallCount)
   })
 })
