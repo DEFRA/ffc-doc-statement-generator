@@ -5,10 +5,12 @@ data:
   APPINSIGHTS_CLOUDROLE: {{ quote .Values.name }}
   MESSAGE_QUEUE_HOST: {{ quote .Values.container.messageQueueHost }}
   {{- if and (.Values.environmentCode) (not .Values.pr) }}
+  ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}-{{ .Values.environmentCode }}
   STATEMENT_TOPIC_ADDRESS: {{ .Values.container.statementTopicAddress }}-{{ .Values.environmentCode }}
   PUBLISH_TOPIC_ADDRESS: {{ .Values.container.publishTopicAddress }}-{{ .Values.environmentCode }}
   CRM_TOPIC_ADDRESS: {{ .Values.container.crmTopicAddress }}-{{ .Values.environmentCode }}
   {{ else }}
+  ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}
   STATEMENT_TOPIC_ADDRESS: {{ .Values.container.statementTopicAddress }}
   PUBLISH_TOPIC_ADDRESS: {{ .Values.container.publishTopicAddress }}
   CRM_TOPIC_ADDRESS: {{ .Values.container.crmTopicAddress }}
@@ -38,5 +40,4 @@ data:
   DELINKEDPAYMENTSTATEMENT_ENABLED: {{ quote .Values.container.delinkedPaymentStatementEnabled }}
   SEND_CRM_MESSAGE_ENABLED: {{ quote .Values.container.sendCrmMessageEnabled }}
   PUBLISHING_FREQUENCY: {{ quote .Values.container.publishingFrequency }}
-  ALERT_TOPIC_ADDRESS: {{ .Values.container.alertTopicAddress }}
 {{- end -}}
