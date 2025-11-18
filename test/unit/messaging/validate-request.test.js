@@ -72,7 +72,7 @@ describe('validation message composition', () => {
   test.each([
     [{ details: [{ message: 'err1' }, { message: 'err2' }], message: 'err1; err2' }, 'err1; err2'],
     [{ message: 'simple validation error' }, 'simple validation error'],
-    [{ message: 'Validation failed' }, 'Validation failed'] // change from {} to { message: 'Validation failed' }
+    [{ message: 'Validation failed' }, 'Validation failed']
   ])('generates validation message: %p', async (mockError, expectedMessage) => {
     jest.resetModules()
     const mockDataProcessingAlert = jest.fn()
