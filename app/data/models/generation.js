@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const generation = sequelize.define('generation', {
-    generationId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    generationId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, comment: 'History log for statement creation etc' },
     statementData: DataTypes.JSON,
     dateGenerated: DataTypes.DATE,
     filename: DataTypes.STRING,
