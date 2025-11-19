@@ -6,12 +6,39 @@ const { createAlerts } = require('../../../app/messaging/create-alerts')
 const { dataProcessingAlert, deriveAlertData } = require('../../../app/messaging/processing-alerts')
 
 describe('deriveAlertData', () => {
-  test('keeps existing non-empty message unchanged', () => {
-    const payload = { process: 'my-process', message: 'already present', error: { foo: 'bar' } }
-    const result = deriveAlertData(payload, 'my-process')
-    expect(result.message).toBe('already present')
-    expect(result.error).toEqual({ foo: 'bar' })
-    expect(result.process).toBe('my-process')
+  const simpleCases = [
+    {
+      name: 'keeps existing non-empty message unchanged',
+      payload: { process: 'my-process', message: 'already present', error: { foo: 'bar' } },
+      expected: { message: 'already present', process: 'my-process', error: { foo: 'bar' } }
+    },
+    {
+      name: 'extracts message from error object with message and keeps original error object',
+      payload: { process: 'proc2', message: null, error: { message: 'obj message', code: 123 } },
+      expected: { message: 'obj message', process: 'proc2', error: { message: 'obj message', code: 123 } }
+    },
+    {
+      name: 'uses string error as message and clears error to null',
+      payload: { process: 'sproc', message: '   ', error: 'simple string error' },
+      expected: { message: 'simple string error', process: 'sproc', error: null }
+    },
+    {
+      name: 'uses default message when no message and no error',
+      payload: { process: 'noerr' },
+      expected: (result) => {
+        expect(result.message).toBe('Failed processing noerr')
+        expect(Object.prototype.hasOwnProperty.call(result, 'error')).toBe(false)
+      }
+    }
+  ]
+
+  test.each(simpleCases)('$name', ({ payload, expected }) => {
+    const result = deriveAlertData(payload, payload.process)
+    if (typeof expected === 'function') {
+      expected(result)
+    } else {
+      expect(result).toMatchObject(expected)
+    }
   })
 
   test('extracts message from Error instance and replaces error with {message, stack}', () => {
@@ -23,28 +50,6 @@ describe('deriveAlertData', () => {
     expect(result.error).toBeDefined()
     expect(result.error.message).toBe('boom happened')
     expect(typeof result.error.stack).toBe('string')
-  })
-
-  test('extracts message from error object with message and keeps original error object', () => {
-    const errObj = { message: 'obj message', code: 123 }
-    const payload = { process: 'proc2', message: null, error: errObj }
-    const result = deriveAlertData(payload, 'proc2')
-    expect(result.message).toBe('obj message')
-    expect(result.error).toBe(errObj)
-  })
-
-  test('uses string error as message and clears error to null', () => {
-    const payload = { process: 'sproc', message: '   ', error: 'simple string error' }
-    const result = deriveAlertData(payload, 'sproc')
-    expect(result.message).toBe('simple string error')
-    expect(result.error).toBeNull()
-  })
-
-  test('uses default message when no message and no error', () => {
-    const payload = { process: 'noerr' /* no message, no error */ }
-    const result = deriveAlertData(payload, 'noerr')
-    expect(result.message).toBe('Failed processing noerr')
-    expect(Object.prototype.hasOwnProperty.call(result, 'error')).toBe(false)
   })
 })
 
@@ -87,13 +92,14 @@ describe('dataProcessingAlert (integration with publish/createAlerts)', () => {
     expect(createAlerts).toHaveBeenCalledTimes(1)
   })
 
-  test('throws TypeError when payload is not an object', async () => {
-    await expect(dataProcessingAlert(null)).rejects.toThrow(TypeError)
-    await expect(dataProcessingAlert(123)).rejects.toThrow(TypeError)
-  })
+  const invalidPayloads = [
+    [null, TypeError],
+    [123, TypeError],
+    [{}, TypeError],
+    [{ process: 123 }, TypeError]
+  ]
 
-  test('throws TypeError when payload.process is missing or not a string', async () => {
-    await expect(dataProcessingAlert({})).rejects.toThrow(TypeError)
-    await expect(dataProcessingAlert({ process: 123 })).rejects.toThrow(TypeError)
+  test.each(invalidPayloads)('throws TypeError when payload is invalid: %p', async (payload, errorType) => {
+    await expect(dataProcessingAlert(payload)).rejects.toThrow(errorType)
   })
 })

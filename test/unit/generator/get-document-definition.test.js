@@ -10,7 +10,6 @@ jest.mock('../../../app/generator/content')
 describe('getDocumentDefinition', () => {
   const mockRequest = {}
   const mockContent = {}
-
   const horizontalMargin = 15
   const verticalMargin = 5
 
@@ -18,59 +17,68 @@ describe('getDocumentDefinition', () => {
     generateContent.mockResolvedValue(mockContent)
   })
 
-  const documentTypes = [SFI23QUARTERLYSTATEMENT, DELINKED]
+  const documentTypes = [
+    { type: SFI23QUARTERLYSTATEMENT, name: 'SFI23QUARTERLYSTATEMENT' },
+    { type: DELINKED, name: 'DELINKED' }
+  ]
 
-  documentTypes.forEach(type => {
-    test(`returns correct pageSize for type: ${type.id}`, async () => {
+  test.each(documentTypes)(
+    'returns correct pageSize for %s',
+    async ({ type }) => {
       const result = await getDocumentDefinition(mockRequest, type)
       expect(result.pageSize).toBe(A4)
-    })
+    }
+  )
 
-    test(`returns correct content for type: ${type.id}`, async () => {
+  test.each(documentTypes)(
+    'returns correct content for %s',
+    async ({ type }) => {
       const result = await getDocumentDefinition(mockRequest, type)
       expect(result.content).toBe(mockContent)
       expect(generateContent).toHaveBeenCalledWith(mockRequest, type)
-    })
+    }
+  )
 
-    test(`returns all defined styles for type: ${type.id}`, async () => {
+  test.each(documentTypes)(
+    'returns all defined styles for %s',
+    async ({ type }) => {
       const result = await getDocumentDefinition(mockRequest, type)
       expect(result.styles).toStrictEqual(styles)
-    })
+    }
+  )
 
-    test(`sets default style as default style for type: ${type.id}`, async () => {
+  test.each(documentTypes)(
+    'sets default style for %s',
+    async ({ type }) => {
       const result = await getDocumentDefinition(mockRequest, type)
       expect(result.defaultStyle).toBe(styles.default)
-    })
+    }
+  )
 
-    test(`sets the left margin for ${type.name}`, async () => {
+  test.each(documentTypes)(
+    'sets correct page margins for %s',
+    async ({ type }) => {
       const result = await getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[0]).toBe(millimetresToPoints(horizontalMargin))
-    })
+      expect(result.pageMargins).toEqual([
+        millimetresToPoints(horizontalMargin),
+        millimetresToPoints(verticalMargin),
+        millimetresToPoints(horizontalMargin),
+        millimetresToPoints(verticalMargin)
+      ])
+    }
+  )
 
-    test(`sets the top margin for ${type.name}`, async () => {
-      const result = await getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[1]).toBe(millimetresToPoints(verticalMargin))
-    })
-
-    test(`sets the right margin for ${type.name}`, async () => {
-      const result = await getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[2]).toBe(millimetresToPoints(horizontalMargin))
-    })
-
-    test(`sets the bottom margin for ${type.name}`, async () => {
-      const result = await getDocumentDefinition(mockRequest, type)
-      expect(result.pageMargins[3]).toBe(millimetresToPoints(verticalMargin))
-    })
-
-    test(`returns an object with the correct structure for type: ${type.id}`, async () => {
+  test.each(documentTypes)(
+    'returns object with correct structure for %s',
+    async ({ type }) => {
       const result = await getDocumentDefinition(mockRequest, type)
       expect(result).toHaveProperty('content')
       expect(result).toHaveProperty('pageSize')
       expect(result).toHaveProperty('pageMargins')
       expect(result).toHaveProperty('styles')
       expect(result).toHaveProperty('defaultStyle')
-    })
-  })
+    }
+  )
 
   test('throws error if generateContent fails', async () => {
     const error = new Error('Test error')

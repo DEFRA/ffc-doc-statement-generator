@@ -1,34 +1,34 @@
 const db = require('../../../app/data')
-let noNotify
-
 const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
+const mockNoNotify = require('../../mocks/objects/mock-no-notify')
 
-describe('process get no-notify by agreementNumber object', () => {
+describe('getNoNotifyByAgreementNumber', () => {
   beforeAll(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
+    await db.sequelize.truncate({ cascade: true, restartIdentity: true })
   })
 
   beforeEach(async () => {
-    noNotify = JSON.parse(JSON.stringify(require('../../mocks/objects/mock-no-notify')))
-    await db.noNotify.bulkCreate(noNotify)
+    await db.noNotify.bulkCreate(mockNoNotify)
   })
 
   afterEach(async () => {
-    await db.sequelize.truncate({
-      cascade: true,
-      restartIdentity: true
-    })
+    await db.sequelize.truncate({ cascade: true, restartIdentity: true })
   })
 
   afterAll(async () => {
     await db.sequelize.close()
   })
 
-  test('should return record with corresponding agreement number when claimId exists', async () => {
-    const result = await getNoNotifyByAgreementNumber(noNotify[0].agreementNumber)
-    expect(result.agreementNumber).toBe(noNotify[0].agreementNumber)
+  test('returns record with matching agreement number when it exists', async () => {
+    const target = mockNoNotify[0]
+    const result = await getNoNotifyByAgreementNumber(target.agreementNumber)
+
+    expect(result).not.toBeNull()
+    expect(result.agreementNumber).toBe(target.agreementNumber)
+  })
+
+  test('returns null when agreement number does not exist', async () => {
+    const result = await getNoNotifyByAgreementNumber('NON_EXISTENT_AGREEMENT')
+    expect(result).toBeNull()
   })
 })
