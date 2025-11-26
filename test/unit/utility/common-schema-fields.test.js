@@ -1,25 +1,22 @@
 const { numberSchema, stringSchema, emailSchema, dateSchema, precisionSchema } = require('../../../app/utility/common-schema-fields')
 
-describe('Validation Schema Tests', () => {
+describe('validationSchemaTests', () => {
   describe('numberSchema', () => {
+    const schemaName = 'testNumber'
+    const schema = numberSchema(schemaName)
+
     test('should validate a valid integer', () => {
-      const schema = numberSchema('testNumber')
       const result = schema.validate(100)
       expect(result.error).toBeUndefined()
     })
 
-    test('should return error for non-integer value', () => {
-      const schema = numberSchema('testNumber')
-      const result = schema.validate(100.5)
+    test.each([
+      { value: 100.5, expectedMessage: `${schemaName} should be an integer` },
+      { value: undefined, expectedMessage: `The field ${schemaName} is not present but it is required` }
+    ])('should return error for invalid number %#', ({ value, expectedMessage }) => {
+      const result = schema.validate(value)
       expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('testNumber should be an integer')
-    })
-
-    test('should return error for missing value', () => {
-      const schema = numberSchema('testNumber')
-      const result = schema.validate()
-      expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('The field testNumber is not present but it is required')
+      expect(result.error.message).toBe(expectedMessage)
     })
   })
 
@@ -30,31 +27,21 @@ describe('Validation Schema Tests', () => {
       expect(result.error).toBeUndefined()
     })
 
-    test('should return error for string exceeding max length', () => {
-      const schema = stringSchema('testString', 5)
-      const result = schema.validate('exceeding')
+    test.each([
+      { name: 'testString', value: 'exceeding', maxLength: 5, expectedMessage: 'testString should have a maximum length of 5' },
+      { name: 'testString', value: undefined, expectedMessage: 'The field testString is not present but it is required' },
+      { name: 'testPattern', value: 'InvalidString123', pattern: /^[a-z]+$/, expectedMessage: 'testPattern is not in the correct format' }
+    ])('should return error for invalid or missing string %#', ({ name, value, maxLength, pattern, expectedMessage }) => {
+      const schema = stringSchema(name, maxLength, pattern)
+      const result = schema.validate(value)
       expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('testString should have a maximum length of 5')
-    })
-
-    test('should return error for missing string', () => {
-      const schema = stringSchema('testString')
-      const result = schema.validate()
-      expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('The field testString is not present but it is required')
+      expect(result.error.message).toBe(expectedMessage)
     })
 
     test('should validate string matching pattern', () => {
       const schema = stringSchema('testPattern', undefined, /^[a-z]+$/)
       const result = schema.validate('validstring')
       expect(result.error).toBeUndefined()
-    })
-
-    test('should return error for string not matching pattern', () => {
-      const schema = stringSchema('testPattern', undefined, /^[a-z]+$/)
-      const result = schema.validate('InvalidString123')
-      expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('testPattern is not in the correct format')
     })
   })
 
@@ -65,7 +52,7 @@ describe('Validation Schema Tests', () => {
       expect(result.error).toBeUndefined()
     })
 
-    test('should return error for missing email', () => {
+    test('should return no error for null email', () => {
       const schema = emailSchema('testEmail')
       const result = schema.validate(null)
       expect(result.error).toBeUndefined()
@@ -73,39 +60,37 @@ describe('Validation Schema Tests', () => {
   })
 
   describe('dateSchema', () => {
+    const schemaName = 'testDate'
+    const schema = dateSchema(schemaName)
+
     test('should validate a valid date', () => {
-      const schema = dateSchema('testDate')
       const result = schema.validate(new Date('2024-01-01'))
       expect(result.error).toBeUndefined()
     })
 
-    test('should return error for invalid date', () => {
-      const schema = dateSchema('testDate')
-      const result = schema.validate('not-a-date')
+    test.each([
+      { value: 'not-a-date', expectedMessage: `${schemaName} should be a valid date` },
+      { value: undefined, expectedMessage: `The field ${schemaName} is not present but it is required` }
+    ])('should return error for invalid or missing date %#', ({ value, expectedMessage }) => {
+      const result = schema.validate(value)
       expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('testDate should be a valid date')
-    })
-
-    test('should return error for missing date', () => {
-      const schema = dateSchema('testDate')
-      const result = schema.validate()
-      expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('The field testDate is not present but it is required')
+      expect(result.error.message).toBe(expectedMessage)
     })
   })
 
   describe('precisionSchema', () => {
+    const schemaName = 'testPrecision'
+    const schema = precisionSchema(schemaName, 2)
+
     test('should validate a number with correct precision', () => {
-      const schema = precisionSchema('testPrecision', 2)
       const result = schema.validate(123.45)
       expect(result.error).toBeUndefined()
     })
 
     test('should return error for missing precision', () => {
-      const schema = precisionSchema('testPrecision', 2)
       const result = schema.validate()
       expect(result.error).toBeDefined()
-      expect(result.error.message).toBe('The field testPrecision is not present but it is required')
+      expect(result.error.message).toBe(`The field ${schemaName} is not present but it is required`)
     })
   })
 })

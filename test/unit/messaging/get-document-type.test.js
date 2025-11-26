@@ -1,52 +1,26 @@
 const { getDocumentType } = require('../../../app/messaging/get-document-type')
 const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
 
-describe('get document type', () => {
-  test('returns SFI23QUARTERLYSTATEMENT type', async () => {
+describe('getDocumentType', () => {
+  test('returns SFI23QUARTERLYSTATEMENT type', () => {
     expect(getDocumentType(SFI23QUARTERLYSTATEMENT.type)).toBe(SFI23QUARTERLYSTATEMENT)
   })
 
-  test('returns DELINKED type', async () => {
+  test('returns DELINKED type', () => {
     expect(getDocumentType(DELINKED.type)).toBe(DELINKED)
   })
 
-  test('throws on unknown type', async () => {
-    expect(() => getDocumentType('unknown')).toThrow()
-  })
-
-  test('throws on undefined type', async () => {
-    expect(() => getDocumentType(undefined)).toThrow()
-  })
-
-  test('throws on missing type', async () => {
-    expect(() => getDocumentType()).toThrow()
-  })
-
-  test('throws on empty type', async () => {
-    expect(() => getDocumentType('')).toThrow()
-  })
-
-  test('throws on array type', async () => {
-    expect(() => getDocumentType([])).toThrow()
-  })
-
-  test('throws on true type', async () => {
-    expect(() => getDocumentType(true)).toThrow()
-  })
-
-  test('throws on false type', async () => {
-    expect(() => getDocumentType(false)).toThrow()
-  })
-
-  test('throws on 0 type', async () => {
-    expect(() => getDocumentType(0)).toThrow()
-  })
-
-  test('throws on 1 type', async () => {
-    expect(() => getDocumentType(1)).toThrow()
-  })
-
-  test('throws on empty string type', async () => {
-    expect(() => getDocumentType('')).toThrow()
+  test.each([
+    'unknown',
+    undefined,
+    null,
+    '',
+    [],
+    true,
+    false,
+    0,
+    1
+  ])('throws on invalid type: %p', (invalidType) => {
+    expect(() => getDocumentType(invalidType)).toThrow()
   })
 })

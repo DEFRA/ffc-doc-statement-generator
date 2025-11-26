@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const noNotify = sequelize.define('noNotify', {
-    noNotifyId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    noNotifyId: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true, comment: 'Exclusions tables' },
     frn: DataTypes.BIGINT,
     claimId: DataTypes.STRING,
     agreementNumber: DataTypes.STRING

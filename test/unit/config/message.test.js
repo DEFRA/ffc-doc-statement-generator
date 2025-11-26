@@ -1,5 +1,6 @@
-describe('message config', () => {
+describe('messageConfig', () => {
   const OLD_ENV = process.env
+
   beforeEach(() => {
     jest.resetModules()
     process.env = { ...OLD_ENV }
@@ -13,6 +14,7 @@ describe('message config', () => {
     process.env.CRM_TOPIC_ADDRESS = 'crm-addr'
     process.env.ALERT_TOPIC_ADDRESS = 'alert-addr'
   })
+
   afterEach(() => {
     process.env = OLD_ENV
   })
@@ -25,45 +27,21 @@ describe('message config', () => {
     expect(config.alertTopic).toBeDefined()
   })
 
-  test('merges messageQueue and statementSubscription', () => {
+  test.each([
+    ['statementSubscription', 'sub-addr', 'topic-addr', 'subscription'],
+    ['publishTopic', 'pub-addr', undefined, undefined],
+    ['crmTopic', 'crm-addr', undefined, undefined],
+    ['alertTopic', 'alert-addr', undefined, undefined]
+  ])('merges messageQueue and %s', (key, address, topic, type) => {
     const config = require('../../../app/config/message')
-    expect(config.statementSubscription).toMatchObject({
+    const expected = {
       host: 'host',
       username: 'user',
       password: 'pass',
-      address: 'sub-addr',
-      topic: 'topic-addr',
-      type: 'subscription'
-    })
-  })
-
-  test('merges messageQueue and publishTopic', () => {
-    const config = require('../../../app/config/message')
-    expect(config.publishTopic).toMatchObject({
-      host: 'host',
-      username: 'user',
-      password: 'pass',
-      address: 'pub-addr'
-    })
-  })
-
-  test('merges messageQueue and crmTopic', () => {
-    const config = require('../../../app/config/message')
-    expect(config.crmTopic).toMatchObject({
-      host: 'host',
-      username: 'user',
-      password: 'pass',
-      address: 'crm-addr'
-    })
-  })
-
-  test('merges messageQueue and alertTopic', () => {
-    const config = require('../../../app/config/message')
-    expect(config.alertTopic).toMatchObject({
-      host: 'host',
-      username: 'user',
-      password: 'pass',
-      address: 'alert-addr'
-    })
+      address
+    }
+    if (topic) expected.topic = topic
+    if (type) expected.type = type
+    expect(config[key]).toMatchObject(expected)
   })
 })

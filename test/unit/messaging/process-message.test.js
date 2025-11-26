@@ -1,21 +1,18 @@
 jest.mock('ffc-messaging')
 jest.mock('../../../app/data')
 const mockGenerator = jest.fn()
-jest.mock('../../../app/generator', () => {
-  return {
-    generateDocument: mockGenerator
-  }
-})
+jest.mock('../../../app/generator', () => ({
+  generateDocument: mockGenerator
+}))
 const mockValidation = jest.fn()
-jest.mock('../../../app/messaging/validate-request', () => {
-  return {
-    validateRequest: mockValidation
-  }
-})
+jest.mock('../../../app/messaging/validate-request', () => ({
+  validateRequest: mockValidation
+}))
 const mockStatement = require('../../mocks/mock-delinked-statement')
 const processMessage = require('../../../app/messaging/process-message')
 const { VALIDATION } = require('../../../app/constants/errors')
 const { DELINKED: STATEMENT } = require('../../../app/constants/document-types')
+
 let receiver
 
 const mockValidationImplementation = () => {
@@ -24,7 +21,7 @@ const mockValidationImplementation = () => {
   throw err
 }
 
-describe('process statement message', () => {
+describe('processStatementMessage', () => {
   beforeEach(() => {
     jest.resetAllMocks()
     receiver = {
@@ -34,157 +31,40 @@ describe('process statement message', () => {
     }
   })
 
-  test('completes message on success', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    await processMessage(message, receiver)
-    expect(receiver.completeMessage).toHaveBeenCalledWith(message)
-  })
+  const successMessage = {
+    body: mockStatement,
+    applicationProperties: { type: STATEMENT.type }
+  }
 
-  test('completes message on success only once', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    await processMessage(message, receiver)
+  test('completes message on success', async () => {
+    await processMessage(successMessage, receiver)
+    expect(receiver.completeMessage).toHaveBeenCalledWith(successMessage)
     expect(receiver.completeMessage).toHaveBeenCalledTimes(1)
   })
 
-  test('calls validate statement', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    await processMessage(message, receiver)
-    expect(mockValidation).toHaveBeenCalledWith(message.body, STATEMENT)
-  })
-
-  test('calls validate statement only once', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    await processMessage(message, receiver)
+  test('calls validate statement and generator with statement', async () => {
+    await processMessage(successMessage, receiver)
+    expect(mockValidation).toHaveBeenCalledWith(successMessage.body, STATEMENT)
     expect(mockValidation).toHaveBeenCalledTimes(1)
-  })
-
-  test('calls generator with statement', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    await processMessage(message, receiver)
-    expect(mockGenerator).toHaveBeenCalledWith(message.body, STATEMENT)
-  })
-
-  test('calls generator with statement only once', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    await processMessage(message, receiver)
+    expect(mockGenerator).toHaveBeenCalledWith(successMessage.body, STATEMENT)
     expect(mockGenerator).toHaveBeenCalledTimes(1)
   })
 
-  test('does not complete message on error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockGenerator.mockImplementation(() => { throw new Error('Unable to generate') })
-    await processMessage(message, receiver)
+  test.each([
+    ['non-validation generation error', () => mockGenerator.mockImplementation(() => { throw new Error('A generation error') })],
+    ['another generation error', () => mockGenerator.mockImplementation(() => { throw new Error('Unable to generate') })]
+  ])('does not complete or dead letter message on %s', async (_, setup) => {
+    setup()
+    await processMessage(successMessage, receiver)
     expect(receiver.completeMessage).not.toHaveBeenCalled()
-  })
-
-  test('does not dead letter message on non-validation error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockGenerator.mockImplementation(() => { throw new Error('Unable to generate') })
-    await processMessage(message, receiver)
     expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
 
   test('dead letters message if validation error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockValidation.mockImplementation(() => mockValidationImplementation())
-    await processMessage(message, receiver)
-    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(message)
-  })
-
-  test('dead letters message only once if validation error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockValidation.mockImplementation(() => mockValidationImplementation())
-    await processMessage(message, receiver)
+    mockValidation.mockImplementation(mockValidationImplementation)
+    await processMessage(successMessage, receiver)
+    expect(receiver.deadLetterMessage).toHaveBeenCalledWith(successMessage)
     expect(receiver.deadLetterMessage).toHaveBeenCalledTimes(1)
-  })
-
-  test('does not complete message if validation error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockValidation.mockImplementation(() => mockValidationImplementation())
-    await processMessage(message, receiver)
-    expect(receiver.completeMessage).not.toHaveBeenCalled()
-  })
-
-  test('does not dead letter message on non-validation error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockGenerator.mockImplementation(() => {
-      throw new Error('A generation error')
-    })
-    await processMessage(message, receiver)
-    expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
-  })
-
-  test('does not complete message on non-validation error', async () => {
-    const message = {
-      body: mockStatement,
-      applicationProperties: {
-        type: STATEMENT.type
-      }
-    }
-    mockGenerator.mockImplementation(() => {
-      throw new Error('A generation error')
-    })
-    await processMessage(message, receiver)
     expect(receiver.completeMessage).not.toHaveBeenCalled()
   })
 })

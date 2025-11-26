@@ -1,17 +1,9 @@
 const config = require('../../../app/config')
-
 const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../../../app/constants/document-types')
-
 const { DATE: SYSTEM_TIME, TIMESTAMP: TIMESTAMP_SYSTEM_TIME } = require('../../mocks/components/system-time')
-
 const MOCK_SFI23QUARTERLYSTATEMENT = require('../../mocks/mock-statement-sfi23-quarterly')
 const MOCK_DELINKEDSTATEMENT = require('../../mocks/mock-delinked-statement')
-
-const {
-  SFI23QUARTERLYSTATEMENT: MOCK_SFI23QUARTERLYSTATEMENT_FILENAME,
-  DELINKEDSTATEMENT: MOCK_DELINKED_FILENAME
-} = require('../../mocks/components/filename')
-
+const { SFI23QUARTERLYSTATEMENT: MOCK_SFI23QUARTERLYSTATEMENT_FILENAME, DELINKEDSTATEMENT: MOCK_DELINKED_FILENAME } = require('../../mocks/components/filename')
 const { mockPdfPrinter } = require('../../mocks/objects/pdfPrinter')
 
 jest.mock('../../../app/generator/get-generations')
@@ -28,281 +20,90 @@ const { saveOutboundStatement } = require('../../../app/generator/save-outbound-
 
 const { generateDocument } = require('../../../app/generator')
 
-let request
-let type
-let consoleInfoSpy
+describe('generateDocument', () => {
+  let consoleInfoSpy
 
-describe('Generate document', () => {
   beforeEach(() => {
     config.sfi23QuarterlyStatementEnabled = true
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
-
-    consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => { })
-    getGenerations.mockResolvedValue(null)
+    consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => {})
     getDocumentDefinition.mockReturnValue('docDef')
   })
 
   afterEach(() => {
     delete config.sfi23QuarterlyStatementEnabled
-    delete config.sendCrmMessageEnabled
     consoleInfoSpy.mockRestore()
     jest.clearAllMocks()
   })
 
-  describe('When document is an sfi23 quarterly-statement statement', () => {
-    beforeEach(() => {
-      publish.mockResolvedValue(MOCK_SFI23QUARTERLYSTATEMENT_FILENAME)
+  const documentScenarios = [
+    {
+      name: 'SFI23QUARTERLYSTATEMENT',
+      type: SFI23QUARTERLYSTATEMENT,
+      request: MOCK_SFI23QUARTERLYSTATEMENT,
+      filename: MOCK_SFI23QUARTERLYSTATEMENT_FILENAME
+    },
+    {
+      name: 'DELINKED',
+      type: DELINKED,
+      request: MOCK_DELINKEDSTATEMENT,
+      filename: MOCK_DELINKED_FILENAME
+    }
+  ]
 
-      request = JSON.parse(JSON.stringify(MOCK_SFI23QUARTERLYSTATEMENT))
-      type = SFI23QUARTERLYSTATEMENT
-    })
-
-    describe('When sfi23-quarterly statement has not been processed before', () => {
+  describe.each(documentScenarios)('$name document', ({ type, request, filename }) => {
+    describe.each([
+      { processedBefore: false, generationsReturn: null },
+      { processedBefore: true, generationsReturn: true }
+    ])('when processedBefore=$processedBefore', ({ processedBefore, generationsReturn }) => {
       beforeEach(() => {
-        getGenerations.mockResolvedValue(null)
+        getGenerations.mockResolvedValue(generationsReturn)
+        publish.mockResolvedValue(filename)
       })
 
-      test('sfi23-quarterly should call getGenerations', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should call getGenerations once', async () => {
+      test('calls getGenerations correctly', async () => {
         await generateDocument(request, type)
         expect(getGenerations).toHaveBeenCalledTimes(1)
-      })
-
-      test('sfi23-quarterly should call getGenerations with request.documentReference', async () => {
-        await generateDocument(request, type)
         expect(getGenerations).toHaveBeenCalledWith(request.documentReference)
       })
 
-      test('sfi23-quarterly should call getDocumentDefinition', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).toHaveBeenCalled()
-      })
+      if (!processedBefore) {
+        test('calls getDocumentDefinition', async () => {
+          await generateDocument(request, type)
+          expect(getDocumentDefinition).toHaveBeenCalledTimes(1)
+          expect(getDocumentDefinition).toHaveBeenCalledWith(request, type)
+        })
 
-      test('sfi23-quarterly should call getDocumentDefinition once', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).toHaveBeenCalledTimes(1)
-      })
+        test('calls PDF printer correctly', async () => {
+          await generateDocument(request, type)
+          expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledTimes(1)
+          expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledWith(getDocumentDefinition())
+        })
 
-      test('sfi23-quarterly should call getDocumentDefinition with request and type', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).toHaveBeenCalledWith(request, type)
-      })
+        test('calls publish with correct arguments', async () => {
+          await generateDocument(request, type)
+          expect(publish).toHaveBeenCalledTimes(1)
+          expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
+        })
 
-      test('sfi23-quarterly should call mockPdfPrinter.createPdfKitDocument', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalled()
-      })
+        test('calls saveOutboundStatement', async () => {
+          await generateDocument(request, type)
+          expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
+        })
 
-      test('sfi23-quarterly should call mockPdfPrinter.createPdfKitDocument once', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledTimes(1)
-      })
-
-      test('sfi23-quarterly should call mockPdfPrinter.createPdfKitDocument with getDocumentDefinition', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledWith(getDocumentDefinition())
-      })
-
-      test('sfi23-quarterly should call publish', async () => {
-        await generateDocument(request, type)
-        expect(publish).toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should call publish once', async () => {
-        await generateDocument(request, type)
-        expect(publish).toHaveBeenCalledTimes(1)
-      })
-
-      test('sfi23-quarterly should call publish with mockPdfPrinter.createPdfKitDocument, request, TIMESTAMP_SYSTEM_TIME and type', async () => {
-        await generateDocument(request, type)
-        expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-      })
-
-      test('sfi23-quarterly should call saveOutboundStatement', async () => {
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should call saveOutboundStatement once', async () => {
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
-      })
-
-      test('should log that the document was published to blob storage', async () => {
-        await generateDocument(request, type)
-        expect(console.info).toHaveBeenCalledWith(`Document published to blob storage: ${MOCK_SFI23QUARTERLYSTATEMENT_FILENAME}`)
-      })
-    })
-
-    describe('When sfi23-quarterly statement has been processed before', () => {
-      beforeEach(() => {
-        getGenerations.mockResolvedValue(true)
-      })
-
-      test('sfi23-quarterly should call getGenerations', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should call getGenerations once', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalledTimes(1)
-      })
-
-      test('sfi23-quarterly should call getGenerations with request.documentReference', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalledWith(request.documentReference)
-      })
-
-      test('sfi23-quarterly should not call getDocumentDefinition', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).not.toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should not call mockPdfPrinter.createPdfKitDocument', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).not.toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should not call publish', async () => {
-        await generateDocument(request, type)
-        expect(publish).not.toHaveBeenCalled()
-      })
-
-      test('sfi23-quarterly should not call saveOutboundStatement', async () => {
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).not.toHaveBeenCalled()
-      })
-    })
-  })
-
-  describe('When document is a delinked statement', () => {
-    beforeEach(() => {
-      publish.mockResolvedValue(MOCK_DELINKED_FILENAME)
-
-      request = MOCK_DELINKEDSTATEMENT
-      type = DELINKED
-    })
-
-    describe('When statement has not been processed before', () => {
-      beforeEach(() => {
-        getGenerations.mockResolvedValue(null)
-      })
-
-      test('should call getGenerations', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalled()
-      })
-
-      test('should call getGenerations once', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call getGenerations with request.documentReference', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalledWith(request.documentReference)
-      })
-
-      test('should call getDocumentDefinition', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).toHaveBeenCalled()
-      })
-
-      test('should call getDocumentDefinition once', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call getDocumentDefinition with request and type', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).toHaveBeenCalledWith(request, type)
-      })
-
-      test('should call mockPdfPrinter.createPdfKitDocument', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalled()
-      })
-
-      test('should call mockPdfPrinter.createPdfKitDocument once', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call mockPdfPrinter.createPdfKitDocument with getDocumentDefinition', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).toHaveBeenCalledWith(getDocumentDefinition())
-      })
-
-      test('should call publish', async () => {
-        await generateDocument(request, type)
-        expect(publish).toHaveBeenCalled()
-      })
-
-      test('should call publish once', async () => {
-        await generateDocument(request, type)
-        expect(publish).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call publish with mockPdfPrinter.createPdfKitDocument, request, TIMESTAMP_SYSTEM_TIME and type', async () => {
-        await generateDocument(request, type)
-        expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
-      })
-
-      test('should call saveOutboundStatement', async () => {
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).toHaveBeenCalled()
-      })
-
-      test('should call saveOutboundStatement once', async () => {
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
-      })
-    })
-
-    describe('When statement has been processed before', () => {
-      beforeEach(() => {
-        getGenerations.mockResolvedValue(true)
-      })
-
-      test('should call getGenerations', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalled()
-      })
-
-      test('should call getGenerations once', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalledTimes(1)
-      })
-
-      test('should call getGenerations with request.documentReference', async () => {
-        await generateDocument(request, type)
-        expect(getGenerations).toHaveBeenCalledWith(request.documentReference)
-      })
-
-      test('should not call getDocumentDefinition', async () => {
-        await generateDocument(request, type)
-        expect(getDocumentDefinition).not.toHaveBeenCalled()
-      })
-
-      test('should not call mockPdfPrinter.createPdfKitDocument', async () => {
-        await generateDocument(request, type)
-        expect(mockPdfPrinter().createPdfKitDocument).not.toHaveBeenCalled()
-      })
-
-      test('should not call publish', async () => {
-        await generateDocument(request, type)
-        expect(publish).not.toHaveBeenCalled()
-      })
-
-      test('should not call saveOutboundStatement', async () => {
-        await generateDocument(request, type)
-        expect(saveOutboundStatement).not.toHaveBeenCalled()
-      })
+        test('logs publishing info', async () => {
+          await generateDocument(request, type)
+          expect(console.info).toHaveBeenCalledWith(`Document published to blob storage: ${filename}`)
+        })
+      } else {
+        test('does not call getDocumentDefinition, PDF printer, publish or saveOutboundStatement', async () => {
+          await generateDocument(request, type)
+          expect(getDocumentDefinition).not.toHaveBeenCalled()
+          expect(mockPdfPrinter().createPdfKitDocument).not.toHaveBeenCalled()
+          expect(publish).not.toHaveBeenCalled()
+          expect(saveOutboundStatement).not.toHaveBeenCalled()
+        })
+      }
     })
   })
 })

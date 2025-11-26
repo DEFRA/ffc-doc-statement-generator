@@ -1,30 +1,24 @@
 const getEndDate = require('../../../app/generator/content/sfi23-quarterly-statement/end-date.js')
 const agreementEnd = '1st January 2026'
 
-describe('get calculation date', () => {
+describe('getCalculationDate', () => {
   test('returns two columns', () => {
     const result = getEndDate(agreementEnd)
     expect(result.columns.length).toBe(2)
   })
 
-  test('returns title column text', () => {
+  test('columns have correct properties', () => {
     const result = getEndDate(agreementEnd)
-    expect(result.columns[0].text).toBe('End date:')
-  })
+    const columnTests = [
+      { index: 0, prop: 'text', expected: 'End date:' },
+      { index: 0, prop: 'width', expected: 200 },
+      { index: 1, prop: 'text', expected: '1st January 2026' },
+      { index: 1, prop: 'width', expected: '*' }
+    ]
 
-  test('returns title column width', () => {
-    const result = getEndDate(agreementEnd)
-    expect(result.columns[0].width).toBe(200)
-  })
-
-  test('returns end date column text', () => {
-    const result = getEndDate(agreementEnd)
-    expect(result.columns[1].text).toBe('1st January 2026')
-  })
-
-  test('returns end date column width', () => {
-    const result = getEndDate(agreementEnd)
-    expect(result.columns[1].width).toBe('*')
+    columnTests.forEach(({ index, prop, expected }) => {
+      expect(result.columns[index][prop]).toBe(expected)
+    })
   })
 
   test('returns column style', () => {
