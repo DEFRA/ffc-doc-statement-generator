@@ -3,7 +3,7 @@ const delinkedStatementSchema = require('./schemas/delinked-statement')
 const { VALIDATION } = require('../constants/errors')
 const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../constants/document-types')
 const { DATA_PUBLISHING_ERROR } = require('../constants/alerts')
-const { dataProcessingAlert } = require('../messaging/processing-alerts')
+const { dataProcessingAlert } = require('ffc-alerting-utils')
 
 const alertDefault = async (type, request) => {
   const payloadType = type?.id ?? request?.type
@@ -11,7 +11,7 @@ const alertDefault = async (type, request) => {
 
   const alertPayload = {
     process: 'validate-request',
-    type: payloadType,
+    payloadType,
     sbi: request?.sbi,
     scheme: request?.scheme,
     message: `Failed to generate content for ${prettyName}`
@@ -64,7 +64,7 @@ const validateRequest = async (request, type) => {
 
     const alertPayload = {
       process: 'validate-request',
-      type: payloadType,
+      payloadType,
       sbi: request?.sbi,
       scheme: request?.scheme,
       message: combinedMessage ?? `Failed to generate content for ${prettyName}`

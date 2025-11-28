@@ -1,6 +1,6 @@
 const schema = require('./schema')
 const delinkedSchema = require('./delinked-schema')
-const dataProcessingAlert = require('../processing-alerts')
+const { dataProcessingAlert } = require('ffc-alerting-utils')
 const { DATA_PUBLISHING_ERROR } = require('../../constants/alerts')
 
 const validatePublish = async (publish, type) => {
@@ -14,7 +14,7 @@ const validatePublish = async (publish, type) => {
   if (result.error) {
     const alertPayload = {
       process: 'validatePublish',
-      type,
+      payloadType: type,
       sbi: publish?.sbi,
       documentReference: publish?.documentReference,
       scheme: publish?.scheme,

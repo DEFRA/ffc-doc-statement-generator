@@ -7,4 +7,9 @@ ignore:
         reason: No current fix available
         expires: 2025-07-31T12:35:06.796Z
         created: 2025-07-24T06:35:06.803Z
+  SNYK-JS-VALIDATOR-13395830:
+    - '*':
+        reason: Fix in-flight
+        expires: 2025-10-29T09:00:06.796Z
+        created: 2025-10-22T10:20:00.803Z
 patch: {}
