@@ -106,7 +106,7 @@ components:
     ActionCode:
       type: string
       description: Identifier for action code within scheme
-      example: 80001
+      example: "80001"
     ActionId:
       type: number
       description: Unique identifier (pkId) for action
@@ -114,7 +114,7 @@ components:
     ActionName:
       type: string
       description: Name of the action
-      example: Manage hedgerows
+      example: "Manage hedgerows"
     Address:
       additionalProperties: false
       required:
@@ -136,9 +136,7 @@ components:
         postcode:
           $ref: "#/components/schemas/Postcode"
     AgreementNumber:
-      type: number
-      description: Unique identifier for agreement
-      example: 123456789
+          $ref: "#/components/schemas/agreementNumber"
     AgreementEnd:
       type: string
       format: date-time
@@ -152,16 +150,15 @@ components:
     AnnualValue:
       type: string
       description: The annual value of the action
-      example: £1200 + £22.5/ha
+      example: "£1200 + £22.5/ha"
     Area:
       type: string
       description: The second line of the address
       example: Some Area
     AreaClaimed:
-      type: number
-      format: decimal
+      type: string
       description: The area claimed for the calculation in hectares
-      example: 84.05
+      example: "84.05"
     BusinessName:
       type: string
       description: The business name
@@ -322,9 +319,9 @@ components:
         documentReference:
           $ref: "#/components/schemas/DocumentReference"
         excludedFromNotify:
-          type: boolean
-          description: Indicates if the statement is excluded from notify
-          example: false
+          $ref: "#/components/schemas/excludedFromNotify"
+        type:
+          $ref: '#/components/schemas/TypeDelinked'
     DocumentReference:
       type: number
       description: Unique identifier of the document
@@ -381,7 +378,7 @@ components:
     FundingCode:
       type: string
       description: Identifier for funding code within scheme
-      example: 80001
+      example: "80001"
     FundingName:
       type: string
       description: The funding option name
@@ -446,7 +443,7 @@ components:
     FundingTotalName:
       type: string
       description: The funding total name
-      example: Total
+      example: "Total"
     FundingTotalLevel:
       type: string
       description: The funding total level
@@ -487,7 +484,7 @@ components:
       type: string
       format: decimal
       description: The over declaration penalty
-      example: 120.5
+      example: "120.5"
     PaymentAmount:
       type: number
       format: decimal
@@ -577,17 +574,16 @@ components:
       pattern: '^\d+\.\d{2}$'
     QuarterlyPaymentAmount:
       type: string
-      format: decimal
       description: The quarterly payment amount
-      example: 100.5
+      example: "100.5"
     QuarterlyValue:
       type: string
       description: The quarterly value
-      example: £100.50
+      example: "£100.50"
     Rate:
       type: string
       description: Payment in pounds sterling per hectare
-      example: £22.5/ha
+      example: "£22.5/ha"
     Reduction:
       type: object
       required:
@@ -640,15 +636,15 @@ components:
         frequency:
           $ref: "#/components/schemas/SchemeFrequency"
         agreementNumber:
-          $ref: "#/components/schemas/SchemeAgreementNumber"
-    SchemeAgreementNumber:
-      type: string
+          $ref: "#/components/schemas/agreementNumber"
+    agreementNumber:
+      type: number
       description: The agreement number
-      example: SFI1234567
+      example: 123456789
     SchemeCode:
       type: string
       description: Unique funding option code
-      example: 80001
+      example: "80001"
       enum:
         - 80001
     SchemeDelinked:
@@ -737,24 +733,28 @@ components:
           $ref: "#/components/schemas/PreviousPaymentCount"
         documentReference:
           $ref: "#/components/schemas/DocumentReference"
+        excludedFromNotify:
+          $ref: "#/components/schemas/excludedFromNotify"
+        type:
+          $ref: '#/components/schemas/TypeSFI23'
     Source:
       type: string
       description: The source of the message being sent
-      example: ffc-doc-statement-generator
+      example: "ffc-doc-statement-generator"
     Street:
       type: string
       description: The first line of the address
-      example: 1 Some Street
+      example: "1 Some Street"
     TotalActionPayments:
       type: string
       format: decimal
       description: Sum of all Action Payment
-      example: 100.5
+      example: "100.5"
     TotalAdditionalPayments:
       type: string
       format: decimal
       description: Sum of all Additional Payment
-      example: 50.2
+      example: "50.2"
     TotalDelinkedPayment:
       type: string
       description: Total annual delinked payment amount
@@ -764,7 +764,7 @@ components:
       type: string
       format: decimal
       description: Sum of all Payment
-      example: 150.7
+      example: "150.7"
     TotalProgressiveReduction:
       type: string
       description: Total progressive reduction amount
@@ -773,13 +773,25 @@ components:
     Town:
       type: string
       description: The third line of the address
-      example: Some Town
+      example: "Some Town"
     TransactionDate:
       type: string
       format: date-time
       description: The date the transaction was made
       example: "2022-08-22T16:45:20.891Z"
+    TypeDelinked:
+      type: string
+      description:  DELINKED CALCULATION document type
+      example: "uk.gov.doc.delinked-statement"
+    TypeSFI23:
+      type: string
+      description:  SFI23 document type
+      example: "uk.gov.doc.sfi-23-quarterly-statement"
     UnitOfMeasure:
       type: string
       description: The unit of measure
-      example: Ha
+      example: "Ha"
+    excludedFromNotify:
+      type: boolean
+      description: Indicates if the statement is excluded from notify
+      example: false
