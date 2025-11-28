@@ -781,12 +781,14 @@ components:
       example: "2022-08-22T16:45:20.891Z"
     TypeDelinked:
       type: string
+      enum:
+        - "uk.gov.doc.delinked-statement"
       description:  DELINKED CALCULATION document type
-      example: "uk.gov.doc.delinked-statement"
     TypeSFI23:
       type: string
+      enum:
+        - "uk.gov.doc.sfi-23-quarterly-statement"      
       description:  SFI23 document type
-      example: "uk.gov.doc.sfi-23-quarterly-statement"
     UnitOfMeasure:
       type: string
       description: The unit of measure
