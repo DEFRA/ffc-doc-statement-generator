@@ -21,7 +21,7 @@ module.exports = {
   schemeCode: 'SFI-23',
   calculationDate: '2024-03-01',
   invoiceNumber: 'SFIA0103195',
-  agreementNumber: '1653462',
+  agreementNumber: 1653462,
   agreementStart: '2024-03-01',
   agreementEnd: '2024-03-01',
   totalAdditionalPayments: 1000,
@@ -32,7 +32,7 @@ module.exports = {
     shortName: 'SFI',
     year: '2023',
     frequency: 'Quarterly',
-    agreementNumber: '1653462'
+    agreementNumber: 1653462
   },
   actionGroups: [
     {

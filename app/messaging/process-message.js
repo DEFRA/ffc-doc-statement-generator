@@ -9,7 +9,7 @@ const processMessage = async (message, receiver) => {
     const request = message.body
     console.log('Generation request received:', util.inspect(request, false, null, true))
 
-    const documentType = getDocumentType(message.applicationProperties.type)
+    const documentType = getDocumentType(message.applicationProperties.type, message.body.type)
 
     await validateRequest(request, documentType)
     await generateDocument(request, documentType)

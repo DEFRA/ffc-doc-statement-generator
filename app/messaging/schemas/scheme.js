@@ -17,9 +17,10 @@ module.exports = Joi.object({
     'any.required': 'frequency is missing but it is required.',
     'string.base': 'The frequency must be a string.'
   }),
-  agreementNumber: Joi.string().required().messages({
-    'any.required': 'agreementNumber is missing but it is required.',
-    'string.base': 'The agreement number must be a string.'
+  agreementNumber: Joi.number().integer().required().messages({
+    'number.base': 'Agreement number must be a number',
+    'number.integer': 'Agreement number must be an integer',
+    'any.required': 'Agreement number is required'
   })
 }).required().messages({
   'any.required': 'scheme object is missing but it is required.'
