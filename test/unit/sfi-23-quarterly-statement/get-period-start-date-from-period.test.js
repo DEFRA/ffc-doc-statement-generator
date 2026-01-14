@@ -18,8 +18,7 @@ describe('getPeriodStartDateFromPeriod', () => {
 
     const startDate = getPeriodStartDateFromPeriod(period)
 
-    expect(moment).toHaveBeenCalledWith('1 January ', 'LL')
-    expect(moment.locale).toHaveBeenCalledWith('en-gb')
+    expect(moment).toHaveBeenCalledWith('1 January 2025', 'D MMMM YYYY')
     expect(startDate).toEqual(expectedStartDate)
   })
 
@@ -28,8 +27,7 @@ describe('getPeriodStartDateFromPeriod', () => {
 
     const startDate = getPeriodStartDateFromPeriod(period)
 
-    expect(moment).toHaveBeenCalledWith('Invalid period string', 'LL')
-    expect(moment.locale).toHaveBeenCalledWith('en-gb')
+    expect(moment).toHaveBeenCalledWith('Invalid period string', 'D MMMM YYYY')
     expect(isNaN(startDate.getTime())).toBeTruthy()
   })
 })
