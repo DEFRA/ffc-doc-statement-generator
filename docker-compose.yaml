@@ -36,6 +36,9 @@ services:
       SEND_DELINKED_2024_STATEMENTS: ${SEND_DELINKED_2024_STATEMENTS:-false}
       PUBLISHING_FREQUENCY: ${PUBLISHING_FREQUENCY:-60000}
       ALERT_TOPIC_ADDRESS: ${ALERT_TOPIC_ADDRESS:-ffc-doc-alerting}${MESSAGE_QUEUE_SUFFIX}
+      POLL_WINDOW_START: ${POLL_WINDOW_START:-"08:00"}
+      POLL_WINDOW_END: ${POLL_WINDOW_END:-"18:00"}
+      POLL_WINDOW_DAYS: ${POLL_WINDOW_DAYS:-"Mon,Tue,Wed,Thu,Fri"}
 
   ffc-doc-statement-generator-postgres:
     image: postgres:11.4-alpine
