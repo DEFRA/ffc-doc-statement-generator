@@ -40,4 +40,7 @@ data:
   DELINKEDPAYMENTSTATEMENT_ENABLED: {{ quote .Values.container.delinkedPaymentStatementEnabled }}
   SEND_CRM_MESSAGE_ENABLED: {{ quote .Values.container.sendCrmMessageEnabled }}
   PUBLISHING_FREQUENCY: {{ quote .Values.container.publishingFrequency }}
+  POLL_WINDOW_START: {{ quote .Values.container.pollWindowStart }}
+  POLL_WINDOW_END: {{ quote .Values.container.pollWindowEnd }}
+  POLL_WINDOW_DAYS: {{ quote .Values.container.pollWindowDays }}
 {{- end -}}
