@@ -4,12 +4,16 @@ resources:
     name: ffc-doc-statement-generator
   topics:
     - name: ffc-doc-statements
-      role: receiver
+      roles: 
+        - name: receiver
       subscriptions:
         - name: ffc-doc-statement-generator
     - name: ffc-doc-statement-publish
-      role: sender
+      roles: 
+        -name: sender
     - name: ffc-doc-statement-crm
-      role: sender
+      roles: 
+        - name: sender
     - name: ffc-doc-alerting
-      role: sender
+      roles: 
+        - name: sender
