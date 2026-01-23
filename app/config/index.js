@@ -13,7 +13,14 @@ const schema = Joi.object({
   sfi23QuarterlyStatementEnabled: Joi.boolean().optional().default(false),
   delinkedGenerateStatementEnabled: Joi.boolean().optional().default(true),
   sendCrmMessageEnabled: Joi.boolean().optional().default(false),
-  publishingFrequency: Joi.number().default(60000)
+  publishingFrequency: Joi.number().default(60000),
+  pollWindow: Joi.object({
+    start: Joi.string().default('00:00'),
+    end: Joi.string().default('23:59'),
+    days: Joi.array().items(
+      Joi.string().valid('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat')
+    ).default(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'])
+  }).default({ start: '00:00', end: '23:59', days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] })
 })
 
 const config = {
@@ -24,7 +31,12 @@ const config = {
   sfi23QuarterlyStatementEnabled: process.env.SFI23QUARTERLYSTATEMENT_ENABLED,
   delinkedGenerateStatementEnabled: process.env.DELINKED_GENERATE_STATEMENT_ENABLED,
   sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
-  publishingFrequency: process.env.PUBLISHING_FREQUENCY
+  publishingFrequency: process.env.PUBLISHING_FREQUENCY,
+  pollWindow: {
+    start: process.env.POLL_WINDOW_START,
+    end: process.env.POLL_WINDOW_END,
+    days: process.env.POLL_WINDOW_DAYS ? process.env.POLL_WINDOW_DAYS.split(',') : undefined
+  }
 }
 
 const result = schema.validate(config, {
