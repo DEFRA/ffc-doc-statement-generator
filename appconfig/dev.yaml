@@ -18,7 +18,7 @@ secretProviderClass:
         objectType: secret
 
   secretObjects:
-    - secretName: ffc-doc-statement-receiver
+    - secretName: ffc-doc-statement-generator
       type: Opaque
       data:
         - objectName: devtest-ffcahwr-appInsights-connectionString
