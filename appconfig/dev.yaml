@@ -9,9 +9,6 @@ container:
   alertTopicAddress: queue:ffc-doc-alerting
   publishTopicAddress: queue:ffc-doc-statement-publish
   crmTopicAddress: queue:ffc-doc-statement-crm
-ingress:
-  server: azure.defra.cloud
-  endpoint: ffc-doc-statement-generator-dev
 secretProviderClass:
   azure:
     keyvaultName: DEVFFCINFKV1001
