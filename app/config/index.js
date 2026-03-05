@@ -15,6 +15,7 @@ const schema = Joi.object({
   sendCrmMessageEnabled: Joi.boolean().optional().default(false),
   publishingFrequency: Joi.number().default(60000),
   pollWindow: Joi.object({
+    enabled: Joi.boolean().default(true),
     start: Joi.string().default('00:00'),
     end: Joi.string().default('23:59'),
     days: Joi.array().items(
@@ -33,6 +34,7 @@ const config = {
   sendCrmMessageEnabled: process.env.SEND_CRM_MESSAGE_ENABLED,
   publishingFrequency: process.env.PUBLISHING_FREQUENCY,
   pollWindow: {
+    enabled: process.env.POLL_WINDOW_ENABLED,
     start: process.env.POLL_WINDOW_START,
     end: process.env.POLL_WINDOW_END,
     days: process.env.POLL_WINDOW_DAYS ? process.env.POLL_WINDOW_DAYS.split(',') : undefined
