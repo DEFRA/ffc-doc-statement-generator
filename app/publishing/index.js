@@ -6,8 +6,10 @@ const start = async () => {
   try {
     const inWindow = isWithinWindow(config.pollWindow)
     const onDay = isPollDay(config.pollWindow.days)
-    if (inWindow && onDay) {
+    if (!config.pollWindow.enabled || (inWindow && onDay)) {
       await publishStatements()
+    } else {
+      console.log('Outside processing window or not a processing day, skipping processing')
     }
   } catch (err) {
     console.error(err)
