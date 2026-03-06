@@ -5,10 +5,15 @@ container:
   messageQueueHost: PRDFFCINFSB1001.servicebus.windows.net
   azureStorageAccountName: prdffcdocst1001
   redisHostname: PRDFFCINFRD1001.redis.cache.windows.net
-  statementTopicAddress: queue:ffc-doc-statements
-  alertTopicAddress: queue:ffc-doc-alerting
-  publishTopicAddress: queue:ffc-doc-statement-publish
-  crmTopicAddress: queue:ffc-doc-statement-crm
+  showSfi23PaymentPeriod: false
+  sfi23QuarterlyStatementEnabled: false
+  delinkedPaymentStatementEnabled: true
+  sendCrmMessageEnabled: false
+  publishingFrequency: 3600000
+  pollWindowStart: "08:00"
+  pollWindowEnd: "18:00"
+  pollWindowDays: "Mon,Tue,Wed,Thu,Fri"
+  pollWindowEnabled: true
 secretProviderClass:
   azure:
     keyvaultName: PRDFFCINFKV1001
