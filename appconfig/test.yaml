@@ -2,13 +2,18 @@
 environment: production
 environmentCode: test
 container:
-  azureStorageAccountName: devffcdocst1001
+  azureStorageAccountName: testffcdocst1001
   messageQueueHost: DEVFFCINFSB1001.servicebus.windows.net
   redisHostname: DEVFFCINFRD1001.redis.cache.windows.net
-  statementTopicAddress: queue:ffc-doc-statements
-  alertTopicAddress: queue:ffc-doc-alerting
-  publishTopicAddress: queue:ffc-doc-statement-publish
-  crmTopicAddress: queue:ffc-doc-statement-crm
+  showSfi23PaymentPeriod: false
+  sfi23QuarterlyStatementEnabled: true
+  delinkedPaymentStatementEnabled: true
+  sendCrmMessageEnabled: true
+  publishingFrequency: 3600000
+  pollWindowStart: "08:00"
+  pollWindowEnd: "18:00"
+  pollWindowDays: "Mon,Tue,Wed,Thu,Fri"
+  pollWindowEnabled: true
 secretProviderClass:
   azure:
     keyvaultName: DEVFFCINFKV1001
