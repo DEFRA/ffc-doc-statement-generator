@@ -28,3 +28,9 @@ resources:
         requiresDuplicateDetection: true
         roles: 
         - name: sender
+      - name: ffc-doc-statement-crm
+        defaultMessageTimeToLive: P3650D
+        duplicateDetectionHistoryTimeWindow: PT10M30S
+        requiresDuplicateDetection: true
+        roles: 
+        - name: sender
