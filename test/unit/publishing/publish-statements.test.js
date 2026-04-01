@@ -38,7 +38,7 @@ describe('publishStatements', () => {
       type: { id: 'type-id', type: DELINKED.type }
     }]
     const mockGenerationData = {
-      statementData: { scheme: { agreementNumber: '12345' } },
+      statementData: { scheme: { agreementNumber: '12345' }, sbi: '123', frn: '456' },
       filename: 'file1.pdf'
     }
 
@@ -54,7 +54,7 @@ describe('publishStatements', () => {
     expect(getGenerationById).toHaveBeenCalledWith(mockStatements[0].generationId)
     expect(sendPublishMessage).toHaveBeenCalledWith(mockGenerationData.statementData, mockGenerationData.filename, mockStatements[0].type.id)
     expect(setPublished).toHaveBeenCalledWith(mockStatements[0].outboxId, true, false, null)
-    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'), expect.any(String))
+    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing: sbi: 123, frn: 456'))
     expect(consoleInfoSpy).toHaveBeenCalledWith(`Publish message sent for document ${mockGenerationData.filename}`)
     expect(consoleLogSpy).toHaveBeenCalledWith('Statement finished publishing')
   })
@@ -161,7 +161,7 @@ describe('publishStatements', () => {
     expect(sendPublishMessage).toHaveBeenCalledTimes(2)
     expect(sendCrmMessage).toHaveBeenCalledTimes(2)
     expect(setPublished).toHaveBeenCalledTimes(2)
-    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'), expect.any(String))
+    expect(consoleLogSpy).toHaveBeenCalledWith(expect.stringContaining('Identified statement for publishing:'))
     expect(consoleLogSpy).toHaveBeenCalledWith('Statement finished publishing')
   })
 })
