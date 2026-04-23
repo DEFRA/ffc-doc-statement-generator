@@ -3,7 +3,7 @@ const { validateRequest } = require('./validate-request')
 const { generateDocument } = require('../generator')
 const { VALIDATION } = require('../constants/errors')
 
-const processMessage = async (message, receiver) => {
+const processStatementMessage = async (message, receiver) => {
   try {
     const request = message.body
     console.log(`Generation request received: sbi: ${request.sbi}, frn: ${request.frn}`)
@@ -28,4 +28,4 @@ const processMessage = async (message, receiver) => {
   }
 }
 
-module.exports = processMessage
+module.exports = processStatementMessage

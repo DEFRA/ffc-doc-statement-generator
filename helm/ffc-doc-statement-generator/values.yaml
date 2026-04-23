@@ -31,6 +31,8 @@ container:
   messageQueueHost: namespace.servicebus.windows.net
   statementTopicAddress: ffc-doc-statements
   statementSubscriptionAddress: ffc-doc-statement-generator
+  retentionTopicAddress: fcp-pds-data-retention
+  retentionSubscriptionAddress: ffc-doc-statement-generator
   publishTopicAddress: ffc-doc-statement-publish
   crmTopicAddress: ffc-doc-statement-crm
   azureStorageAccountName: ffcdoc
