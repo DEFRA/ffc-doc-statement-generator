@@ -24,10 +24,13 @@ jest.mock('../../../app/retention/remove-generations', () => ({
   removeGenerations: jest.fn()
 }))
 
+jest.mock('../../../app/messaging/publish/send-retention-messages', () => jest.fn())
+
 const { removeNoNotifys } = require('../../../app/retention/remove-no-notifys')
 const { findGenerations } = require('../../../app/retention/find-generations')
 const { removeOutbox } = require('../../../app/retention/remove-outbox')
 const { removeGenerations } = require('../../../app/retention/remove-generations')
+const sendRetentionMessages = require('../../../app/messaging/publish/send-retention-messages')
 
 describe('removeAgreementData', () => {
   const retentionDataDelinked = {
@@ -62,6 +65,7 @@ describe('removeAgreementData', () => {
     expect(findGenerations).not.toHaveBeenCalled()
     expect(removeOutbox).not.toHaveBeenCalled()
     expect(removeGenerations).not.toHaveBeenCalled()
+    expect(sendRetentionMessages).not.toHaveBeenCalled()
   })
 
   test('commits and returns early if no generations found', async () => {
@@ -84,9 +88,10 @@ describe('removeAgreementData', () => {
     expect(transaction.rollback).not.toHaveBeenCalled()
     expect(removeOutbox).not.toHaveBeenCalled()
     expect(removeGenerations).not.toHaveBeenCalled()
+    expect(sendRetentionMessages).not.toHaveBeenCalled()
   })
 
-  test('removes outbox and generations when generations found', async () => {
+  test('removes outbox, generations and sends retention messages when generations found', async () => {
     const generations = [
       { generationId: 101 },
       { generationId: 102 }
@@ -97,6 +102,7 @@ describe('removeAgreementData', () => {
     removeNoNotifys.mockResolvedValue()
     removeOutbox.mockResolvedValue()
     removeGenerations.mockResolvedValue()
+    sendRetentionMessages.mockResolvedValue()
 
     await removeAgreementData(retentionDataDelinked)
 
@@ -126,6 +132,9 @@ describe('removeAgreementData', () => {
 
     expect(transaction.commit).toHaveBeenCalledTimes(1)
     expect(transaction.rollback).not.toHaveBeenCalled()
+
+    expect(sendRetentionMessages).toHaveBeenCalledTimes(1)
+    expect(sendRetentionMessages).toHaveBeenCalledWith(generations)
   })
 
   test('rolls back transaction and throws if an error occurs', async () => {
@@ -143,5 +152,6 @@ describe('removeAgreementData', () => {
 
     expect(transaction.rollback).toHaveBeenCalledTimes(1)
     expect(transaction.commit).not.toHaveBeenCalled()
+    expect(sendRetentionMessages).not.toHaveBeenCalled()
   })
 })

@@ -4,6 +4,7 @@ const { removeGenerations } = require('./remove-generations')
 const { removeNoNotifys } = require('./remove-no-notifys')
 const { removeOutbox } = require('./remove-outbox')
 const { findGenerations } = require('./find-generations')
+const sendRetentionMessages = require('../messaging/publish/send-retention-messages')
 
 const removeAgreementData = async (retentionData) => {
   const transaction = await db.sequelize.transaction()
@@ -18,7 +19,7 @@ const removeAgreementData = async (retentionData) => {
     await removeNoNotifys(simplifiedAgreementNumber, frn, transaction)
 
     const generations = await findGenerations(simplifiedAgreementNumber, frn, transaction)
-    const generationIds = generations.map(c => c.generationId)
+    const generationIds = generations.map(g => g.generationId)
     if (generations.length === 0) {
       await transaction.commit()
       return
@@ -27,6 +28,7 @@ const removeAgreementData = async (retentionData) => {
     await removeOutbox(generationIds, transaction)
     await removeGenerations(generationIds, transaction)
 
+    await sendRetentionMessages(generations)
     await transaction.commit()
   } catch (err) {
     await transaction.rollback()

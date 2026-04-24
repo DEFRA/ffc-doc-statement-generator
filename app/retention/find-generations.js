@@ -2,7 +2,7 @@ const db = require('../data')
 
 const findGenerations = async (agreementNumber, frn, transaction) => {
   return db.generation.findAll({
-    attributes: ['generationId'],
+    attributes: ['generationId', 'documentReference', 'filename'],
     where: {
       [db.sequelize.Op.and]: [
         db.sequelize.where(db.sequelize.json('statementData.applicationId'), agreementNumber),

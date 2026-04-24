@@ -33,6 +33,7 @@ container:
   statementSubscriptionAddress: ffc-doc-statement-generator
   retentionTopicAddress: fcp-pds-data-retention
   retentionSubscriptionAddress: ffc-doc-statement-generator
+  statementRetentionTopicAddress: ffc-doc-statement-retention
   publishTopicAddress: ffc-doc-statement-publish
   crmTopicAddress: ffc-doc-statement-crm
   azureStorageAccountName: ffcdoc
