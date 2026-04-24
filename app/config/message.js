@@ -15,6 +15,14 @@ const mqSchema = Joi.object({
     topic: Joi.string(),
     type: Joi.string().default('subscription')
   },
+  retentionSubscription: {
+    address: Joi.string().required(),
+    topic: Joi.string().required(),
+    type: Joi.string().default('subscription')
+  },
+  statementRetentionTopic: {
+    address: Joi.string()
+  },
   publishTopic: {
     address: Joi.string()
   },
@@ -40,6 +48,14 @@ const mqConfig = {
     topic: process.env.STATEMENT_TOPIC_ADDRESS,
     type: 'subscription'
   },
+  retentionSubscription: {
+    address: process.env.RETENTION_SUBSCRIPTION_ADDRESS,
+    topic: process.env.RETENTION_TOPIC_ADDRESS,
+    type: 'subscription'
+  },
+  statementRetentionTopic: {
+    address: process.env.STATEMENT_RETENTION_TOPIC_ADDRESS
+  },
   publishTopic: {
     address: process.env.PUBLISH_TOPIC_ADDRESS
   },
@@ -61,12 +77,16 @@ if (mqResult.error) {
 }
 
 const statementSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.statementSubscription }
+const retentionSubscription = { ...mqResult.value.messageQueue, ...mqResult.value.retentionSubscription }
+const statementRetentionTopic = { ...mqResult.value.messageQueue, ...mqResult.value.statementRetentionTopic }
 const publishTopic = { ...mqResult.value.messageQueue, ...mqResult.value.publishTopic }
 const crmTopic = { ...mqResult.value.messageQueue, ...mqResult.value.crmTopic }
 const alertTopic = { ...mqResult.value.messageQueue, ...mqResult.value.alertTopic }
 
 module.exports = {
   statementSubscription,
+  retentionSubscription,
+  statementRetentionTopic,
   publishTopic,
   crmTopic,
   alertTopic
