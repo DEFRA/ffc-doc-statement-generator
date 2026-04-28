@@ -11,6 +11,13 @@ jest.mock('../../../app/data', () => ({
     },
     where: jest.fn(),
     json: jest.fn()
+  },
+  Sequelize: {
+    Op: {
+      and: 'and'
+    },
+    where: jest.fn(),
+    json: jest.fn()
   }
 }))
 
@@ -21,7 +28,7 @@ describe('findGenerations', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    db.sequelize.where.mockImplementation((col, val) => ({ col, val }))
+    db.Sequelize.where.mockImplementation((col, val) => ({ col, val }))
     db.sequelize.json.mockImplementation((path) => `json_path:${path}`)
   })
 
@@ -38,15 +45,15 @@ describe('findGenerations', () => {
     expect(db.sequelize.json).toHaveBeenCalledWith('statementData.applicationId')
     expect(db.sequelize.json).toHaveBeenCalledWith('statementData.frn')
 
-    expect(db.sequelize.where).toHaveBeenCalledTimes(2)
-    expect(db.sequelize.where).toHaveBeenCalledWith('json_path:statementData.applicationId', agreementNumber)
-    expect(db.sequelize.where).toHaveBeenCalledWith('json_path:statementData.frn', frn)
+    expect(db.Sequelize.where).toHaveBeenCalledTimes(2)
+    expect(db.Sequelize.where).toHaveBeenCalledWith('json_path:statementData.applicationId', agreementNumber)
+    expect(db.Sequelize.where).toHaveBeenCalledWith('json_path:statementData.frn', frn)
 
     expect(db.generation.findAll).toHaveBeenCalledTimes(1)
     expect(db.generation.findAll).toHaveBeenCalledWith({
-      attributes: ['generationId'],
+      attributes: ['generationId', 'documentReference', 'filename'],
       where: {
-        [db.sequelize.Op.and]: [
+        [db.Sequelize.Op.and]: [
           { col: 'json_path:statementData.applicationId', val: agreementNumber },
           { col: 'json_path:statementData.frn', val: frn }
         ]
