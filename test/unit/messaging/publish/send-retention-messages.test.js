@@ -1,17 +1,17 @@
-const sendRetentionMessages = require('../../app/messaging/publish/send-retention-messages')
 const { MessageSender } = require('ffc-messaging')
-const config = require('../../app/config')
-const MESSAGE_SOURCE = require('../../app/constants/message-source')
+const sendRetentionMessages = require('../../../../app/messaging/publish/send-retention-messages')
+const config = require('../../../../app/config')
+const MESSAGE_SOURCE = require('../../../../app/constants/message-source')
 
 jest.mock('ffc-messaging', () => ({
   MessageSender: jest.fn()
 }))
 
-jest.mock('../../app/config', () => ({
+jest.mock('../../../../app/config', () => ({
   statementRetentionTopic: 'test-topic'
 }))
 
-jest.mock('../../app/constants/message-source', () => 'test-source')
+jest.mock('../../../../app/constants/message-source', () => 'test-source')
 
 describe('sendRetentionMessages', () => {
   let senderMockInstance
