@@ -5,7 +5,7 @@ const MESSAGE_SOURCE = require('../../constants/message-source')
 const sendRetentionMessages = async (generations) => {
   let sender
   try {
-    for (const generation in generations) {
+    for (const generation of generations) {
       const message = {
         body: {
           documentReference: generation.documentReference,
