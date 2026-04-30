@@ -5,22 +5,11 @@ container:
   azureStorageAccountName: testffcdocst1001
   messageQueueHost: DEVFFCINFSB1001.servicebus.windows.net
   redisHostname: DEVFFCINFRD1001.redis.cache.windows.net
-  showSfi23PaymentPeriod: false
-  sfi23QuarterlyStatementEnabled: true
-  delinkedPaymentStatementEnabled: true
-  sendCrmMessageEnabled: true
-  publishingFrequency: 3600000
-  pollWindowStart: "08:00"
-  pollWindowEnd: "18:00"
-  pollWindowDays: "Mon,Tue,Wed,Thu,Fri"
-  pollWindowEnabled: true
 secretProviderClass:
   azure:
     keyvaultName: DEVFFCINFKV1001
     objects:
       - objectName: devtest-ffcahwr-appInsights-connectionString
-        objectType: secret
-      - objectName: dev-postgresUser
         objectType: secret
 
   secretObjects:
@@ -29,5 +18,3 @@ secretProviderClass:
       data:
         - objectName: devtest-ffcahwr-appInsights-connectionString
           key: APPLICATIONINSIGHTS_CONNECTION_STRING
-        - objectName: dev-postgresUser
-          key: POSTGRES_USERNAME

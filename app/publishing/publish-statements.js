@@ -1,4 +1,3 @@
-const util = require('util')
 const config = require('../config')
 const { SFI23QUARTERLYSTATEMENT, DELINKED } = require('../constants/document-types')
 
@@ -55,7 +54,7 @@ const publishStatements = async () => {
     const { outboxId, generationId, type } = pendingStatement
     const { statementData, filename, documentReference } = await getGenerationById(generationId)
     statementData.documentReference = documentReference
-    console.log('Identified statement for publishing:', util.inspect(statementData, false, null, true))
+    console.log(`Identified statement for publishing: sbi: ${statementData.sbi}, frn: ${statementData.frn}`)
     const sentToPublisher = await handleNotification(statementData, filename, type)
     const { sentToCRM, receiverLink } = await handleCRM(statementData, filename, type)
     await setPublished(outboxId, sentToPublisher, sentToCRM, receiverLink)

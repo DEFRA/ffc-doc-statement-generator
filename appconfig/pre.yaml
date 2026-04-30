@@ -5,22 +5,11 @@ container:
   messageQueueHost: PREFFCINFSB1001.servicebus.windows.net
   azureStorageAccountName: preffcdocst1001
   redisHostname: PREFFCINFRD1001.redis.cache.windows.net
-  showSfi23PaymentPeriod: false
-  sfi23QuarterlyStatementEnabled: false
-  delinkedPaymentStatementEnabled: true
-  sendCrmMessageEnabled: false
-  publishingFrequency: 3600000
-  pollWindowStart: "08:00"
-  pollWindowEnd: "18:00"
-  pollWindowDays: "Mon,Tue,Wed,Thu,Fri"
-  pollWindowEnabled: true
 secretProviderClass:
   azure:
     keyvaultName: PREFFCINFKV1001
     objects:
       - objectName: pre-ffcahwr-appinsights-connectionString
-        objectType: secret
-      - objectName: pre-postgresUser
         objectType: secret
 
   secretObjects:
@@ -29,5 +18,3 @@ secretProviderClass:
       data:
         - objectName: pre-ffcahwr-appinsights-connectionString
           key: APPLICATIONINSIGHTS_CONNECTION_STRING
-        - objectName: pre-postgresUser
-          key: POSTGRES_USERNAME

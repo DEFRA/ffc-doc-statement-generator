@@ -1,4 +1,3 @@
-const util = require('util')
 const { getDocumentType } = require('./get-document-type')
 const { validateRequest } = require('./validate-request')
 const { generateDocument } = require('../generator')
@@ -7,7 +6,7 @@ const { VALIDATION } = require('../constants/errors')
 const processMessage = async (message, receiver) => {
   try {
     const request = message.body
-    console.log('Generation request received:', util.inspect(request, false, null, true))
+    console.log(`Generation request received: sbi: ${request.sbi}, frn: ${request.frn}`)
 
     const documentType = getDocumentType(message.applicationProperties.type, message.body.type)
 
