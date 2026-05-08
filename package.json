@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "2.5.76",
+  "version": "2.5.77",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -30,9 +30,9 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "4.4.1",
+    "@azure/monitor-opentelemetry": "1.16.0",
     "@azure/storage-blob": "12.31.0",
     "@hapi/hapi": "21.4.8",
-    "applicationinsights": "2.9.6",
     "ffc-alerting-utils": "1.0.14",
     "ffc-database": "1.0.25",
     "ffc-messaging": "2.10.6",
