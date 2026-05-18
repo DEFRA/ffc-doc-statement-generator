@@ -26,6 +26,9 @@ services:
       MESSAGE_QUEUE_PASSWORD: SAS_KEY_VALUE
       STATEMENT_QUEUE_ADDRESS: ffc-doc-statement-test
       POLL_WINDOW_ENABLED: ${POLL_WINDOW_ENABLED:-false}
+      RETENTION_TOPIC_ADDRESS: fcp-pds-data-retention
+      STATEMENT_RETENTION_TOPIC_ADDRESS: ffc-doc-statement-retention
+      RETENTION_SUBSCRIPTION_ADDRESS: ffc-doc-statement-generator
 
   ffc-doc-statement-generator-postgres:
     volumes:

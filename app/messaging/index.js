@@ -2,20 +2,27 @@ const { MessageReceiver } = require('ffc-messaging')
 
 const config = require('../config')
 
-const processMessage = require('./process-message')
+const processStatementMessage = require('./process-statement-message')
+const { processRetentionMessage } = require('./process-retention-message')
 
-let receiver
+let statementReceiver
+let retentionReceiver
 
 const start = async () => {
-  const action = message => processMessage(message, receiver)
-  receiver = new MessageReceiver(config.statementSubscription, action)
-  await receiver.subscribe()
-
+  const action = message => processStatementMessage(message, statementReceiver)
+  statementReceiver = new MessageReceiver(config.statementSubscription, action)
+  await statementReceiver.subscribe()
   console.info('Ready to generate payment statements')
+
+  const retentionAction = message => processRetentionMessage(message, retentionReceiver)
+  retentionReceiver = new MessageReceiver(config.retentionSubscription, retentionAction)
+  await retentionReceiver.subscribe()
+  console.info('Retention receiver ready')
 }
 
 const stop = async () => {
-  await receiver.closeConnection()
+  await statementReceiver.closeConnection()
+  await retentionReceiver.closeConnection()
 }
 
 module.exports = { start, stop }

@@ -9,7 +9,7 @@ jest.mock('../../../app/messaging/validate-request', () => ({
   validateRequest: mockValidation
 }))
 const mockStatement = require('../../mocks/mock-delinked-statement')
-const processMessage = require('../../../app/messaging/process-message')
+const processStatementMessage = require('../../../app/messaging/process-statement-message')
 const { VALIDATION } = require('../../../app/constants/errors')
 const { DELINKED: STATEMENT } = require('../../../app/constants/document-types')
 
@@ -37,13 +37,13 @@ describe('processStatementMessage', () => {
   }
 
   test('completes message on success', async () => {
-    await processMessage(successMessage, receiver)
+    await processStatementMessage(successMessage, receiver)
     expect(receiver.completeMessage).toHaveBeenCalledWith(successMessage)
     expect(receiver.completeMessage).toHaveBeenCalledTimes(1)
   })
 
   test('calls validate statement and generator with statement', async () => {
-    await processMessage(successMessage, receiver)
+    await processStatementMessage(successMessage, receiver)
     expect(mockValidation).toHaveBeenCalledWith(successMessage.body, STATEMENT)
     expect(mockValidation).toHaveBeenCalledTimes(1)
     expect(mockGenerator).toHaveBeenCalledWith(successMessage.body, STATEMENT)
@@ -55,14 +55,14 @@ describe('processStatementMessage', () => {
     ['another generation error', () => mockGenerator.mockImplementation(() => { throw new Error('Unable to generate') })]
   ])('does not complete or dead letter message on %s', async (_, setup) => {
     setup()
-    await processMessage(successMessage, receiver)
+    await processStatementMessage(successMessage, receiver)
     expect(receiver.completeMessage).not.toHaveBeenCalled()
     expect(receiver.deadLetterMessage).not.toHaveBeenCalled()
   })
 
   test('dead letters message if validation error', async () => {
     mockValidation.mockImplementation(mockValidationImplementation)
-    await processMessage(successMessage, receiver)
+    await processStatementMessage(successMessage, receiver)
     expect(receiver.deadLetterMessage).toHaveBeenCalledWith(successMessage)
     expect(receiver.deadLetterMessage).toHaveBeenCalledTimes(1)
     expect(receiver.completeMessage).not.toHaveBeenCalled()
