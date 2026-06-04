@@ -7,9 +7,8 @@ const createStringSchema = (name, chars, pattern) => stringSchema(name, chars, p
 const createEmailSchema = (name, chars) => emailSchema(name, chars)
 const schemeYearStart = 2024
 const schemeYearEnd = 2027
-const currentYear = new Date().getFullYear()
 const validSchemeYears = Array.from(
-  { length: Math.min(currentYear, schemeYearEnd) - schemeYearStart + 1 },
+  { length: schemeYearEnd - schemeYearStart + 1 },
   (_, base) => schemeYearStart + base
 )
 
