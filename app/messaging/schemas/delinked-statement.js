@@ -5,6 +5,12 @@ const monetaryPattern = /^\d+\.\d{2}$/
 
 const createStringSchema = (name, chars, pattern) => stringSchema(name, chars, pattern)
 const createEmailSchema = (name, chars) => emailSchema(name, chars)
+const schemeYearStart = 2024
+const schemeYearEnd = 2027
+const validSchemeYears = Array.from(
+  { length: schemeYearEnd - schemeYearStart + 1 },
+  (_, base) => schemeYearStart + base
+)
 
 const createProgressiveReductionSchema = (name) => Joi.string().pattern(monetaryPattern).required().messages({
   'string.base': `${name} should be a type of string`,
@@ -83,11 +89,11 @@ module.exports = Joi.object({
       'any.required': 'The field scheme short name is not present but it is required',
       'any.only': 'Scheme short name must be DP'
     }),
-    year: Joi.number().integer().valid(constants.year2024, constants.year2025).messages({
+    year: Joi.number().integer().required().valid(...validSchemeYears).messages({
       'number.base': 'Year should be a type of number',
       'number.integer': 'Year should be an integer',
       'any.required': 'The field year is not present but it is required',
-      'any.only': 'Year must be either 2024 or 2025'
+      'any.only': `Year must be one of ${validSchemeYears.join(', ')}`
     })
   }),
   previousPaymentCount: numberSchema('previousPaymentCount'),
