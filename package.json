@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "2.6.3",
+  "version": "2.6.4",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -25,7 +25,8 @@
     "Leigh Godson leigh.godson@atos.net",
     "Amirs Ishmuhametovs amirs.ishmuhametovs@defra.gov.uk",
     "Sam Plackett samuel.plackett@atos.net",
-    "Oliver Lewington oliver.lewington@atos.net"
+    "Oliver Lewington oliver.lewington@atos.net",
+    "Alistair Wishart alistair.wishart@atos.net"
   ],
   "license": "OGL-UK-3.0",
   "dependencies": {
@@ -37,7 +38,7 @@
     "ffc-database": "1.0.25",
     "ffc-messaging": "2.10.6",
     "ffc-pay-event-publisher": "1.2.5",
-    "joi": "17.6.0",
+    "joi": "18.2.1",
     "log-timestamp": "0.3.0",
     "moment": "2.29.4",
     "pdfmake": "0.2.7",
@@ -52,8 +53,11 @@
     "nodemon": "3.0.1"
   },
   "overrides": {
-    "protobufjs": "8.2.0",
-    "uuid": "11.1.1"
+    "protobufjs": "8.6.3",
+    "uuid": "11.1.1",
+    "joi": "18.2.1",
+    "js-yaml": "4.2.0",
+    "@opentelemetry/core": "2.8.0"
   },
   "nodemonConfig": {
     "ignore": [

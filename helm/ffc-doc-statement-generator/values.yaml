@@ -57,6 +57,7 @@ container:
   pollWindowEnd: "23:59"
   pollWindowDays: "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
   pollWindowEnabled: true
+  azureLogLevel: error
 
 ingress:
   server: azure.defra.cloud
