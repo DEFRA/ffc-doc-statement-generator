@@ -12,12 +12,14 @@ const mqSchema = Joi.object({
   statementSubscription: {
     address: Joi.string(),
     topic: Joi.string(),
-    type: Joi.string().default('subscription')
+    type: Joi.string().default('subscription'),
+    maxConcurrentCalls: Joi.number().integer().min(1).default(1)
   },
   retentionSubscription: {
     address: Joi.string().required(),
     topic: Joi.string().required(),
-    type: Joi.string().default('subscription')
+    type: Joi.string().default('subscription'),
+    maxConcurrentCalls: Joi.number().integer().min(1).default(1)
   },
   statementRetentionTopic: {
     address: Joi.string()
@@ -44,12 +46,14 @@ const mqConfig = {
   statementSubscription: {
     address: process.env.STATEMENT_SUBSCRIPTION_ADDRESS,
     topic: process.env.STATEMENT_TOPIC_ADDRESS,
-    type: 'subscription'
+    type: 'subscription',
+    maxConcurrentCalls: 3
   },
   retentionSubscription: {
     address: process.env.RETENTION_SUBSCRIPTION_ADDRESS,
     topic: process.env.RETENTION_TOPIC_ADDRESS,
-    type: 'subscription'
+    type: 'subscription',
+    maxConcurrentCalls: 3
   },
   statementRetentionTopic: {
     address: process.env.STATEMENT_RETENTION_TOPIC_ADDRESS

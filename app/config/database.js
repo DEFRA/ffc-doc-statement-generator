@@ -34,6 +34,12 @@ const dbConfig = {
   dialectOptions: {
     ssl: isProd()
   },
+  pool: {
+    max: 10,
+    min: 2,
+    acquire: 60000,
+    idle: 10000
+  },
   hooks,
   host: process.env.POSTGRES_HOST || 'ffc-doc-statement-generator-postgres',
   password: process.env.POSTGRES_PASSWORD,

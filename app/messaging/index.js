@@ -4,6 +4,9 @@ const config = require('../config')
 
 const processStatementMessage = require('./process-statement-message')
 const { processRetentionMessage } = require('./process-retention-message')
+const { closeSender: closePublishSender } = require('./publish/send-publish-message')
+const { closeSender: closeRetentionSender } = require('./publish/send-retention-messages')
+const { closeSender: closeCrmSender } = require('../publishing/crm/send-crm-message')
 
 let statementReceiver
 let retentionReceiver
@@ -23,6 +26,9 @@ const start = async () => {
 const stop = async () => {
   await statementReceiver.closeConnection()
   await retentionReceiver.closeConnection()
+  await closePublishSender()
+  await closeRetentionSender()
+  await closeCrmSender()
 }
 
 module.exports = { start, stop }

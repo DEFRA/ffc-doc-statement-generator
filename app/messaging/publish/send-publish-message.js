@@ -3,25 +3,32 @@ const { MessageSender } = require('ffc-messaging')
 const createMessage = require('./create-message')
 const { createAlerts } = require('../create-alerts')
 
+let sender = null
+
+const getSender = () => {
+  if (!sender) {
+    sender = new MessageSender(config.publishTopic)
+  }
+  return sender
+}
+
+const closeSender = async () => {
+  if (sender) {
+    await sender.closeConnection()
+    sender = null
+  }
+}
+
 const sendPublishMessage = async (statement, filename, typeId) => {
-  let sender
   try {
     const message = await createMessage(statement, filename, typeId)
-    sender = new MessageSender(config.publishTopic)
-    await sender.sendMessage(message)
+    await getSender().sendMessage(message)
   } catch (error) {
     console.error('Error sending publish message:', error)
     await createAlerts([{ file: filename, message: error.message }])
     throw error
-  } finally {
-    if (sender) {
-      try {
-        await sender.closeConnection()
-      } catch (closeError) {
-        console.error('Error closing message sender connection:', closeError)
-      }
-    }
   }
 }
 
 module.exports = sendPublishMessage
+module.exports.closeSender = closeSender

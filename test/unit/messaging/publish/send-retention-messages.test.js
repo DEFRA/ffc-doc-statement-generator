@@ -1,37 +1,34 @@
-const { MessageSender } = require('ffc-messaging')
-const sendRetentionMessages = require('../../../../app/messaging/publish/send-retention-messages')
-const config = require('../../../../app/config')
-const MESSAGE_SOURCE = require('../../../../app/constants/message-source')
-
-jest.mock('ffc-messaging', () => ({
-  MessageSender: jest.fn()
-}))
-
-jest.mock('../../../../app/config', () => ({
-  statementRetentionTopic: 'test-topic'
-}))
-
-jest.mock('../../../../app/constants/message-source', () => 'test-source')
-
 describe('sendRetentionMessages', () => {
+  let sendRetentionMessages
+  let closeSender
   let senderMockInstance
+  let MockMessageSender
   let consoleErrorSpy
 
   beforeEach(() => {
     senderMockInstance = {
-      sendMessage: jest.fn().mockResolvedValue(),
-      closeConnection: jest.fn().mockResolvedValue()
+      sendMessage: jest.fn().mockResolvedValue(undefined),
+      closeConnection: jest.fn().mockResolvedValue(undefined)
     }
-    MessageSender.mockClear()
-    MessageSender.mockImplementation(() => senderMockInstance)
-    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { })
+    MockMessageSender = jest.fn().mockImplementation(() => senderMockInstance)
+
+    jest.resetModules()
+    jest.doMock('ffc-messaging', () => ({ MessageSender: MockMessageSender }))
+    jest.doMock('../../../../app/config', () => ({ statementRetentionTopic: 'test-topic' }))
+    jest.doMock('../../../../app/constants/message-source', () => 'test-source')
+
+    const mod = require('../../../../app/messaging/publish/send-retention-messages')
+    sendRetentionMessages = mod
+    closeSender = mod.closeSender
+
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterEach(() => {
     consoleErrorSpy.mockRestore()
   })
 
-  test('sends a message for each generation and closes connection', async () => {
+  test('creates sender once and sends a message for each generation', async () => {
     const generations = [
       { documentReference: 'docRef1', filename: 'file1.pdf' },
       { documentReference: 'docRef2', filename: 'file2.pdf' }
@@ -39,8 +36,8 @@ describe('sendRetentionMessages', () => {
 
     await sendRetentionMessages(generations)
 
-    expect(MessageSender).toHaveBeenCalledTimes(generations.length)
-    expect(MessageSender).toHaveBeenCalledWith(config.statementRetentionTopic)
+    expect(MockMessageSender).toHaveBeenCalledTimes(1)
+    expect(MockMessageSender).toHaveBeenCalledWith('test-topic')
 
     expect(senderMockInstance.sendMessage).toHaveBeenCalledTimes(generations.length)
     generations.forEach((generation, i) => {
@@ -50,17 +47,23 @@ describe('sendRetentionMessages', () => {
           filename: generation.filename
         },
         type: 'uk.gov.doc.statement.retention',
-        source: MESSAGE_SOURCE
+        source: 'test-source'
       })
     })
-
-    expect(senderMockInstance.closeConnection).toHaveBeenCalledTimes(1)
   })
 
-  test('logs error if sendMessage throws and still closes connection', async () => {
-    const generations = [
-      { documentReference: 'docRef1', filename: 'file1.pdf' }
-    ]
+  test('reuses sender across multiple calls without recreating it', async () => {
+    const generations = [{ documentReference: 'docRef1', filename: 'file1.pdf' }]
+
+    await sendRetentionMessages(generations)
+    await sendRetentionMessages(generations)
+
+    expect(MockMessageSender).toHaveBeenCalledTimes(1)
+    expect(senderMockInstance.sendMessage).toHaveBeenCalledTimes(2)
+  })
+
+  test('logs error if sendMessage throws', async () => {
+    const generations = [{ documentReference: 'docRef1', filename: 'file1.pdf' }]
     const sendError = new Error('Send failed')
     senderMockInstance.sendMessage.mockRejectedValue(sendError)
 
@@ -70,38 +73,23 @@ describe('sendRetentionMessages', () => {
       'Error sending statement retention message:',
       sendError
     )
+  })
+
+  test('closeSender closes the connection and resets the singleton', async () => {
+    const generations = [{ documentReference: 'docRef1', filename: 'file1.pdf' }]
+    await sendRetentionMessages(generations)
+
+    await closeSender()
+
     expect(senderMockInstance.closeConnection).toHaveBeenCalledTimes(1)
+
+    // After closing, a new call should create a fresh sender
+    await sendRetentionMessages(generations)
+    expect(MockMessageSender).toHaveBeenCalledTimes(2)
   })
 
-  test('logs error if closeConnection throws', async () => {
-    const generations = [
-      { documentReference: 'docRef1', filename: 'file1.pdf' }
-    ]
-    senderMockInstance.closeConnection.mockRejectedValue(new Error('Close failed'))
-
-    await sendRetentionMessages(generations)
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Error closing message sender connection:',
-      expect.any(Error)
-    )
-  })
-
-  test('does not attempt to close connection if sender was never created', async () => {
-    // Modify MessageSender to throw before instance creation
-    MessageSender.mockImplementation(() => {
-      throw new Error('Ctor failed')
-    })
-
-    const generations = [
-      { documentReference: 'docRef1', filename: 'file1.pdf' }
-    ]
-
-    await sendRetentionMessages(generations)
-
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Error sending statement retention message:',
-      expect.any(Error)
-    )
+  test('closeSender does nothing if sender was never created', async () => {
+    await closeSender()
+    expect(senderMockInstance.closeConnection).not.toHaveBeenCalled()
   })
 })

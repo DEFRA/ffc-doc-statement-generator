@@ -12,7 +12,7 @@ jest.mock('ffc-messaging', () => {
   }
 })
 
-jest.mock('../../app/config')
+jest.mock('../../app/config', () => ({}))
 
 const sendCrmMessage = require('../../app/publishing/crm/send-crm-message')
 const mockStatement = require('../mocks/mock-statement-sfi23-quarterly')
@@ -44,6 +44,6 @@ describe('sendCrmMessage', () => {
 
   test('closes connection', async () => {
     await sendCrmMessage(mockStatement, FILENAME, SFI23QUARTERLYSTATEMENT)
-    expect(mockCloseConnection).toHaveBeenCalledTimes(1)
+    expect(mockCloseConnection).not.toHaveBeenCalled()
   })
 })
