@@ -1,4 +1,5 @@
 const { mockMessageSender } = require('../../../mocks/modules/ffc-messaging')
+jest.mock('../../../../app/config', () => ({ publishTopic: 'test-publish-topic' }))
 jest.mock('../../../../app/messaging/publish/create-message')
 const createMessage = require('../../../../app/messaging/publish/create-message')
 jest.mock('../../../../app/messaging/create-alerts', () => ({ createAlerts: jest.fn() }))
