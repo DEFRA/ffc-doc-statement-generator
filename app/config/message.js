@@ -13,13 +13,13 @@ const mqSchema = Joi.object({
     address: Joi.string(),
     topic: Joi.string(),
     type: Joi.string().default('subscription'),
-    maxConcurrentCalls: Joi.number().integer().min(1).default(1)
+    maxConcurrentCalls: Joi.number().integer().min(1).default(3)
   },
   retentionSubscription: {
     address: Joi.string().required(),
     topic: Joi.string().required(),
     type: Joi.string().default('subscription'),
-    maxConcurrentCalls: Joi.number().integer().min(1).default(1)
+    maxConcurrentCalls: Joi.number().integer().min(1).default(3)
   },
   statementRetentionTopic: {
     address: Joi.string()
