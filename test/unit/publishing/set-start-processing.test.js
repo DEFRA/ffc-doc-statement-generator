@@ -18,9 +18,7 @@ describe('set start processing date stamp', () => {
       { outboxId: 3 }
     ]
 
-    const transactionMock = { id: 'transaction-object' }
-
-    await setStartProcessing(pendingStatements, transactionMock)
+    await setStartProcessing(pendingStatements)
 
     expect(db.outbox.update).toHaveBeenCalledTimes(1)
     expect(db.outbox.update).toHaveBeenCalledWith(
@@ -30,8 +28,7 @@ describe('set start processing date stamp', () => {
           outboxId: {
             [db.Sequelize.Op.in]: [1, 2, 3]
           }
-        },
-        transaction: transactionMock
+        }
       }
     )
 
@@ -39,9 +36,7 @@ describe('set start processing date stamp', () => {
   })
 
   test('should call update with empty array if no pendingStatements', async () => {
-    const transactionMock = {}
-
-    await setStartProcessing([], transactionMock)
+    await setStartProcessing([])
 
     expect(db.outbox.update).toHaveBeenCalledWith(
       expect.any(Object),
@@ -50,8 +45,7 @@ describe('set start processing date stamp', () => {
           outboxId: {
             [db.Sequelize.Op.in]: []
           }
-        },
-        transaction: transactionMock
+        }
       })
     )
   })
