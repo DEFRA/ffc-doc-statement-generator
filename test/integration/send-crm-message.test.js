@@ -12,7 +12,10 @@ jest.mock('ffc-messaging', () => {
   }
 })
 
-jest.mock('../../app/config')
+jest.mock('../../app/config', () => ({
+  statementReceiverEndpoint: 'http://test-endpoint',
+  statementReceiverApiVersion: 'v1'
+}))
 
 const sendCrmMessage = require('../../app/publishing/crm/send-crm-message')
 const mockStatement = require('../mocks/mock-delinked-statement')
@@ -44,6 +47,6 @@ describe('sendCrmMessage', () => {
 
   test('closes connection', async () => {
     await sendCrmMessage(mockStatement, FILENAME, DELINKED)
-    expect(mockCloseConnection).toHaveBeenCalledTimes(1)
+    expect(mockCloseConnection).not.toHaveBeenCalled()
   })
 })

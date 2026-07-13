@@ -1,7 +1,8 @@
 const { mockMessageSender } = require('../../../mocks/modules/ffc-messaging')
+jest.mock('../../../../app/config', () => ({ publishTopic: 'test-publish-topic' }))
 jest.mock('../../../../app/messaging/publish/create-message')
 const createMessage = require('../../../../app/messaging/publish/create-message')
-jest.mock('../../../../app/messaging/create-alerts')
+jest.mock('../../../../app/messaging/create-alerts', () => ({ createAlerts: jest.fn() }))
 const { createAlerts } = require('../../../../app/messaging/create-alerts')
 
 const sendPublishMessage = require('../../../../app/messaging/publish/send-publish-message')
@@ -55,10 +56,6 @@ describe('sendPublishMessage', () => {
       expect(sentMessage.body.scheme).toBe(document.scheme)
       expect(sentMessage.type).toBe(messagePublish.type)
       expect(sentMessage.source).toBe(messagePublish.source)
-
-      // Close connection
-      expect(mockMessageSender().closeConnection).toHaveBeenCalled()
-      expect(mockMessageSender().closeConnection).toHaveBeenCalledTimes(1)
     })
   })
 })

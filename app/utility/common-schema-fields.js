@@ -18,9 +18,7 @@ const constants = {
   number200: 200,
   number240: 240,
   number260: 260,
-  number4000: 4000,
-  year2024: 2024,
-  year2025: 2025
+  number4000: 4000
 }
 
 const messages = {

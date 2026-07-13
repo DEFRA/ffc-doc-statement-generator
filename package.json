@@ -1,6 +1,6 @@
 {
   "name": "ffc-doc-statement-generator",
-  "version": "2.6.5",
+  "version": "2.6.6",
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
@@ -31,13 +31,13 @@
   "license": "OGL-UK-3.0",
   "dependencies": {
     "@azure/identity": "4.13.1",
-    "@azure/monitor-opentelemetry": "1.18.0",
+    "@azure/monitor-opentelemetry": "1.18.2",
     "@azure/storage-blob": "12.31.0",
     "@hapi/hapi": "21.4.8",
-    "ffc-alerting-utils": "1.0.15",
-    "ffc-database": "1.0.25",
-    "ffc-messaging": "2.10.6",
-    "ffc-pay-event-publisher": "1.2.5",
+    "ffc-alerting-utils": "1.0.16",
+    "ffc-database": "1.0.27",
+    "ffc-messaging": "2.10.8",
+    "ffc-pay-event-publisher": "1.2.7",
     "joi": "18.2.1",
     "log-timestamp": "0.3.0",
     "moment": "2.29.4",
@@ -53,11 +53,8 @@
     "nodemon": "3.0.1"
   },
   "overrides": {
-    "protobufjs": "8.6.3",
-    "uuid": "11.1.1",
-    "joi": "18.2.1",
-    "js-yaml": "4.2.0",
-    "@opentelemetry/core": "2.8.0"
+    "@opentelemetry/propagator-jaeger": "2.9.0",
+    "uuid": "11.1.1"
   },
   "nodemonConfig": {
     "ignore": [
