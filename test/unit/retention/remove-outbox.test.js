@@ -1,45 +1,36 @@
-const db = require('../../../app/data')
-const { removeOutbox } = require('../../../app/retention/remove-outbox')
+const { createKnexMock } = require('../../helpers/mock-knex')
+
+const mockDb = createKnexMock(['outbox'])
 
 jest.mock('../../../app/data', () => ({
-  Sequelize: {
-    Op: {
-      in: 'in'
-    }
-  },
-  outbox: {
-    destroy: jest.fn()
-  }
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
+
+const { removeOutbox } = require('../../../app/retention/remove-outbox')
 
 describe('removeOutbox', () => {
   const generationIds = [101, 202, 303]
-  const transaction = {}
+  const queryable = mockDb.trx
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDb.builder.resolves(3)
   })
 
-  test('calls db.outbox.destroy with correct parameters', async () => {
-    db.outbox.destroy.mockResolvedValue(3)
+  test('deletes the matching outbox rows against the supplied queryable', async () => {
+    await removeOutbox(queryable, generationIds)
 
-    await removeOutbox(generationIds, transaction)
-
-    expect(db.outbox.destroy).toHaveBeenCalledTimes(1)
-    expect(db.outbox.destroy).toHaveBeenCalledWith({
-      where: {
-        generationId: {
-          [db.Sequelize.Op.in]: generationIds
-        }
-      },
-      transaction
-    })
+    expect(mockDb.tables.outbox).toHaveBeenCalledWith(queryable)
+    expect(mockDb.builder.whereIn).toHaveBeenCalledWith('generationId', generationIds)
+    expect(mockDb.builder.del).toHaveBeenCalledTimes(1)
   })
 
-  test('propagates error when db.outbox.destroy rejects', async () => {
-    const error = new Error('DB error')
-    db.outbox.destroy.mockRejectedValue(error)
+  test('propagates error when the delete rejects', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
 
-    await expect(removeOutbox(generationIds, transaction)).rejects.toThrow('DB error')
+    await expect(removeOutbox(queryable, generationIds)).rejects.toThrow('DB error')
   })
 })
