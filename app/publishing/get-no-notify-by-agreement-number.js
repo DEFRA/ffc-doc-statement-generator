@@ -1,15 +1,10 @@
-const db = require('../data')
+const { noNotifys } = require('../data')
 
 const getNoNotifyByAgreementNumber = async (agreementNumber) => {
-  return db.noNotify.findOne({
-    attributes: [
-      'agreementNumber'
-    ],
-    where: {
-      agreementNumber
-    },
-    raw: true
-  })
+  return await noNotifys()
+    .select('agreementNumber')
+    .where({ agreementNumber })
+    .first() ?? null
 }
 
 module.exports = getNoNotifyByAgreementNumber
