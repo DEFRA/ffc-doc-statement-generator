@@ -36,8 +36,6 @@ const createQueryBuilder = () => {
 
   builder.rejects = (error) => {
     pending = Promise.reject(error)
-    // Keep the rejection handled until the assertion awaits it, otherwise Node
-    // reports an unhandled rejection for tests that only assert on the chain.
     pending.catch(() => {})
     return builder
   }
