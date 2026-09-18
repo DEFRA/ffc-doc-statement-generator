@@ -1,8 +1,6 @@
 const { generations } = require('../data')
 
-// #>> extracts JSON as text, so both operands are bound as text. The Sequelize
-// equivalent inlined frn as a bare number, which PostgreSQL rejected — there is
-// no text = bigint operator. See PR description.
+// #>> yields text, so frn must be bound as text: there is no text = bigint operator
 const findGenerations = async (queryable, agreementNumber, frn) => {
   return generations(queryable)
     .select('generationId', 'documentReference', 'filename')

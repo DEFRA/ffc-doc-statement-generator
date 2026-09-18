@@ -1,6 +1,3 @@
-// Knex query builders are chainable and thenable, so the mock has to be both:
-// every builder method returns the same object, and awaiting it resolves with
-// whatever the test set via resolves()/rejects().
 const chainableMethods = [
   'select',
   'where',
@@ -52,9 +49,6 @@ const createQueryBuilder = () => {
   return builder
 }
 
-// Mirrors the shape of app/data: { client, transaction, close, ...accessors }.
-// Every accessor and the transaction queryable resolve to the same builder, so a
-// test asserts on the accessor for the table and the builder for the query.
 const createKnexMock = (tableNames = []) => {
   const builder = createQueryBuilder()
   const knex = jest.fn(() => builder)
@@ -62,7 +56,6 @@ const createKnexMock = (tableNames = []) => {
   knex.raw = jest.fn()
   knex.destroy = jest.fn()
 
-  // A Knex transaction is itself a queryable, so the mock is too.
   const trx = jest.fn(() => builder)
   const transaction = jest.fn(async (callback) => callback(trx))
 
