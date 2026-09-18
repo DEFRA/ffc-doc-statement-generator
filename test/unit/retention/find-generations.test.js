@@ -1,81 +1,62 @@
-const db = require('../../../app/data')
-const { findGenerations } = require('../../../app/retention/find-generations')
+const { createKnexMock } = require('../../helpers/mock-knex')
+
+const mockDb = createKnexMock(['generations'])
 
 jest.mock('../../../app/data', () => ({
-  generation: {
-    findAll: jest.fn()
-  },
-  sequelize: {
-    Op: {
-      and: 'and'
-    },
-    where: jest.fn(),
-    json: jest.fn()
-  },
-  Sequelize: {
-    Op: {
-      and: 'and'
-    },
-    where: jest.fn(),
-    json: jest.fn()
-  }
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
+
+const { findGenerations } = require('../../../app/retention/find-generations')
 
 describe('findGenerations', () => {
   const agreementNumber = 'AGR-789'
   const frn = 123456
-  const transaction = {}
+  const queryable = mockDb.trx
 
   beforeEach(() => {
     jest.clearAllMocks()
-    db.Sequelize.where.mockImplementation((col, val) => ({ col, val }))
-    db.sequelize.json.mockImplementation((path) => `json_path:${path}`)
+    mockDb.builder.resolves([])
   })
 
-  test('calls db.generation.findAll with correct parameters', async () => {
-    const mockResult = [
-      { generationId: 101 },
-      { generationId: 202 }
-    ]
-    db.generation.findAll.mockResolvedValue(mockResult)
+  test('selects the retention columns against the supplied queryable', async () => {
+    await findGenerations(queryable, agreementNumber, frn)
 
-    const result = await findGenerations(agreementNumber, frn, transaction)
+    expect(mockDb.tables.generations).toHaveBeenCalledWith(queryable)
+    expect(mockDb.builder.select).toHaveBeenCalledWith('generationId', 'documentReference', 'filename')
+  })
 
-    expect(db.sequelize.json).toHaveBeenCalledTimes(2)
-    expect(db.sequelize.json).toHaveBeenCalledWith('statementData.applicationId')
-    expect(db.sequelize.json).toHaveBeenCalledWith('statementData.frn')
+  // #>> yields text, so both operands must be bound as text. The Sequelize
+  // version inlined frn as a bare number, which PostgreSQL rejects.
+  test('matches the JSON fields as text', async () => {
+    await findGenerations(queryable, agreementNumber, frn)
 
-    expect(db.Sequelize.where).toHaveBeenCalledTimes(2)
-    expect(db.Sequelize.where).toHaveBeenCalledWith('json_path:statementData.applicationId', agreementNumber)
-    expect(db.Sequelize.where).toHaveBeenCalledWith('json_path:statementData.frn', frn)
+    expect(mockDb.builder.whereRaw).toHaveBeenCalledWith(
+      '"statementData" #>> \'{applicationId}\' = ?',
+      ['AGR-789']
+    )
+    expect(mockDb.builder.whereRaw).toHaveBeenCalledWith(
+      '"statementData" #>> \'{frn}\' = ?',
+      ['123456']
+    )
+  })
 
-    expect(db.generation.findAll).toHaveBeenCalledTimes(1)
-    expect(db.generation.findAll).toHaveBeenCalledWith({
-      attributes: ['generationId', 'documentReference', 'filename'],
-      where: {
-        [db.Sequelize.Op.and]: [
-          { col: 'json_path:statementData.applicationId', val: agreementNumber },
-          { col: 'json_path:statementData.frn', val: frn }
-        ]
-      },
-      transaction
-    })
-    expect(result).toBe(mockResult)
+  test('returns the matching generations', async () => {
+    const mockResult = [{ generationId: 101 }, { generationId: 202 }]
+    mockDb.builder.resolves(mockResult)
+
+    await expect(findGenerations(queryable, agreementNumber, frn)).resolves.toBe(mockResult)
   })
 
   test('returns empty array when no records found', async () => {
-    db.generation.findAll.mockResolvedValue([])
-
-    const result = await findGenerations(agreementNumber, frn, transaction)
-
-    expect(db.generation.findAll).toHaveBeenCalledTimes(1)
-    expect(result).toEqual([])
+    await expect(findGenerations(queryable, agreementNumber, frn)).resolves.toEqual([])
   })
 
-  test('propagates error when db.generation.findAll rejects', async () => {
-    const error = new Error('DB error')
-    db.generation.findAll.mockRejectedValue(error)
+  test('propagates error when the query rejects', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
 
-    await expect(findGenerations(agreementNumber, frn, transaction)).rejects.toThrow('DB error')
+    await expect(findGenerations(queryable, agreementNumber, frn)).rejects.toThrow('DB error')
   })
 })

@@ -1,10 +1,9 @@
-const db = require('../data')
+const { noNotifys } = require('../data')
 
-const removeNoNotifys = async (agreementNumber, frn, transaction) => {
-  await db.noNotify.destroy({
-    where: { agreementNumber, frn },
-    transaction
-  })
+const removeNoNotifys = async (queryable, agreementNumber, frn) => {
+  await noNotifys(queryable)
+    .where({ agreementNumber, frn })
+    .del()
 }
 
 module.exports = {

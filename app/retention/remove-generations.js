@@ -1,14 +1,9 @@
-const db = require('../data')
+const { generations } = require('../data')
 
-const removeGenerations = async (generationIds, transaction) => {
-  await db.generation.destroy({
-    where: {
-      generationId: {
-        [db.Sequelize.Op.in]: generationIds
-      }
-    },
-    transaction
-  })
+const removeGenerations = async (queryable, generationIds) => {
+  await generations(queryable)
+    .whereIn('generationId', generationIds)
+    .del()
 }
 
 module.exports = {

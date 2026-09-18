@@ -1,45 +1,36 @@
-const db = require('../../../app/data')
-const { removeGenerations } = require('../../../app/retention/remove-generations')
+const { createKnexMock } = require('../../helpers/mock-knex')
+
+const mockDb = createKnexMock(['generations'])
 
 jest.mock('../../../app/data', () => ({
-  Sequelize: {
-    Op: {
-      in: 'in'
-    }
-  },
-  generation: {
-    destroy: jest.fn()
-  }
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
+
+const { removeGenerations } = require('../../../app/retention/remove-generations')
 
 describe('removeGenerations', () => {
   const generationIds = [101, 202, 303]
-  const transaction = {}
+  const queryable = mockDb.trx
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDb.builder.resolves(3)
   })
 
-  test('calls db.generation.destroy with correct parameters', async () => {
-    db.generation.destroy.mockResolvedValue(3)
+  test('deletes the matching generations against the supplied queryable', async () => {
+    await removeGenerations(queryable, generationIds)
 
-    await removeGenerations(generationIds, transaction)
-
-    expect(db.generation.destroy).toHaveBeenCalledTimes(1)
-    expect(db.generation.destroy).toHaveBeenCalledWith({
-      where: {
-        generationId: {
-          [db.Sequelize.Op.in]: generationIds
-        }
-      },
-      transaction
-    })
+    expect(mockDb.tables.generations).toHaveBeenCalledWith(queryable)
+    expect(mockDb.builder.whereIn).toHaveBeenCalledWith('generationId', generationIds)
+    expect(mockDb.builder.del).toHaveBeenCalledTimes(1)
   })
 
-  test('propagates error when db.generation.destroy rejects', async () => {
-    const error = new Error('DB error')
-    db.generation.destroy.mockRejectedValue(error)
+  test('propagates error when the delete rejects', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
 
-    await expect(removeGenerations(generationIds, transaction)).rejects.toThrow('DB error')
+    await expect(removeGenerations(queryable, generationIds)).rejects.toThrow('DB error')
   })
 })

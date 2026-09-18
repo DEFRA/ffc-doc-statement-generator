@@ -1,14 +1,9 @@
-const db = require('../data')
+const { outbox } = require('../data')
 
-const removeOutbox = async (generationIds, transaction) => {
-  await db.outbox.destroy({
-    where: {
-      generationId: {
-        [db.Sequelize.Op.in]: generationIds
-      }
-    },
-    transaction
-  })
+const removeOutbox = async (queryable, generationIds) => {
+  await outbox(queryable)
+    .whereIn('generationId', generationIds)
+    .del()
 }
 
 module.exports = {

@@ -1,37 +1,37 @@
-const db = require('../../../app/data')
-const { removeNoNotifys } = require('../../../app/retention/remove-no-notifys')
+const { createKnexMock } = require('../../helpers/mock-knex')
+
+const mockDb = createKnexMock(['noNotifys'])
 
 jest.mock('../../../app/data', () => ({
-  noNotify: {
-    destroy: jest.fn()
-  }
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
 }))
+
+const { removeNoNotifys } = require('../../../app/retention/remove-no-notifys')
 
 describe('removeNoNotifys', () => {
   const agreementNumber = 'AGR-789'
   const frn = 123456
-  const transaction = {}
+  const queryable = mockDb.trx
 
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDb.builder.resolves(1)
   })
 
-  test('calls db.noNotify.destroy with correct parameters', async () => {
-    db.noNotify.destroy.mockResolvedValue(1)
+  test('deletes the matching exclusions against the supplied queryable', async () => {
+    await removeNoNotifys(queryable, agreementNumber, frn)
 
-    await removeNoNotifys(agreementNumber, frn, transaction)
-
-    expect(db.noNotify.destroy).toHaveBeenCalledTimes(1)
-    expect(db.noNotify.destroy).toHaveBeenCalledWith({
-      where: { agreementNumber, frn },
-      transaction
-    })
+    expect(mockDb.tables.noNotifys).toHaveBeenCalledWith(queryable)
+    expect(mockDb.builder.where).toHaveBeenCalledWith({ agreementNumber, frn })
+    expect(mockDb.builder.del).toHaveBeenCalledTimes(1)
   })
 
-  test('propagates error when db.noNotify.destroy rejects', async () => {
-    const error = new Error('DB error')
-    db.noNotify.destroy.mockRejectedValue(error)
+  test('propagates error when the delete rejects', async () => {
+    mockDb.builder.rejects(new Error('DB error'))
 
-    await expect(removeNoNotifys(agreementNumber, frn, transaction)).rejects.toThrow('DB error')
+    await expect(removeNoNotifys(queryable, agreementNumber, frn)).rejects.toThrow('DB error')
   })
 })
