@@ -1,8 +1,12 @@
-jest.mock('ffc-messaging', () => ({ MessageSender: jest.fn() }))
-jest.mock('../../../../app/config', () => ({ crmTopic: 'test-crm-topic' }))
+jest.mock('../../../../app/config', () => ({ crmTopic: { address: 'test-crm-topic' } }))
+jest.mock('../../../../app/messaging/service-bus', () => ({
+  getSender: jest.fn(),
+  sendMessage: jest.fn(),
+  closeSender: jest.fn()
+}))
 jest.mock('../../../../app/publishing/crm/create-crm-message', () => jest.fn())
 
-const { MessageSender } = require('ffc-messaging')
+const { getSender, sendMessage, closeSender: closeServiceBusSender } = require('../../../../app/messaging/service-bus')
 const createCrmMessage = require('../../../../app/publishing/crm/create-crm-message')
 const sendCrmMessage = require('../../../../app/publishing/crm/send-crm-message')
 const mockStatement = require('../../../mocks/mock-delinked-statement')
@@ -10,20 +14,13 @@ const { DELINKEDSTATEMENT: FILENAME } = require('../../../mocks/components/filen
 const { DELINKED } = require('../../../../app/constants/document-types')
 
 describe('send crm message', () => {
-  let senderMockInstance
+  let mockSender
 
   beforeEach(() => {
-    senderMockInstance = {
-      sendMessage: jest.fn().mockResolvedValue(undefined),
-      closeConnection: jest.fn().mockResolvedValue(undefined)
-    }
-    MessageSender.mockClear()
-    MessageSender.mockImplementation(() => senderMockInstance)
+    mockSender = { sendMessages: jest.fn().mockResolvedValue(undefined) }
+    jest.clearAllMocks()
+    getSender.mockReturnValue(mockSender)
     createCrmMessage.mockReset()
-  })
-
-  afterEach(async () => {
-    await sendCrmMessage.closeSender()
   })
 
   test('should call createCrmMessage when statement and filename are given', async () => {
@@ -44,12 +41,14 @@ describe('send crm message', () => {
     expect(createCrmMessage).toHaveBeenCalledWith(mockStatement, FILENAME, DELINKED)
   })
 
-  test('creates sender only once across multiple calls', async () => {
+  test('reuses sender across multiple calls', async () => {
     createCrmMessage.mockReturnValue({ body: { apiLink: 'http://example.com' } })
     await sendCrmMessage(mockStatement, FILENAME, DELINKED)
     await sendCrmMessage(mockStatement, FILENAME, DELINKED)
-    expect(MessageSender).toHaveBeenCalledTimes(1)
-    expect(senderMockInstance.sendMessage).toHaveBeenCalledTimes(2)
+    expect(getSender).toHaveBeenCalledTimes(2)
+    expect(sendMessage).toHaveBeenCalledTimes(2)
+    expect(sendMessage.mock.calls[0][0]).toBe(mockSender)
+    expect(sendMessage.mock.calls[1][0]).toBe(mockSender)
   })
 
   test('returns apiLink from message body', async () => {
@@ -58,21 +57,9 @@ describe('send crm message', () => {
     expect(result).toBe('http://example.com/link')
   })
 
-  test('closeSender closes the connection and resets the singleton', async () => {
-    createCrmMessage.mockReturnValue({ body: { apiLink: 'http://example.com' } })
-    await sendCrmMessage(mockStatement, FILENAME, DELINKED)
-
+  test('closeSender closes the sender for the crm topic', async () => {
     await sendCrmMessage.closeSender()
-
-    expect(senderMockInstance.closeConnection).toHaveBeenCalledTimes(1)
-
-    // Sending again after close should create a fresh sender
-    await sendCrmMessage(mockStatement, FILENAME, DELINKED)
-    expect(MessageSender).toHaveBeenCalledTimes(2)
-  })
-
-  test('closeSender does nothing if sender was never created', async () => {
-    await sendCrmMessage.closeSender()
-    expect(senderMockInstance.closeConnection).not.toHaveBeenCalled()
+    expect(closeServiceBusSender).toHaveBeenCalledTimes(1)
+    expect(closeServiceBusSender).toHaveBeenCalledWith({ address: 'test-crm-topic' })
   })
 })

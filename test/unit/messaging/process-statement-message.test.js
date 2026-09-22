@@ -1,4 +1,3 @@
-jest.mock('ffc-messaging')
 jest.mock('../../../app/data')
 const mockGenerator = jest.fn()
 jest.mock('../../../app/generator', () => ({

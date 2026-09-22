@@ -1,34 +1,44 @@
-const { MessageReceiver } = require('ffc-messaging')
-
 const config = require('../config')
-
+const { createServiceBusClient, createReceiver, subscribeReceiver, closeSenders } = require('./service-bus')
 const processStatementMessage = require('./process-statement-message')
 const { processRetentionMessage } = require('./process-retention-message')
-const { closeSender: closePublishSender } = require('./publish/send-publish-message')
-const { closeSender: closeRetentionSender } = require('./publish/send-retention-messages')
-const { closeSender: closeCrmSender } = require('../publishing/crm/send-crm-message')
+const errorHandler = (error) => {
+  console.error('Error occurred:', error)
+}
 
+let sbClient
 let statementReceiver
 let retentionReceiver
 
 const start = async () => {
-  const action = message => processStatementMessage(message, statementReceiver)
-  statementReceiver = new MessageReceiver(config.statementSubscription, action)
-  await statementReceiver.subscribe()
+  sbClient = createServiceBusClient(config.statementSubscription)
+  statementReceiver = createReceiver(sbClient, config.statementSubscription)
+  await subscribeReceiver(statementReceiver, processStatementMessage, errorHandler, config.statementSubscription)
   console.info('Ready to generate payment statements')
 
-  const retentionAction = message => processRetentionMessage(message, retentionReceiver)
-  retentionReceiver = new MessageReceiver(config.retentionSubscription, retentionAction)
-  await retentionReceiver.subscribe()
+  retentionReceiver = createReceiver(sbClient, config.retentionSubscription)
+  await subscribeReceiver(retentionReceiver, processRetentionMessage, errorHandler, config.retentionSubscription)
   console.info('Retention receiver ready')
 }
 
 const stop = async () => {
-  await statementReceiver.closeConnection()
-  await retentionReceiver.closeConnection()
-  await closePublishSender()
-  await closeRetentionSender()
-  await closeCrmSender()
+  await closeSenders()
+  if (statementReceiver) {
+    await statementReceiver.close()
+    statementReceiver = null
+  }
+  if (retentionReceiver) {
+    await retentionReceiver.close()
+    retentionReceiver = null
+  }
+  if (sbClient) {
+    try {
+      await sbClient.close()
+    } catch (error) {
+      console.error('Error closing Service Bus client:', error)
+    }
+    sbClient = null
+  }
 }
 
 module.exports = { start, stop }
