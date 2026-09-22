@@ -1,4 +1,4 @@
-const { outbox } = require('../data')
+const { outbox } = require('../database')
 const { setStartProcessing } = require('./set-start-processing')
 
 const minutesToGoBack = 15

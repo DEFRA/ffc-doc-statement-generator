@@ -1,4 +1,4 @@
-const { noNotifys } = require('../data')
+const { noNotifys } = require('../database')
 
 const removeNoNotifys = async (queryable, agreementNumber, frn) => {
   await noNotifys(queryable)

@@ -1,4 +1,4 @@
-const { outbox } = require('../data')
+const { outbox } = require('../database')
 
 const setStartProcessing = async (pendingStatements) => {
   const outboxIds = pendingStatements.map(statement => statement.outboxId)

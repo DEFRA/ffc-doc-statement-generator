@@ -1,4 +1,4 @@
-const { outbox } = require('../data')
+const { outbox } = require('../database')
 
 const saveOutboundStatement = async (generationId, type) => {
   await outbox().insert({

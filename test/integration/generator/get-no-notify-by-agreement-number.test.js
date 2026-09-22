@@ -1,4 +1,4 @@
-const db = require('../../../app/data')
+const db = require('../../../app/database')
 const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 const mockNoNotify = require('../../mocks/objects/mock-no-notify')
 

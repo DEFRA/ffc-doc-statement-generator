@@ -1,4 +1,4 @@
-const { outbox } = require('../data')
+const { outbox } = require('../database')
 
 const setPublished = async (outboxId, sentToPublisher, sentToCRM, receiverLink) => {
   await outbox()

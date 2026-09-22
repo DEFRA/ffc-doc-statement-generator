@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('../database')
 const { DELINKED } = require('../constants/scheme-ids')
 const { removeGenerations } = require('./remove-generations')
 const { removeNoNotifys } = require('./remove-no-notifys')

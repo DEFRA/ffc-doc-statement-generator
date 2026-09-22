@@ -1,4 +1,4 @@
-const { generations } = require('../data')
+const { generations } = require('../database')
 
 const getGenerations = async (documentReference) => {
   return generations()

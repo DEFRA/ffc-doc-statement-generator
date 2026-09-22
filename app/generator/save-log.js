@@ -1,4 +1,4 @@
-const { generations } = require('../data')
+const { generations } = require('../database')
 
 const saveLog = async (statementData, filename, dateGenerated) => {
   const { documentReference: documentRef, ...data } = statementData

@@ -1,4 +1,4 @@
-const { outbox } = require('../data')
+const { outbox } = require('../database')
 
 const removeOutbox = async (queryable, generationIds) => {
   await outbox(queryable)

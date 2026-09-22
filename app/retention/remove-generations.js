@@ -1,4 +1,4 @@
-const { generations } = require('../data')
+const { generations } = require('../database')
 
 const removeGenerations = async (queryable, generationIds) => {
   await generations(queryable)

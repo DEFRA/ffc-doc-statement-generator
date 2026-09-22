@@ -1,4 +1,4 @@
-const { noNotifys } = require('../data')
+const { noNotifys } = require('../database')
 
 const getNoNotifyByAgreementNumber = async (agreementNumber) => {
   return await noNotifys()

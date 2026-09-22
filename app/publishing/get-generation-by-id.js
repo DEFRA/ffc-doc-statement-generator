@@ -1,4 +1,4 @@
-const { generations } = require('../data')
+const { generations } = require('../database')
 
 const getGenerationById = async (generationId) => {
   return await generations()
