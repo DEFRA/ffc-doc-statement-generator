@@ -13,11 +13,11 @@ let retentionReceiver
 const start = async () => {
   sbClient = createServiceBusClient(config.statementSubscription)
   statementReceiver = createReceiver(sbClient, config.statementSubscription)
-  await subscribeReceiver(statementReceiver, processStatementMessage, errorHandler, config.statementSubscription)
+  subscribeReceiver(statementReceiver, processStatementMessage, errorHandler, config.statementSubscription)
   console.info('Ready to generate payment statements')
 
   retentionReceiver = createReceiver(sbClient, config.retentionSubscription)
-  await subscribeReceiver(retentionReceiver, processRetentionMessage, errorHandler, config.retentionSubscription)
+  subscribeReceiver(retentionReceiver, processRetentionMessage, errorHandler, config.retentionSubscription)
   console.info('Retention receiver ready')
 }
 
