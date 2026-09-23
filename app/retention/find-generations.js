@@ -1,16 +1,11 @@
-const db = require('../data')
+const { generations } = require('../database')
 
-const findGenerations = async (agreementNumber, frn, transaction) => {
-  return db.generation.findAll({
-    attributes: ['generationId', 'documentReference', 'filename'],
-    where: {
-      [db.Sequelize.Op.and]: [
-        db.Sequelize.where(db.sequelize.json('statementData.applicationId'), agreementNumber),
-        db.Sequelize.where(db.sequelize.json('statementData.frn'), frn)
-      ]
-    },
-    transaction
-  })
+// #>> yields text, so frn must be bound as text: there is no text = bigint operator
+const findGenerations = async (queryable, agreementNumber, frn) => {
+  return generations(queryable)
+    .select('generationId', 'documentReference', 'filename')
+    .whereRaw('"statementData" #>> \'{applicationId}\' = ?', [String(agreementNumber)])
+    .whereRaw('"statementData" #>> \'{frn}\' = ?', [String(frn)])
 }
 
 module.exports = {

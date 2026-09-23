@@ -1,12 +1,9 @@
-const db = require('../data')
+const { generations } = require('../database')
 
 const getGenerationById = async (generationId) => {
-  return db.generation.findOne({
-    where: {
-      generationId
-    },
-    raw: true
-  })
+  return await generations()
+    .where({ generationId })
+    .first() ?? null
 }
 
 module.exports = getGenerationById

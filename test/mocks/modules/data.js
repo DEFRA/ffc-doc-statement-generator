@@ -1,31 +1,12 @@
-const mockCommit = jest.fn()
-const mockRollback = jest.fn()
+const { createKnexMock } = require('../../helpers/mock-knex')
 
-const mockTransaction = jest.fn().mockImplementation(() => {
-  return {
-    commit: mockCommit,
-    rollback: mockRollback
-  }
-})
+const mockDb = createKnexMock(['generations', 'noNotifys', 'outbox'])
 
-const mockSequelize = {
-  transaction: mockTransaction
-}
+jest.mock('../../../app/database', () => ({
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
+}))
 
-const mockCreate = jest.fn()
-
-const mockGeneration = {
-  create: mockCreate
-}
-
-jest.mock('../../../app/data', () => {
-  return {
-    sequelize: mockSequelize,
-    generation: mockGeneration
-  }
-})
-
-module.exports = {
-  mockTransaction,
-  mockGeneration
-}
+module.exports = mockDb
