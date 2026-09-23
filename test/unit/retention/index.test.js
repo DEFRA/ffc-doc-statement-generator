@@ -3,7 +3,7 @@ const { DELINKED } = require('../../../app/constants/scheme-ids')
 
 const mockDb = createKnexMock()
 
-jest.mock('../../../app/data', () => ({
+jest.mock('../../../app/database', () => ({
   client: mockDb.knex,
   transaction: mockDb.transaction,
   close: mockDb.close
