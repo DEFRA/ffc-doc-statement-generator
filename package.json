@@ -1,7 +1,11 @@
 {
   "name": "ffc-doc-statement-generator",
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version": "2.6.8",
+=======
+  "version": "2.6.7",
+>>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
 =======
   "version": "2.6.7",
 >>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
@@ -45,14 +49,20 @@
     "ffc-messaging": "2.10.10",
 =======
     "ffc-database": "1.0.27",
+<<<<<<< HEAD
+>>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
+=======
 >>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
     "ffc-pay-event-publisher": "1.2.9",
     "joi": "18.2.9",
     "log-timestamp": "0.3.0",
     "moment": "2.31.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "pdfmake": "0.2.7"
 =======
+=======
+>>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
     "pdfmake": "0.2.7",
     "sequelize": "6.37.8"
 >>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
@@ -67,7 +77,10 @@
   },
   "overrides": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "@opentelemetry/propagator-jaeger": "2.9.0",
+=======
+>>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
 =======
 >>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
     "uuid": "11.1.1",
