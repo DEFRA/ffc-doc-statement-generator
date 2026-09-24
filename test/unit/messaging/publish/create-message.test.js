@@ -1,11 +1,18 @@
-const { mockMessageSender } = require('../../../mocks/modules/ffc-messaging')
-jest.mock('../../../../app/config', () => ({ publishTopic: 'test-publish-topic' }))
+jest.mock('../../../../app/config', () => ({ publishTopic: { address: 'test-publish-topic' } }))
+jest.mock('../../../../app/messaging/service-bus', () => ({
+  getSender: jest.fn(),
+  sendMessage: jest.fn(),
+  closeSender: jest.fn()
+}))
 jest.mock('../../../../app/messaging/publish/create-message')
 const createMessage = require('../../../../app/messaging/publish/create-message')
 jest.mock('../../../../app/messaging/create-alerts', () => ({ createAlerts: jest.fn() }))
 const { createAlerts } = require('../../../../app/messaging/create-alerts')
 
+const { getSender, sendMessage } = require('../../../../app/messaging/service-bus')
 const sendPublishMessage = require('../../../../app/messaging/publish/send-publish-message')
+
+const mockSender = { sendMessages: jest.fn().mockResolvedValue(undefined) }
 
 const documentTypes = [
   {
@@ -25,8 +32,9 @@ const documentTypes = [
 ]
 
 describe('sendPublishMessage', () => {
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks()
+    getSender.mockReturnValue(mockSender)
   })
 
   describe.each(documentTypes)('$name', ({ document, filename, type, messagePublish }) => {
@@ -40,13 +48,13 @@ describe('sendPublishMessage', () => {
       expect(createMessage).toHaveBeenCalledTimes(1)
     })
 
-    test('should send message and close connection', async () => {
+    test('should send message via service bus sender', async () => {
       await sendPublishMessage(document, filename, type)
-      const sentMessage = mockMessageSender().sendMessage.mock.calls[0][0]
+      const sentMessage = sendMessage.mock.calls[0][1]
 
-      // Check message properties
-      expect(mockMessageSender().sendMessage).toHaveBeenCalledWith(createMessage())
-      expect(mockMessageSender().sendMessage).toHaveBeenCalledTimes(1)
+      expect(getSender).toHaveBeenCalledWith({ address: 'test-publish-topic' })
+      expect(sendMessage).toHaveBeenCalledWith(mockSender, createMessage())
+      expect(sendMessage).toHaveBeenCalledTimes(1)
       expect(sentMessage.body.filename).toBe(filename)
       expect(sentMessage.body.businessName).toBe(document.businessName)
       expect(sentMessage.body.frn).toBe(document.frn)
@@ -56,6 +64,15 @@ describe('sendPublishMessage', () => {
       expect(sentMessage.body.scheme).toBe(document.scheme)
       expect(sentMessage.type).toBe(messagePublish.type)
       expect(sentMessage.source).toBe(messagePublish.source)
+    })
+
+    test('reuses sender across multiple calls', async () => {
+      await sendPublishMessage(document, filename, type)
+      await sendPublishMessage(document, filename, type)
+
+      expect(getSender).toHaveBeenCalledTimes(2)
+      expect(sendMessage.mock.calls[0][0]).toBe(mockSender)
+      expect(sendMessage.mock.calls[1][0]).toBe(mockSender)
     })
   })
 })

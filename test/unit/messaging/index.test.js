@@ -1,4 +1,9 @@
-jest.mock('ffc-messaging')
+jest.mock('../../../app/messaging/service-bus', () => ({
+  createServiceBusClient: jest.fn(),
+  createReceiver: jest.fn(),
+  subscribeReceiver: jest.fn(),
+  closeSenders: jest.fn()
+}))
 jest.mock('../../../app/data')
 const messageService = require('../../../app/messaging')
 

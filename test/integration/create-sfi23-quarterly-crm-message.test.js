@@ -1,22 +1,18 @@
 const mockSendMessage = jest.fn()
-const mockCloseConnection = jest.fn()
 
-jest.mock('ffc-messaging', () => {
-  return {
-    MessageSender: jest.fn().mockImplementation(() => {
-      return {
-        sendMessage: mockSendMessage,
-        closeConnection: mockCloseConnection
-      }
-    })
-  }
-})
+jest.mock('../../app/messaging/service-bus', () => ({
+  getSender: jest.fn(),
+  sendMessage: (sender, message) => mockSendMessage(message),
+  closeSender: jest.fn()
+}))
 
 jest.mock('../../app/config', () => ({
+  crmTopic: { address: 'test-crm-topic' },
   statementReceiverEndpoint: 'http://test-endpoint',
   statementReceiverApiVersion: 'v1'
 }))
 
+const { getSender } = require('../../app/messaging/service-bus')
 const sendCrmMessage = require('../../app/publishing/crm/send-crm-message')
 const mockStatement = require('../mocks/mock-statement-sfi23-quarterly')
 const { statementReceiverApiVersion, statementReceiverEndpoint } = require('../../app/config')
@@ -26,6 +22,7 @@ const FILENAME = 'FFC_PaymentStatement_SFI-23_2024_1234567890_2022080515301012.p
 describe('sendCrmMessage', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    getSender.mockReturnValue({ sendMessages: jest.fn() })
   })
 
   test.each([
@@ -43,10 +40,5 @@ describe('sendCrmMessage', () => {
   test('sends one crm message', async () => {
     await sendCrmMessage(mockStatement, FILENAME, SFI23QUARTERLYSTATEMENT)
     expect(mockSendMessage).toHaveBeenCalledTimes(1)
-  })
-
-  test('closes connection', async () => {
-    await sendCrmMessage(mockStatement, FILENAME, SFI23QUARTERLYSTATEMENT)
-    expect(mockCloseConnection).not.toHaveBeenCalled()
   })
 })
