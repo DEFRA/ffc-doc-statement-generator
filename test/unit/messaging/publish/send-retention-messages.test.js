@@ -1,26 +1,24 @@
+jest.mock('../../../../app/config', () => ({ statementRetentionTopic: { address: 'test-topic' } }))
+jest.mock('../../../../app/messaging/service-bus', () => ({
+  getSender: jest.fn(),
+  sendMessage: jest.fn(),
+  closeSender: jest.fn()
+}))
+jest.mock('../../../../app/constants/message-source', () => 'test-source')
+
+const { getSender, sendMessage, closeSender: closeServiceBusSender } = require('../../../../app/messaging/service-bus')
+const sendRetentionMessagesModule = require('../../../../app/messaging/publish/send-retention-messages')
+const sendRetentionMessages = sendRetentionMessagesModule
+const closeSender = sendRetentionMessagesModule.closeSender
+
 describe('sendRetentionMessages', () => {
-  let sendRetentionMessages
-  let closeSender
-  let senderMockInstance
-  let MockMessageSender
+  let mockSender
   let consoleErrorSpy
 
   beforeEach(() => {
-    senderMockInstance = {
-      sendMessage: jest.fn().mockResolvedValue(undefined),
-      closeConnection: jest.fn().mockResolvedValue(undefined)
-    }
-    MockMessageSender = jest.fn().mockImplementation(() => senderMockInstance)
-
-    jest.resetModules()
-    jest.doMock('ffc-messaging', () => ({ MessageSender: MockMessageSender }))
-    jest.doMock('../../../../app/config', () => ({ statementRetentionTopic: 'test-topic' }))
-    jest.doMock('../../../../app/constants/message-source', () => 'test-source')
-
-    const mod = require('../../../../app/messaging/publish/send-retention-messages')
-    sendRetentionMessages = mod
-    closeSender = mod.closeSender
-
+    mockSender = { sendMessages: jest.fn().mockResolvedValue(undefined) }
+    jest.clearAllMocks()
+    getSender.mockReturnValue(mockSender)
     consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
   })
 
@@ -28,7 +26,7 @@ describe('sendRetentionMessages', () => {
     consoleErrorSpy.mockRestore()
   })
 
-  test('creates sender once and sends a message for each generation', async () => {
+  test('sends a message for each generation using the same sender', async () => {
     const generations = [
       { documentReference: 'docRef1', filename: 'file1.pdf' },
       { documentReference: 'docRef2', filename: 'file2.pdf' }
@@ -36,12 +34,12 @@ describe('sendRetentionMessages', () => {
 
     await sendRetentionMessages(generations)
 
-    expect(MockMessageSender).toHaveBeenCalledTimes(1)
-    expect(MockMessageSender).toHaveBeenCalledWith('test-topic')
+    expect(getSender).toHaveBeenCalledTimes(generations.length)
+    expect(getSender).toHaveBeenCalledWith({ address: 'test-topic' })
 
-    expect(senderMockInstance.sendMessage).toHaveBeenCalledTimes(generations.length)
+    expect(sendMessage).toHaveBeenCalledTimes(generations.length)
     generations.forEach((generation, i) => {
-      expect(senderMockInstance.sendMessage).toHaveBeenNthCalledWith(i + 1, {
+      expect(sendMessage).toHaveBeenNthCalledWith(i + 1, mockSender, {
         body: {
           documentReference: generation.documentReference,
           filename: generation.filename
@@ -58,14 +56,16 @@ describe('sendRetentionMessages', () => {
     await sendRetentionMessages(generations)
     await sendRetentionMessages(generations)
 
-    expect(MockMessageSender).toHaveBeenCalledTimes(1)
-    expect(senderMockInstance.sendMessage).toHaveBeenCalledTimes(2)
+    expect(getSender).toHaveBeenCalledTimes(2)
+    expect(sendMessage).toHaveBeenCalledTimes(2)
+    expect(sendMessage.mock.calls[0][0]).toBe(mockSender)
+    expect(sendMessage.mock.calls[1][0]).toBe(mockSender)
   })
 
   test('logs error if sendMessage throws', async () => {
     const generations = [{ documentReference: 'docRef1', filename: 'file1.pdf' }]
     const sendError = new Error('Send failed')
-    senderMockInstance.sendMessage.mockRejectedValue(sendError)
+    sendMessage.mockRejectedValue(sendError)
 
     await sendRetentionMessages(generations)
 
@@ -75,21 +75,10 @@ describe('sendRetentionMessages', () => {
     )
   })
 
-  test('closeSender closes the connection and resets the singleton', async () => {
-    const generations = [{ documentReference: 'docRef1', filename: 'file1.pdf' }]
-    await sendRetentionMessages(generations)
-
+  test('closeSender closes the sender for the retention topic', async () => {
     await closeSender()
 
-    expect(senderMockInstance.closeConnection).toHaveBeenCalledTimes(1)
-
-    // After closing, a new call should create a fresh sender
-    await sendRetentionMessages(generations)
-    expect(MockMessageSender).toHaveBeenCalledTimes(2)
-  })
-
-  test('closeSender does nothing if sender was never created', async () => {
-    await closeSender()
-    expect(senderMockInstance.closeConnection).not.toHaveBeenCalled()
+    expect(closeServiceBusSender).toHaveBeenCalledTimes(1)
+    expect(closeServiceBusSender).toHaveBeenCalledWith({ address: 'test-topic' })
   })
 })

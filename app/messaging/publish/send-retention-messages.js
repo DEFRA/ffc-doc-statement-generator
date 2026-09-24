@@ -1,21 +1,9 @@
-const { MessageSender } = require('ffc-messaging')
+const { getSender, sendMessage: sendServiceBusMessage, closeSender: closeServiceBusSender } = require('../service-bus')
 const config = require('../../config')
 const MESSAGE_SOURCE = require('../../constants/message-source')
 
-let sender = null
-
-const getSender = () => {
-  if (!sender) {
-    sender = new MessageSender(config.statementRetentionTopic)
-  }
-  return sender
-}
-
 const closeSender = async () => {
-  if (sender) {
-    await sender.closeConnection()
-    sender = null
-  }
+  await closeServiceBusSender(config.statementRetentionTopic)
 }
 
 const sendRetentionMessages = async (generations) => {
@@ -29,7 +17,7 @@ const sendRetentionMessages = async (generations) => {
         type: 'uk.gov.doc.statement.retention',
         source: MESSAGE_SOURCE
       }
-      await getSender().sendMessage(message)
+      await sendServiceBusMessage(getSender(config.statementRetentionTopic), message)
     }
   } catch (error) {
     console.error('Error sending statement retention message:', error)

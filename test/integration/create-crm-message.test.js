@@ -1,17 +1,3 @@
-const mockSendMessage = jest.fn()
-const mockCloseConnection = jest.fn()
-
-jest.mock('ffc-messaging', () => {
-  return {
-    MessageSender: jest.fn().mockImplementation(() => {
-      return {
-        sendMessage: mockSendMessage,
-        closeConnection: mockCloseConnection
-      }
-    })
-  }
-})
-
 jest.mock('../../app/config')
 
 const createCrmMessage = require('../../app/publishing/crm/create-crm-message')
