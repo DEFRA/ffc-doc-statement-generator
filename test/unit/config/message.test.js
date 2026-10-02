@@ -31,7 +31,7 @@ describe('messageConfig', () => {
   })
 
   test.each([
-    ['statementSubscription', 'sub-addr', 'topic-addr', 'subscription', 3],
+    ['statementSubscription', 'sub-addr', 'topic-addr', 'subscription', 2],
     ['retentionSubscription', 'retention-sub-addr', 'retention-topic-addr', 'subscription', 3],
     ['publishTopic', 'pub-addr', undefined, undefined, undefined],
     ['crmTopic', 'crm-addr', undefined, undefined, undefined],
@@ -50,9 +50,9 @@ describe('messageConfig', () => {
     expect(config[key]).toMatchObject(expected)
   })
 
-  test('statementSubscription has maxConcurrentCalls of 3', () => {
+  test('statementSubscription has maxConcurrentCalls of 2', () => {
     const config = require('../../../app/config/message')
-    expect(config.statementSubscription.maxConcurrentCalls).toBe(3)
+    expect(config.statementSubscription.maxConcurrentCalls).toBe(2)
   })
 
   test('retentionSubscription has maxConcurrentCalls of 3', () => {

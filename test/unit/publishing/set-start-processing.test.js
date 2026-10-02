@@ -8,7 +8,7 @@ describe('set start processing date stamp', () => {
     jest.clearAllMocks()
   })
 
-  test('should call db.outbox.update with correct arguments', async () => {
+  test('should call db.outbox.update with correct arguments including transaction', async () => {
     const now = new Date()
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
@@ -17,8 +17,9 @@ describe('set start processing date stamp', () => {
       { outboxId: 2 },
       { outboxId: 3 }
     ]
+    const transactionMock = { mock: 'transaction' }
 
-    await setStartProcessing(pendingStatements)
+    await setStartProcessing(pendingStatements, transactionMock)
 
     expect(db.outbox.update).toHaveBeenCalledTimes(1)
     expect(db.outbox.update).toHaveBeenCalledWith(
@@ -28,7 +29,8 @@ describe('set start processing date stamp', () => {
           outboxId: {
             [db.Sequelize.Op.in]: [1, 2, 3]
           }
-        }
+        },
+        transaction: transactionMock
       }
     )
 

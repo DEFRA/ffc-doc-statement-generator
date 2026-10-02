@@ -1,7 +1,8 @@
 const Joi = require('joi')
 const { PRODUCTION } = require('./environments')
 const MINIMUM_CONCURRENT_CALLS = 1
-const CONCURRENT_CALLS = 3
+const STATEMENT_CONCURRENT_CALLS = 2
+const RETENTION_CONCURRENT_CALLS = 3
 
 const mqSchema = Joi.object({
   messageQueue: {
@@ -15,13 +16,13 @@ const mqSchema = Joi.object({
     address: Joi.string(),
     topic: Joi.string(),
     type: Joi.string().default('subscription'),
-    maxConcurrentCalls: Joi.number().integer().min(MINIMUM_CONCURRENT_CALLS).default(CONCURRENT_CALLS)
+    maxConcurrentCalls: Joi.number().integer().min(MINIMUM_CONCURRENT_CALLS).default(STATEMENT_CONCURRENT_CALLS)
   },
   retentionSubscription: {
     address: Joi.string().required(),
     topic: Joi.string().required(),
     type: Joi.string().default('subscription'),
-    maxConcurrentCalls: Joi.number().integer().min(MINIMUM_CONCURRENT_CALLS).default(CONCURRENT_CALLS)
+    maxConcurrentCalls: Joi.number().integer().min(MINIMUM_CONCURRENT_CALLS).default(RETENTION_CONCURRENT_CALLS)
   },
   statementRetentionTopic: {
     address: Joi.string()
@@ -49,13 +50,13 @@ const mqConfig = {
     address: process.env.STATEMENT_SUBSCRIPTION_ADDRESS,
     topic: process.env.STATEMENT_TOPIC_ADDRESS,
     type: 'subscription',
-    maxConcurrentCalls: CONCURRENT_CALLS
+    maxConcurrentCalls: STATEMENT_CONCURRENT_CALLS
   },
   retentionSubscription: {
     address: process.env.RETENTION_SUBSCRIPTION_ADDRESS,
     topic: process.env.RETENTION_TOPIC_ADDRESS,
     type: 'subscription',
-    maxConcurrentCalls: CONCURRENT_CALLS
+    maxConcurrentCalls: RETENTION_CONCURRENT_CALLS
   },
   statementRetentionTopic: {
     address: process.env.STATEMENT_RETENTION_TOPIC_ADDRESS
