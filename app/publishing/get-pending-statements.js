@@ -17,9 +17,10 @@ const getPendingStatements = async () => {
     .limit(publishingLimit)
     .forUpdate()
 
-  await setStartProcessing(pendingStatements)
+    await setStartProcessing(pendingStatements, transaction)
 
-  return pendingStatements
+    return pendingStatements
+  })
 }
 
 module.exports = {

@@ -14,6 +14,8 @@ const { getPendingStatements } = require('../../../app/publishing/get-pending-st
 const { setStartProcessing } = require('../../../app/publishing/set-start-processing')
 
 describe('getPendingStatements', () => {
+  let transactionMock
+
   beforeEach(() => {
     jest.clearAllMocks()
     mockDb.builder.resolves([])
@@ -47,7 +49,7 @@ describe('getPendingStatements', () => {
 
     await getPendingStatements()
 
-    expect(setStartProcessing).toHaveBeenCalledWith(mockStatements)
+    expect(setStartProcessing).toHaveBeenCalledWith(mockStatements, transactionMock)
   })
 
   test('should return the pending statements', async () => {
@@ -57,5 +59,12 @@ describe('getPendingStatements', () => {
     const result = await getPendingStatements()
 
     expect(result).toEqual(mockStatements)
+  })
+
+  test('should rollback transaction when findAll throws', async () => {
+    const error = new Error('findAll failed')
+    db.outbox.findAll.mockRejectedValue(error)
+
+    await expect(getPendingStatements()).rejects.toThrow('findAll failed')
   })
 })

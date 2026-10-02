@@ -1,6 +1,6 @@
 const { outbox } = require('../database')
 
-const setStartProcessing = async (pendingStatements) => {
+const setStartProcessing = async (pendingStatements, transaction) => {
   const outboxIds = pendingStatements.map(statement => statement.outboxId)
   await outbox()
     .whereIn('outboxId', outboxIds)

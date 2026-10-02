@@ -4,6 +4,7 @@ const { generateDocument } = require('../generator')
 const { VALIDATION } = require('../constants/errors')
 
 const processStatementMessage = async (message, receiver) => {
+  const start = Date.now()
   try {
     const request = message.body
     console.log(`Generation request received: sbi: ${request.sbi}, frn: ${request.frn}`)
@@ -12,9 +13,10 @@ const processStatementMessage = async (message, receiver) => {
 
     await validateRequest(request, documentType)
     await generateDocument(request, documentType)
+
     console.log('Completing message...')
     await receiver.completeMessage(message)
-    console.log('Message completed successfully.')
+    console.log(`Message completed successfully. Total processing time: ${Date.now() - start}ms`)
   } catch (err) {
     console.error('Unable to process request:', err)
 
