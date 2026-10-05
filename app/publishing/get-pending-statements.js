@@ -7,6 +7,7 @@ const millisecondsInSecond = 1000
 const publishingLimit = 500
 
 const getPendingStatements = async () => {
+<<<<<<< HEAD
   const startProcessingLag = new Date(Date.now() - minutesToGoBack * secondsInMinute * millisecondsInSecond)
   const pendingStatements = await outbox()
     .whereNull('published')
@@ -16,6 +17,22 @@ const getPendingStatements = async () => {
     })
     .limit(publishingLimit)
     .forUpdate()
+=======
+  return db.sequelize.transaction(async (transaction) => {
+    const startProcessingLag = new Date(Date.now() - minutesToGoBack * secondsInMinute * millisecondsInSecond)
+    const pendingStatements = await db.outbox.findAll({
+      where: {
+        published: null,
+        [db.Sequelize.Op.or]: [
+          { startProcessing: null },
+          { startProcessing: { [db.Sequelize.Op.lt]: startProcessingLag } }
+        ]
+      },
+      limit: publishingLimit,
+      lock: true,
+      transaction
+    })
+>>>>>>> 3b4d595 (wrap lock in transaction (#117))
 
     await setStartProcessing(pendingStatements, transaction)
 

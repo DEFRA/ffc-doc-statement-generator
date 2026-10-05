@@ -2,6 +2,7 @@
   "name": "ffc-doc-statement-generator",
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version": "2.6.8",
 =======
   "version": "2.6.7",
@@ -9,6 +10,9 @@
 =======
   "version": "2.6.7",
 >>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
+=======
+  "version": "2.6.8",
+>>>>>>> 3b4d595 (wrap lock in transaction (#117))
   "description": "FFC payment statement generator",
   "homepage": "https://github.com/DEFRA/ffc-doc-statement-generator",
   "main": "app/index.js",
