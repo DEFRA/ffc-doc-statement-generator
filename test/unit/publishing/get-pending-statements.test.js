@@ -14,45 +14,24 @@ const { getPendingStatements } = require('../../../app/publishing/get-pending-st
 const { setStartProcessing } = require('../../../app/publishing/set-start-processing')
 
 describe('getPendingStatements', () => {
-  let transactionMock
-
   beforeEach(() => {
     jest.clearAllMocks()
-<<<<<<< HEAD
     mockDb.builder.resolves([])
-  })
-
-  test('should claim unpublished outbox rows with a row lock', async () => {
-    await getPendingStatements()
-
-    expect(mockDb.tables.outbox).toHaveBeenCalledWith()
-    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('published')
-    expect(mockDb.builder.limit).toHaveBeenCalledWith(500)
-    expect(mockDb.builder.forUpdate).toHaveBeenCalledTimes(1)
-=======
-
-    transactionMock = { mock: 'transaction' }
-    db.sequelize.transaction.mockImplementation(async (callback) => {
-      return callback(transactionMock)
-    })
-
-    db.outbox.findAll.mockResolvedValue([])
   })
 
   test('should run within a transaction', async () => {
     await getPendingStatements()
 
-    expect(db.sequelize.transaction).toHaveBeenCalledTimes(1)
+    expect(mockDb.transaction).toHaveBeenCalledTimes(1)
   })
 
-  test('should call findAll with correct parameters including transaction and lock', async () => {
+  test('should claim unpublished outbox rows with a row lock', async () => {
     await getPendingStatements()
 
-    expect(db.outbox.findAll).toHaveBeenCalledWith(expect.objectContaining({
-      lock: true,
-      transaction: transactionMock
-    }))
->>>>>>> 3b4d595 (wrap lock in transaction (#117))
+    expect(mockDb.tables.outbox).toHaveBeenCalledWith(mockDb.trx)
+    expect(mockDb.builder.whereNull).toHaveBeenCalledWith('published')
+    expect(mockDb.builder.limit).toHaveBeenCalledWith(500)
+    expect(mockDb.builder.forUpdate).toHaveBeenCalledTimes(1)
   })
 
   test('should group the startProcessing lag predicate', async () => {
@@ -74,14 +53,10 @@ describe('getPendingStatements', () => {
 
     await getPendingStatements()
 
-    expect(setStartProcessing).toHaveBeenCalledWith(mockStatements, transactionMock)
+    expect(setStartProcessing).toHaveBeenCalledWith(mockStatements, mockDb.trx)
   })
 
-<<<<<<< HEAD
   test('should return the pending statements', async () => {
-=======
-  test('should return pending statements', async () => {
->>>>>>> 3b4d595 (wrap lock in transaction (#117))
     const mockStatements = [{ outboxId: 1 }]
     mockDb.builder.resolves(mockStatements)
 
@@ -90,10 +65,9 @@ describe('getPendingStatements', () => {
     expect(result).toEqual(mockStatements)
   })
 
-  test('should rollback transaction when findAll throws', async () => {
-    const error = new Error('findAll failed')
-    db.outbox.findAll.mockRejectedValue(error)
+  test('should rollback transaction when the query throws', async () => {
+    mockDb.builder.rejects(new Error('query failed'))
 
-    await expect(getPendingStatements()).rejects.toThrow('findAll failed')
+    await expect(getPendingStatements()).rejects.toThrow('query failed')
   })
 })

@@ -1,18 +1,10 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-jest.mock('ffc-messaging')
-jest.mock('../../../app/database')
-=======
-=======
->>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
 jest.mock('../../../app/messaging/service-bus', () => ({
   createServiceBusClient: jest.fn(),
   createReceiver: jest.fn(),
   subscribeReceiver: jest.fn(),
   closeSenders: jest.fn()
 }))
-jest.mock('../../../app/data')
->>>>>>> 8b025d4 (replace ffc-messaging with service-bus (#116))
+jest.mock('../../../app/database')
 const messageService = require('../../../app/messaging')
 
 describe('messaging', () => {
