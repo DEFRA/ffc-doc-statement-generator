@@ -1,15 +1,10 @@
-const db = require('../data')
+const { generations } = require('../database')
 
 const getGenerations = async (documentReference) => {
-  return db.generation.findOne({
-    where: {
-      [db.Sequelize.Op.and]: [{ documentReference }, {
-        documentReference: {
-          [db.Sequelize.Op.ne]: null
-        }
-      }]
-    }
-  })
+  return generations()
+    .where({ documentReference })
+    .whereNotNull('documentReference')
+    .first()
 }
 
 module.exports = getGenerations

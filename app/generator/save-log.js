@@ -1,4 +1,4 @@
-const db = require('../data')
+const { generations } = require('../database')
 
 const saveLog = async (statementData, filename, dateGenerated) => {
   const { documentReference: documentRef, ...data } = statementData
@@ -28,26 +28,30 @@ const saveLog = async (statementData, filename, dateGenerated) => {
     frequency: schemeFrequency
   } = scheme || {}
 
-  return db.generation.create({
-    statementData: data,
-    documentReference: documentRef,
-    filename,
-    dateGenerated,
-    businessName,
-    frn,
-    sbi,
-    addressLine1,
-    addressLine2,
-    addressLine3,
-    addressLine4,
-    addressLine5,
-    postcode,
-    email,
-    schemeName,
-    schemeShortName,
-    schemeYear,
-    schemeFrequency
-  })
+  const [generation] = await generations()
+    .insert({
+      statementData: data,
+      documentReference: documentRef,
+      filename,
+      dateGenerated,
+      businessName,
+      frn,
+      sbi,
+      addressLine1,
+      addressLine2,
+      addressLine3,
+      addressLine4,
+      addressLine5,
+      postcode,
+      email,
+      schemeName,
+      schemeShortName,
+      schemeYear,
+      schemeFrequency
+    })
+    .returning('generationId')
+
+  return generation
 }
 
 module.exports = saveLog

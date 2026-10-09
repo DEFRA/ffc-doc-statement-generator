@@ -1,17 +1,10 @@
-const db = require('../data')
+const { outbox } = require('../database')
 
 const setStartProcessing = async (pendingStatements, transaction) => {
   const outboxIds = pendingStatements.map(statement => statement.outboxId)
-  await db.outbox.update({
-    startProcessing: new Date()
-  }, {
-    where: {
-      outboxId: {
-        [db.Sequelize.Op.in]: outboxIds
-      }
-    },
-    transaction
-  })
+  await outbox(transaction)
+    .whereIn('outboxId', outboxIds)
+    .update({ startProcessing: new Date() })
 }
 
 module.exports = {

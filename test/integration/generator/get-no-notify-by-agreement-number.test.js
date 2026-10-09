@@ -1,22 +1,26 @@
-const db = require('../../../app/data')
+const db = require('../../../app/database')
 const getNoNotifyByAgreementNumber = require('../../../app/publishing/get-no-notify-by-agreement-number')
 const mockNoNotify = require('../../mocks/objects/mock-no-notify')
 
+const truncate = async () => {
+  await db.client.raw('TRUNCATE TABLE "noNotifys" RESTART IDENTITY CASCADE')
+}
+
 describe('getNoNotifyByAgreementNumber', () => {
   beforeAll(async () => {
-    await db.sequelize.truncate({ cascade: true, restartIdentity: true })
+    await truncate()
   })
 
   beforeEach(async () => {
-    await db.noNotify.bulkCreate(mockNoNotify)
+    await db.noNotifys().insert(mockNoNotify)
   })
 
   afterEach(async () => {
-    await db.sequelize.truncate({ cascade: true, restartIdentity: true })
+    await truncate()
   })
 
   afterAll(async () => {
-    await db.sequelize.close()
+    await db.close()
   })
 
   test('returns record with matching agreement number when it exists', async () => {

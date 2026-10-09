@@ -1,16 +1,14 @@
-const db = require('../data')
+const { outbox } = require('../database')
 
 const setPublished = async (outboxId, sentToPublisher, sentToCRM, receiverLink) => {
-  await db.outbox.update({
-    published: new Date(),
-    sentToPublisher,
-    sentToCRM,
-    receiverLink
-  }, {
-    where: {
-      outboxId
-    }
-  })
+  await outbox()
+    .where({ outboxId })
+    .update({
+      published: new Date(),
+      sentToPublisher,
+      sentToCRM,
+      receiverLink
+    })
 }
 
 module.exports = {

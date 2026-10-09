@@ -1,4 +1,4 @@
-jest.mock('../../../app/data')
+jest.mock('../../../app/database')
 const mockGenerator = jest.fn()
 jest.mock('../../../app/generator', () => ({
   generateDocument: mockGenerator

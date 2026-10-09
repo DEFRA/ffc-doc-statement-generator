@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('../database')
 const { setStartProcessing } = require('./set-start-processing')
 
 const minutesToGoBack = 15
@@ -7,22 +7,18 @@ const millisecondsInSecond = 1000
 const publishingLimit = 500
 
 const getPendingStatements = async () => {
-  return db.sequelize.transaction(async (transaction) => {
+  return db.transaction(async (trx) => {
     const startProcessingLag = new Date(Date.now() - minutesToGoBack * secondsInMinute * millisecondsInSecond)
-    const pendingStatements = await db.outbox.findAll({
-      where: {
-        published: null,
-        [db.Sequelize.Op.or]: [
-          { startProcessing: null },
-          { startProcessing: { [db.Sequelize.Op.lt]: startProcessingLag } }
-        ]
-      },
-      limit: publishingLimit,
-      lock: true,
-      transaction
-    })
+    const pendingStatements = await db.outbox(trx)
+      .whereNull('published')
+      .where(function () {
+        this.whereNull('startProcessing')
+          .orWhere('startProcessing', '<', startProcessingLag)
+      })
+      .limit(publishingLimit)
+      .forUpdate()
 
-    await setStartProcessing(pendingStatements, transaction)
+    await setStartProcessing(pendingStatements, trx)
 
     return pendingStatements
   })
