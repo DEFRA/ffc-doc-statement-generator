@@ -4,7 +4,7 @@ jest.mock('../../../app/messaging/service-bus', () => ({
   subscribeReceiver: jest.fn(),
   closeSenders: jest.fn()
 }))
-jest.mock('../../../app/data')
+jest.mock('../../../app/database')
 const messageService = require('../../../app/messaging')
 
 describe('messaging', () => {

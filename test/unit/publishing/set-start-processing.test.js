@@ -1,64 +1,51 @@
-const db = require('../../../app/data')
-const { setStartProcessing } = require('../../../app/publishing/set-start-processing')
+const { createKnexMock } = require('../../helpers/mock-knex')
 
-jest.mock('../../../app/data')
+const mockDb = createKnexMock(['outbox'])
+
+jest.mock('../../../app/database', () => ({
+  client: mockDb.knex,
+  transaction: mockDb.transaction,
+  close: mockDb.close,
+  ...mockDb.tables
+}))
+
+const { setStartProcessing } = require('../../../app/publishing/set-start-processing')
 
 describe('set start processing date stamp', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    mockDb.builder.resolves(0)
   })
 
-  test('should call db.outbox.update with correct arguments including transaction', async () => {
+  test('should stamp every pending outbox id', async () => {
     const now = new Date()
     jest.spyOn(global, 'Date').mockImplementation(() => now)
 
-    const pendingStatements = [
-      { outboxId: 1 },
-      { outboxId: 2 },
-      { outboxId: 3 }
-    ]
-    const transactionMock = { mock: 'transaction' }
+    await setStartProcessing([{ outboxId: 1 }, { outboxId: 2 }, { outboxId: 3 }])
 
-    await setStartProcessing(pendingStatements, transactionMock)
-
-    expect(db.outbox.update).toHaveBeenCalledTimes(1)
-    expect(db.outbox.update).toHaveBeenCalledWith(
-      { startProcessing: now },
-      {
-        where: {
-          outboxId: {
-            [db.Sequelize.Op.in]: [1, 2, 3]
-          }
-        },
-        transaction: transactionMock
-      }
-    )
+    expect(mockDb.tables.outbox).toHaveBeenCalledWith(undefined)
+    expect(mockDb.builder.whereIn).toHaveBeenCalledWith('outboxId', [1, 2, 3])
+    expect(mockDb.builder.update).toHaveBeenCalledTimes(1)
+    expect(mockDb.builder.update).toHaveBeenCalledWith({ startProcessing: now })
 
     global.Date.mockRestore()
   })
 
-  test('should call update with empty array if no pendingStatements', async () => {
-    await setStartProcessing([])
+  test('should run the update within the supplied transaction', async () => {
+    await setStartProcessing([{ outboxId: 1 }], mockDb.trx)
 
-    expect(db.outbox.update).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.objectContaining({
-        where: {
-          outboxId: {
-            [db.Sequelize.Op.in]: []
-          }
-        }
-      })
-    )
+    expect(mockDb.tables.outbox).toHaveBeenCalledWith(mockDb.trx)
   })
 
-  test('should propagate errors from db.outbox.update', async () => {
-    const error = new Error('Update failed')
-    db.outbox.update.mockRejectedValue(error)
+  test('should pass an empty array if there are no pending statements', async () => {
+    await setStartProcessing([])
 
-    const pendingStatements = [{ outboxId: 1 }]
-    const transactionMock = {}
+    expect(mockDb.builder.whereIn).toHaveBeenCalledWith('outboxId', [])
+  })
 
-    await expect(setStartProcessing(pendingStatements, transactionMock)).rejects.toThrow('Update failed')
+  test('should propagate errors from the update', async () => {
+    mockDb.builder.rejects(new Error('Update failed'))
+
+    await expect(setStartProcessing([{ outboxId: 1 }])).rejects.toThrow('Update failed')
   })
 })

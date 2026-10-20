@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { mockGeneration } = require('../../mocks/modules/data')
+const mockDb = require('../../mocks/modules/data')
 const saveLog = require('../../../app/generator/save-log')
 
 let statement
@@ -8,6 +8,7 @@ let timestamp
 describe('saveLog', () => {
   beforeEach(() => {
     jest.useFakeTimers().setSystemTime(new Date(2022, 7, 5, 15, 30, 10, 12))
+    mockDb.builder.resolves([{ generationId: 1 }])
     timestamp = moment(new Date()).format('YYYYMMDDHHmmssSS')
     statement = JSON.parse(JSON.stringify(require('../../mocks/mock-delinked-statement')))
   })
@@ -18,7 +19,7 @@ describe('saveLog', () => {
 
   const getCallArgs = async (stmt = statement, filename = 'test.pdf', ts = timestamp) => {
     await saveLog(stmt, filename, ts)
-    return mockGeneration.create.mock.calls[0][0]
+    return mockDb.builder.insert.mock.calls[0][0]
   }
 
   test('creates log with statement data (excluding some fields)', async () => {

@@ -18,6 +18,9 @@ const publish = require('../../../app/generator/publish')
 jest.mock('../../../app/generator/save-outbound-statement')
 const { saveOutboundStatement } = require('../../../app/generator/save-outbound-statement')
 
+jest.mock('../../../app/generator/save-log')
+const saveLog = require('../../../app/generator/save-log')
+
 const { generateDocument } = require('../../../app/generator')
 
 describe('generateDocument', () => {
@@ -28,6 +31,7 @@ describe('generateDocument', () => {
     jest.useFakeTimers().setSystemTime(SYSTEM_TIME)
     consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation(() => {})
     getDocumentDefinition.mockReturnValue('docDef')
+    saveLog.mockResolvedValue({ generationId: 1 })
   })
 
   afterEach(() => {
@@ -86,9 +90,10 @@ describe('generateDocument', () => {
           expect(publish).toHaveBeenCalledWith(mockPdfPrinter().createPdfKitDocument(), request, TIMESTAMP_SYSTEM_TIME, type)
         })
 
-        test('calls saveOutboundStatement', async () => {
+        test('calls saveOutboundStatement with the new generation id', async () => {
           await generateDocument(request, type)
           expect(saveOutboundStatement).toHaveBeenCalledTimes(1)
+          expect(saveOutboundStatement).toHaveBeenCalledWith(1, type)
         })
 
         test('logs publishing info', async () => {
@@ -101,6 +106,7 @@ describe('generateDocument', () => {
           expect(getDocumentDefinition).not.toHaveBeenCalled()
           expect(mockPdfPrinter().createPdfKitDocument).not.toHaveBeenCalled()
           expect(publish).not.toHaveBeenCalled()
+          expect(saveLog).not.toHaveBeenCalled()
           expect(saveOutboundStatement).not.toHaveBeenCalled()
         })
       }

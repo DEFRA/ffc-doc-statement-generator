@@ -1,4 +1,4 @@
-const db = require('../data')
+const db = require('../database')
 const { DELINKED } = require('../constants/scheme-ids')
 const { removeGenerations } = require('./remove-generations')
 const { removeNoNotifys } = require('./remove-no-notifys')
@@ -7,33 +7,26 @@ const { findGenerations } = require('./find-generations')
 const sendRetentionMessages = require('../messaging/publish/send-retention-messages')
 
 const removeAgreementData = async (retentionData) => {
-  const transaction = await db.sequelize.transaction()
-  try {
-    const { simplifiedAgreementNumber, frn, schemeId } = retentionData
+  const { simplifiedAgreementNumber, frn, schemeId } = retentionData
 
-    if (schemeId !== DELINKED) {
-      await transaction.commit()
-      return
-    }
+  if (schemeId !== DELINKED) {
+    return
+  }
 
-    await removeNoNotifys(simplifiedAgreementNumber, frn, transaction)
+  await db.transaction(async (trx) => {
+    await removeNoNotifys(trx, simplifiedAgreementNumber, frn)
 
-    const generations = await findGenerations(simplifiedAgreementNumber, frn, transaction)
-    const generationIds = generations.map(g => g.generationId)
+    const generations = await findGenerations(trx, simplifiedAgreementNumber, frn)
     if (generations.length === 0) {
-      await transaction.commit()
       return
     }
 
-    await removeOutbox(generationIds, transaction)
-    await removeGenerations(generationIds, transaction)
+    const generationIds = generations.map(g => g.generationId)
+    await removeOutbox(trx, generationIds)
+    await removeGenerations(trx, generationIds)
 
     await sendRetentionMessages(generations)
-    await transaction.commit()
-  } catch (err) {
-    await transaction.rollback()
-    throw err
-  }
+  })
 }
 
 module.exports = {
