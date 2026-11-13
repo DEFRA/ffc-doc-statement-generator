@@ -45,7 +45,7 @@ services:
       POLL_WINDOW_ENABLED: ${POLL_WINDOW_ENABLED:-false}
 
   ffc-doc-statement-generator-postgres:
-    image: postgres:11.4-alpine
+    image: postgres:16.5-alpine
     environment:
       POSTGRES_DB: ffc_doc_statement_generator
       POSTGRES_PASSWORD: ppp
